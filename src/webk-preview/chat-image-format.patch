@@ -1,0 +1,316 @@
+diff --git a/src/components/popups/newMedia.tsx b/src/components/popups/newMedia.tsx
+index c43d20d..6b6813e 100644
+--- a/src/components/popups/newMedia.tsx
++++ b/src/components/popups/newMedia.tsx
+@@ -23,6 +23,7 @@ import {shouldPreserveKeyboardFocus} from '@helpers/dom/isKeyboardControl';
+ import Modes from '@config/modes';
+ import {attachClickEvent} from '@helpers/dom/clickEvent';
+ import MEDIA_MIME_TYPES_SUPPORTED from '@environment/mediaMimeTypesSupport';
++import {IS_LOCAL_CHAT_PREVIEW} from '@config/debug';
+ import getGifDuration from '@helpers/getGifDuration';
+ import gifToVideo, {canConvertGifToVideo, canConvertGifToVideoSync} from '@helpers/gifToVideo';
+ import movToVideo, {isConvertibleMov} from '@helpers/movToVideo';
+@@ -1158,9 +1159,10 @@ export default function showNewMediaPopup(
+       const isPaidMedia = willSendPaidMedia();
+ 
+       const d: SendFileDetails[] = sendFileParams.map((params) => {
++        const original = IS_LOCAL_CHAT_PREVIEW ? params.file : params.scaledBlob || params.file;
+         return {
+           ...params,
+-          file: prepareEditedFileForSending(params) || convertedFiles.get(params.file as File)?.file || params.scaledBlob || params.file,
++          file: prepareEditedFileForSending(params) || convertedFiles.get(params.file as File)?.file || original,
+           width: params.editResult?.width || params.width,
+           height: params.editResult?.height || params.height,
+           spoiler: isPaidMedia ? undefined : !!params.mediaSpoiler,
+diff --git a/src/pages/localChatPreview/composerImages.ts b/src/pages/localChatPreview/composerImages.ts
+index 7f1dfe0..107b81e 100644
+--- a/src/pages/localChatPreview/composerImages.ts
++++ b/src/pages/localChatPreview/composerImages.ts
+@@ -1,16 +1,20 @@
+ import {seedMirror} from '@components/popupSandbox/bootstrapState';
+ import apiManagerProxy from '@lib/apiManagerProxy';
++import {getCurrentNewMediaPopup} from '@components/popups/newMedia';
+ import type {DownloadMediaOptions} from '@appManagers/apiFileManager';
+ import type {MessageMedia} from '@layer';
+ import type {ChatImage, ChatImageData, ChatMessage} from './liveTransport';
+ 
+-export const IMAGE_MAX_BYTES = 1024 * 1024;
+-const ALBUM_MAX_BYTES = 1_835_008;
++export const IMAGE_MAX_BYTES = 3 * 1024 * 1024;
++const SOURCE_MAX_BYTES = 10 * 1024 * 1024;
++const MAX_IMAGE_PIXELS = 16_000_000;
++const ALBUM_MAX_BYTES = 5_505_024;
+ const ALBUM_MAX_FILES = 10;
+ export const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'] as const;
+-const IMAGE_ACCEPT = IMAGE_TYPES.join(',');
+-const IMAGE_ONLY = '目前仅支持发送 JPG、PNG 或 WebP 图片';
++const IMAGE_ONLY = '无法读取这张图片，请重新截图或另存后发送';
+ const VOICE_DISABLED = '暂不支持发送语音';
++const chatEditor = '.input-message-input[contenteditable="true"]';
++const composerEditorSelector = `.chat.active ${chatEditor}, .popup-new-media ${chatEditor}`;
+ const fileInputSelector = '.chat-input input[type="file"], .popup-new-media input[type="file"]';
+ const sendButtonSelector = 'button.btn-send';
+ const recordingButtonSelector = 'button.btn-send.record, button.btn-send.record-video';
+@@ -25,14 +29,21 @@ function isImageMime(value: string): value is ChatImageData['mime'] {
+ function imageValidationError(file: Blob) {
+   if(!isImageMime(file.type)) return IMAGE_ONLY;
+   if(!file.size) return '图片为空';
+-  if(file.size > IMAGE_MAX_BYTES) return '图片不能超过 1 MB';
++  if(file.size > IMAGE_MAX_BYTES) return '图片不能超过 3 MB';
+ }
+ 
+-export async function encodeChatImage(file: unknown): Promise<ChatImageData> {
++async function checkedOutgoingImage(file: unknown) {
+   if(!(file instanceof Blob) || !isImageMime(file.type)) throw new Error(IMAGE_ONLY);
+-  const error = imageValidationError(file);
+-  if(error) throw new Error(error);
++  if(!file.size) throw new Error('图片为空');
++  if(file.size <= IMAGE_MAX_BYTES) return file;
++  // The attachment preview can re-encode an already prepared image as a larger JPEG.
++  return prepareImageFile(new File([file], '图片', {type: file.type}));
++}
++
++export async function encodeChatImage(input: unknown): Promise<ChatImageData> {
++  const file = await checkedOutgoingImage(input);
+   const mime = file.type;
++  if(!isImageMime(mime)) throw new Error(IMAGE_ONLY);
+   const data = await new Promise<string>((resolve, reject) => {
+     const reader = new FileReader();
+     reader.onerror = () => reject(new Error('读取图片失败'));
+@@ -42,38 +53,99 @@ export async function encodeChatImage(file: unknown): Promise<ChatImageData> {
+   return {mime, data};
+ }
+ 
+-async function compressAlbumImage(file: Blob, target: number) {
+-  if(file.size <= target) return file;
+-  const bitmap = await createImageBitmap(file);
++async function decodeImage(blob: Blob) {
++  const source = URL.createObjectURL(blob);
++  try {
++    const image = new Image();
++    image.src = source;
++    await image.decode();
++    return image;
++  } finally {
++    URL.revokeObjectURL(source);
++  }
++}
++
++async function compressImage(image: HTMLImageElement, fileSize: number, target: number, losslessFirst = false) {
+   const canvas = document.createElement('canvas');
+-  let size = Math.min(1, Math.sqrt(target / file.size) * 1.5);
++  const context = canvas.getContext('2d');
++  if(!context) return;
++  const {naturalWidth: width, naturalHeight: height} = image;
++  function encode(scale: number, mime: string, quality?: number) {
++    canvas.width = Math.max(1, Math.round(width * scale));
++    canvas.height = Math.max(1, Math.round(height * scale));
++    context.drawImage(image, 0, 0, canvas.width, canvas.height);
++    return new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, mime, quality));
++  }
++  const fits = (result: Blob | null): result is Blob =>
++    !!result?.size && result.size <= target && isImageMime(result.type);
+   try {
+-    for(let attempt = 0; attempt < 5; ++attempt, size *= .72) {
+-      canvas.width = Math.max(1, Math.round(bitmap.width * size));
+-      canvas.height = Math.max(1, Math.round(bitmap.height * size));
+-      canvas.getContext('2d').drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+-      const compressed = await new Promise<Blob>((resolve) => canvas.toBlob(resolve, 'image/webp', .8));
+-      if(compressed?.size && compressed.size <= target) return compressed;
++    if(losslessFirst) {
++      const originalSize = await encode(1, 'image/png');
++      if(fits(originalSize)) return originalSize;
++    }
++    let scale = Math.min(1, Math.sqrt(target / fileSize) * 1.5);
++    for(let attempt = 0; attempt < 5; ++attempt, scale *= .72) {
++      const compressed = await encode(scale, 'image/webp', .8);
++      if(fits(compressed)) return compressed;
+     }
+   } finally {
+-    bitmap.close();
++    canvas.width = canvas.height = 0;
+   }
+-  throw new Error('多图合计过大，请减少图片后重试');
++}
++
++async function readImageMime(file: Blob): Promise<ChatImageData['mime'] | undefined> {
++  const header = new Uint8Array(await file.slice(0, 12).arrayBuffer());
++  const startsWith = (prefix: number[]) => prefix.every((byte, index) => header[index] === byte);
++  if(startsWith([0xff, 0xd8, 0xff])) return 'image/jpeg';
++  if(startsWith([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])) return 'image/png';
++  if(startsWith([0x52, 0x49, 0x46, 0x46]) && String.fromCharCode(...header.slice(8)) === 'WEBP') return 'image/webp';
++}
++
++async function prepareImageFile(file: File) {
++  if(!file.size) throw new Error('图片为空');
++  if(file.size > SOURCE_MAX_BYTES) throw new Error('原图片不能超过 10 MB');
++  const mime = await readImageMime(file);
++  const image = await decodeImage(file.slice(0, file.size, mime)).catch(() => {
++    // SVG needs its content type to decode as an image. Only a raster copy is sent.
++    if(!mime) return decodeImage(file.slice(0, file.size, 'image/svg+xml'));
++    throw new Error(IMAGE_ONLY);
++  }).catch(() => { throw new Error(IMAGE_ONLY); });
++  if(image.naturalWidth * image.naturalHeight > MAX_IMAGE_PIXELS) throw new Error('图片分辨率过大');
++  if(mime && file.size <= IMAGE_MAX_BYTES && file.type === mime) return file;
++  const prepared = mime && file.size <= IMAGE_MAX_BYTES ? file :
++    await compressImage(image, file.size, IMAGE_MAX_BYTES, !mime && file.size <= IMAGE_MAX_BYTES);
++  const type = prepared === file ? mime : prepared?.type;
++  if(!prepared || !type || !isImageMime(type)) throw new Error('无法将图片压缩到 3 MB，请缩小图片后重试');
++  const suffix = type === 'image/jpeg' ? 'jpg' : type.slice('image/'.length);
++  const name = file.name.replace(/\.[^.]*$/, '') || '图片';
++  return new File([prepared], `${name}.${suffix}`, {type, lastModified: file.lastModified});
++}
++
++async function prepareFiles(files: File[]) {
++  if(files.length > ALBUM_MAX_FILES) throw new Error('每组最多发送 10 张图片');
++  const prepared: File[] = [];
++  for(const file of files) prepared.push(await prepareImageFile(file));
++  return prepared;
+ }
+ 
+ export async function encodeChatAlbum(files: unknown[]) {
+   if(files.length < 2 || files.length > ALBUM_MAX_FILES) throw new Error('每组可发送 2–10 张图片');
+-  const originals = files.map((file) => {
+-    if(!(file instanceof Blob)) throw new Error(IMAGE_ONLY);
+-    const error = imageValidationError(file);
+-    if(error) throw new Error(error);
+-    return file;
+-  });
++  const originals: Blob[] = [];
++  for(const file of files) originals.push(await checkedOutgoingImage(file));
+   const size = originals.reduce((sum, file) => sum + file.size, 0);
+   if(size <= ALBUM_MAX_BYTES) return Promise.all(originals.map(encodeChatImage));
+   const allotment = Math.floor(ALBUM_MAX_BYTES / originals.length);
+-  const images = await Promise.all(originals.map((file) => compressAlbumImage(file, allotment)));
+-  return Promise.all(images.map(encodeChatImage));
++  const images: ChatImageData[] = [];
++  for(const file of originals) {
++    if(file.size <= allotment) {
++      images.push(await encodeChatImage(file));
++      continue;
++    }
++    const image = await compressImage(await decodeImage(file), file.size, allotment);
++    if(!image) throw new Error('多图合计过大，请减少图片后重试');
++    images.push(await encodeChatImage(image));
++  }
++  return images;
+ }
+ 
+ export function chatPhoto(message: ChatMessage, image: ChatImage): MessageMedia.messageMediaPhoto {
+@@ -173,7 +245,19 @@ export function chatPhotoDownloads(
+   };
+ }
+ 
+-export function installImageOnlyComposer(report: (error: string) => void) {
++export function installImageOnlyComposer(report: (error: string) => void, currentPeer: () => unknown) {
++  const forwarded = new WeakSet<Event>();
++  const pendingSelection = new WeakMap<HTMLInputElement, Event>();
++
++  function forward(target: EventTarget, event: Event) {
++    forwarded.add(event);
++    target.dispatchEvent(event);
++  }
++
++  function reportError(error: unknown) {
++    report(error instanceof Error ? error.message : IMAGE_ONLY);
++  }
++
+   function updateRecordingButton(button: HTMLButtonElement) {
+     if(button.matches(recordingButtonSelector)) {
+       button.dataset.previewRecordingDisabled = '';
+@@ -232,22 +316,66 @@ export function installImageOnlyComposer(report: (error: string) => void) {
+     document.addEventListener(event, guardRecording, true);
+   }
+ 
+-  document.addEventListener('click', (event) => {
++  window.addEventListener('click', (event) => {
+     if(!(event.target instanceof Element)) return;
+     const input = event.target.closest<HTMLInputElement>(fileInputSelector);
+-    if(input) input.accept = IMAGE_ACCEPT;
++    if(!input) return;
++    pendingSelection.delete(input);
++    input.removeAttribute('accept');
+   }, true);
+ 
+-  document.addEventListener('change', (event) => {
++  window.addEventListener('change', (event) => {
+     const input = event.target;
+-    if(!(input instanceof HTMLInputElement) || !input.matches(fileInputSelector)) return;
+-    if(!validateFiles(event, input.files)) return;
+-    input.value = '';
+-    input.dispatchEvent(new Event('cancel'));
++    if(forwarded.has(event) || !(input instanceof HTMLInputElement) || !input.matches(fileInputSelector)) return;
++    const files = Array.from(input.files ?? []);
++    if(!files.length) return;
++    stop(event);
++    pendingSelection.set(input, event);
++    const peer = currentPeer();
++    const popup = getCurrentNewMediaPopup();
++    const current = () => input.isConnected && pendingSelection.get(input) === event &&
++      currentPeer() === peer && getCurrentNewMediaPopup() === popup;
++    void prepareFiles(files).then((prepared) => {
++      if(!current()) return;
++      const data = new DataTransfer();
++      for(const file of prepared) data.items.add(file);
++      input.files = data.files;
++      forward(input, new Event('change', {bubbles: true}));
++    }).catch((error) => {
++      if(!current()) return;
++      input.value = '';
++      input.dispatchEvent(new Event('cancel'));
++      reportError(error);
++    });
+   }, true);
+ 
+-  document.addEventListener('paste', (event) => {
+-    validateFiles(event, event.clipboardData?.files);
++  window.addEventListener('paste', (event) => {
++    const target = event.target;
++    if(forwarded.has(event) || !(target instanceof Element)) return;
++    const editor = target.closest(composerEditorSelector);
++    if(!editor) return;
++    const clipboard = event.clipboardData;
++    const files = Array.from(clipboard?.files ?? []);
++    if(!files.length) {
++      for(const item of Array.from(clipboard?.items ?? [])) {
++        const file = item.kind === 'file' && item.getAsFile();
++        if(file) files.push(file);
++      }
++    }
++    if(!files.length) return;
++    stop(event);
++    const peer = currentPeer();
++    const popup = getCurrentNewMediaPopup();
++    const current = () => currentPeer() === peer && target.closest(composerEditorSelector) === editor &&
++      editor.contains(document.activeElement) && getCurrentNewMediaPopup() === popup;
++    void prepareFiles(files).then((prepared) => {
++      if(!current()) return;
++      const data = new DataTransfer();
++      for(const file of prepared) data.items.add(file);
++      forward(target, new ClipboardEvent('paste', {clipboardData: data, bubbles: true, cancelable: true}));
++    }).catch((error) => {
++      if(current()) reportError(error);
++    });
+   }, true);
+   document.addEventListener('drop', (event) => {
+     validateFiles(event, event.dataTransfer?.files);
+diff --git a/src/pages/localChatPreview/liveChat.ts b/src/pages/localChatPreview/liveChat.ts
+index ce213f5..f44f173 100644
+--- a/src/pages/localChatPreview/liveChat.ts
++++ b/src/pages/localChatPreview/liveChat.ts
+@@ -1245,7 +1245,6 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+     api.reportOrderHistory(true);
+     return;
+   }
+-  installImageOnlyComposer(toast);
+   if(!isH5) {
+     const style = document.createElement('style');
+     style.textContent = `
+@@ -1268,6 +1267,7 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+     Object.assign(appDialogsManager.selection, {reorderInSelection: false});
+   }
+   const {default: appImManager} = await import('@lib/appImManager');
++  installImageOnlyComposer(toast, () => appImManager.chat?.peerId);
+   const {default: appSidebarRight} = await import('@components/sidebarRight');
+   renderRevokedAlbumItem = (groupedId, message, remaining) => {
+     const {mid, peerId} = message;

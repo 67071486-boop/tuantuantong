@@ -1,0 +1,195 @@
+<!-- 复刻证据件：对标物 /Order/TradingOrderActionLogList（交易订单操作记录管理列表）的页内 <style> 段 + 处理过的 body 标记。
+     生成源：.tools/replica-draft/order-tradingorderactionloglist.json（只读 .tools/recon/<对标取数快照>/ 的离线证据，未联网取）。
+     对标原始模板：.tools/recon/<对标取数快照>/html/Order__TradingOrderActionLogList.html
+     与对标原文的差异：非标记 <script> 已删（含 IE 条件注释里的 2 个 CDN 引用）；
+     顶部 <style> 里 .layui-table-cell 等规则与下方页内 <style type="text/css"> 重复且逐字相同——
+     那是草稿把「head 样式 + 页内样式」并成一段的结果，与已交付页（如 customer-customerlist）同形，规则幂等。
+     PII 清空 / laytpl 未解析项的处置见 src/layui-island/pages/order-tradingorderactionloglist.ts 顶部注释。 -->
+<style>
+        body {
+            background-color: #fff
+        } 
+        .layadmin-pagetabs {
+            height: 40px;
+            line-height: 40px;
+            padding: 0 80px 0 40px;
+            background-color: #fafafa;
+            box-sizing: border-box;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+            border-bottom: 1px solid #1AA094;
+        }
+            .layadmin-pagetabs .layui-tab-title li.layui-this, .layadmin-pagetabs .layui-tab-title li:hover {
+                background-color: #009688;
+                color: #fff;
+            }
+    
+
+    .layui-table-cell {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 5px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        box-sizing: border-box;
+        font-size: 12px;
+    }
+
+    .lableb {
+        display: inline-block;
+        padding: 2px 4px;
+        font-size: 12px;
+        line-height: 14px;
+        color: #fff;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #999;
+        overflow: hidden;
+        border-radius: 3px;
+        margin-right: 2px;
+    }
+
+    .paySpan {
+        line-height: 40px;
+        color: #ff0000;
+        font-weight: 600
+    }
+
+    .layui-form .layui-form-item label.layui-form-label {
+        width: 120px;
+        font-family: "Microsoft YaHei";
+    }
+</style>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      
+      
+    <![endif]-->
+    
+
+
+<style type="text/css">
+    .layui-table-cell {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 5px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        box-sizing: border-box;
+        font-size: 12px;
+    }
+
+    .lableb {
+        display: inline-block;
+        padding: 2px 4px;
+        font-size: 12px;
+        line-height: 14px;
+        color: #fff;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #999;
+        overflow: hidden;
+        border-radius: 3px;
+        margin-right: 2px;
+    }
+
+    .paySpan {
+        line-height: 40px;
+        color: #ff0000;
+        font-weight: 600
+    }
+
+    .layui-form .layui-form-item label.layui-form-label {
+        width: 120px;
+        font-family: "Microsoft YaHei";
+    }
+</style>
+<!--[if lt IE 9]>
+  
+  
+<![endif]-->
+<form class="layui-form" action="">
+    <div class="" style="padding-left: 5px;padding-top:10px">
+        <div class="layui-form-pane">
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 100px">操作日期</label>
+                <div class="layui-input-inline" style="width:110px">
+                    <input type="text" name="sDate" id="sDate" lay-verify="date" placeholder="" autocomplete="off" class="layui-input" value="2026-08-20">
+                </div>
+                <div class="layui-input-inline">-</div>
+                <div class="layui-input-inline" style="width:110px">
+                    <input type="text" name="eDate" id="eDate" lay-verify="date" placeholder="" autocomplete="off" class="layui-input" value="2026-09-20">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 100px">操作动作</label>
+                <div class="layui-input-inline">
+                    <select id="actionSelect" name="actionSelect" lay-filter="">
+                        <option value="-1">全部</option>
+                        
+                        <option value="1">发单</option>
+                        <option value="2">改成问题单</option>
+                        <option value="3">改成异常单</option>
+                        <option value="4">改成已暂停</option>
+                        <option value="5">申请撤销</option>
+                        <option value="7">取消撤销</option>
+                        <option value="8">同意撤销</option>
+                        <option value="9">改价改时</option>
+                        <option value="10">验收订单</option>
+                        <option value="15">改成已退单</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 100px;padding:8px 8px">操作人员</label>
+                <div class="layui-input-inline" style="">
+                    <select name="recUser" id="recUser" lay-search="" xm-select="recUser" xm-select-radio xm-select-skin="default" xm-select-height="36px" xm-select-search="" xm-select-search-type="title">
+                        <option value="">选择或输入</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 100px">单号搜索</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="key1" id="key1" lay-verify="" placeholder="系统单号/交易单号" autocomplete="off" class="layui-input" value="">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="">
+                    <button class="layui-btn layui-btn-normal" lay-submit="" type="button" lay-filter="seachBtn" style="width: 100px">搜索</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-row layui-col-space10">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md9 layui-col-lg9">
+            <fieldset class="layui-elem-field">
+                <legend>操作明细</legend>
+                <div class="layui-field-box">
+                    <table class="layui-hide" id="tableList" lay-filter="tableList"></table>
+                    <script type="text/html" id="toolbarDemo">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-xs" lay-event="refresh" type="button" title="刷新当前数据"><i class="layui-icon">&#xe669;</i>刷新数据</button>
+                        </div>
+                    </script>
+                </div>
+            </fieldset>          
+        </div>
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md3 layui-col-lg3">
+            <fieldset class="layui-elem-field">
+                <legend>操作统计</legend>
+                <div class="layui-field-box">
+                    <table class="layui-hide" id="tableList2" lay-filter="tableList2"></table>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</form>
+
+
+
+

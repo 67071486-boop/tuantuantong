@@ -1,0 +1,145 @@
+diff --git a/src/components/chat/bubbles.ts b/src/components/chat/bubbles.ts
+index da224fc..84e7b14 100644
+--- a/src/components/chat/bubbles.ts
++++ b/src/components/chat/bubbles.ts
+@@ -10583,7 +10583,18 @@ export default class ChatBubbles {
+       (!!context.messageMessage || !!richMessagePage || !!messageWithMessage.pFlags.currentlyTyping) &&
+       context.messageMedia?._ !== 'messageMediaPoll' &&
+       context.messageMedia?._ !== 'messageMediaToDo';
+-    if(canUseSolidMessageBody) {
++    const systemOrderNo = 'ttSystemOrderNo' in message ? message.ttSystemOrderNo : undefined;
++    if(needToSetHTML && typeof systemOrderNo === 'string' && /^\d{20}$/.test(systemOrderNo)) {
++      const summary = document.createElement('div');
++      summary.className = 'preview-system-notice-text';
++      summary.textContent = context.messageMessage;
++      const order = document.createElement('button');
++      order.type = 'button';
++      order.className = 'btn-primary btn-transparent preview-system-order-link';
++      order.dataset.previewOrderNo = systemOrderNo;
++      order.textContent = '查看订单';
++      messageDiv.append(summary, order);
++    } else if(canUseSolidMessageBody) {
+       // * the text runs by its own direction, as the legacy path's `setInnerHTML` makes it
+       setDirection(messageDiv);
+       const element = document.createElement('div');
+diff --git a/src/pages/localChatPreview/conversationLabels.css b/src/pages/localChatPreview/conversationLabels.css
+index 3d95052..5237ce8 100644
+--- a/src/pages/localChatPreview/conversationLabels.css
++++ b/src/pages/localChatPreview/conversationLabels.css
+@@ -26,7 +26,18 @@
+   color: var(--primary-color);
+ }
+
+-.preview-order-readonly .chat-input { display: none !important; }
++.preview-order-readonly .chat-input,
++.preview-system-readonly .chat-input { display: none !important; }
++.preview-system-notice-text {
++  white-space: pre-wrap;
++  overflow-wrap: anywhere;
++}
++.preview-system-order-link {
++  display: block;
++  margin-block: .375rem;
++  padding: .375rem .625rem;
++  width: auto;
++}
+ .preview-order-archive {
+   position: absolute;
+   inset-inline: 0;
+diff --git a/src/pages/localChatPreview/conversationLabels.ts b/src/pages/localChatPreview/conversationLabels.ts
+index 91426f8..69e0aa9 100644
+--- a/src/pages/localChatPreview/conversationLabels.ts
++++ b/src/pages/localChatPreview/conversationLabels.ts
+@@ -57,6 +57,7 @@ export function installConversationLabels(
+       const number = conversations.get(chat.peerId);
+       const order = number?.kind === 'order' ? number : undefined;
+       chat.container.classList.toggle('preview-order-readonly', !!order && order.can_send === false);
++      chat.container.classList.toggle('preview-system-readonly', number?.kind === 'system');
+       let archive = chat.container.querySelector<HTMLElement>('.preview-order-archive');
+       if(!order?.archived) archive?.remove();
+       else {
+@@ -102,11 +103,12 @@ export function installConversationLabels(
+
+   document.addEventListener('click', (event) => {
+     if(!(event.target instanceof Element)) return;
+-    const control = event.target.closest<HTMLButtonElement>('.preview-order-link');
+-    if(!control?.dataset.previewOrderNo) return;
++    const control = event.target.closest<HTMLButtonElement>('.preview-order-link, .preview-system-order-link');
++    const number = control?.dataset.previewOrderNo;
++    if(!number || !/^\d{20}$/.test(number)) return;
+     event.preventDefault();
+     event.stopImmediatePropagation();
+-    openOrder(control.dataset.previewOrderNo);
++    openOrder(number);
+   }, true);
+
+   new MutationObserver(refresh).observe(sidebar, {childList: true, subtree: true});
+diff --git a/src/pages/localChatPreview/liveChat.ts b/src/pages/localChatPreview/liveChat.ts
+index 6c1991c..da76701 100644
+--- a/src/pages/localChatPreview/liveChat.ts
++++ b/src/pages/localChatPreview/liveChat.ts
+@@ -350,6 +350,8 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+       },
+       date: Math.floor(Date.parse(raw.created_at) / 1000),
+       message: raw.revoked ? '消息已撤回' : raw.text,
++      ...(!raw.revoked && conversation.kind === 'system' && /^\d{20}$/.test(raw.system_order_no || '') ?
++        {ttSystemOrderNo: raw.system_order_no} : {}),
+       entities: getMentionEntities(raw, peerId),
+       media: !raw.revoked && raw.image ? chatPhoto(raw, raw.image) : undefined,
+       grouped_id: !raw.revoked && raw.image && raw.album_id ? `tt-album:${conversation.id}:${raw.album_id}` : undefined,
+@@ -388,7 +390,7 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+       conversation.peer.id.toPeerId(false);
+     const previous = conversations.get(peerId);
+     if(conversation.kind === 'order') saveGroup(peerId, conversation);
+-    else saveUser(conversation.peer);
++    else saveUser(conversation.peer, false, conversation.kind !== 'system');
+     peerByConversation.set(conversation.id, peerId);
+     conversations.set(peerId, conversation);
+     refreshOrderMediaControls();
+@@ -925,7 +927,7 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+   }
+
+   async function sendText(options: SendMessage & {text: string; clearDraft?: boolean; threadId?: number; monoforumThreadId?: PeerId}) {
+-    if(!options.text?.trim()) return;
++    if(!options.text?.trim() || conversations.get(options.peerId)?.kind === 'system') return;
+     if(isH5 && options.clearDraft) h5Drafts.delete(draftKey(options.peerId, options.monoforumThreadId || options.threadId));
+     try {
+       await sendBody(options.peerId, messageBody(options, options.text));
+@@ -938,7 +940,7 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+   function sendGrouped(options: SendMessage & {caption?: string; sendFileDetails: {file: unknown; width?: number; height?: number}[]}) {
+     imageSends = imageSends.then(async() => {
+       const files = options.sendFileDetails;
+-      if(!files.length) return;
++      if(!files.length || conversations.get(options.peerId)?.kind === 'system') return;
+       const body = messageBody(options, options.caption ?? '');
+       const images = files.length > 1 ?
+         {images: await encodeChatAlbum(files.map(({file}) => file))} :
+@@ -1130,6 +1132,7 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+         isPhotoFilter({_: filter} as MessagesFilter) ? mids.map((mid) => apiManagerProxy.getMessageFromStorage(storageKey, mid))
+         .filter((message) => message?._ === 'message' && message.media?._ === 'messageMediaPhoto').slice(0, limit) : [],
+       canSendToPeer: (peerId: PeerId) => !readOnly && peerId !== myId &&
++        conversations.get(peerId)?.kind !== 'system' &&
+         (conversations.get(peerId)?.kind !== 'order' || (conversations.get(peerId) as OrderConversation).can_send !== false) &&
+         (conversations.has(peerId) || (!workerDirectoryOnly && contactsByPeer.has(peerId))),
+       getEphemeralHistory: () => [],
+diff --git a/src/pages/localChatPreview/liveTransport.ts b/src/pages/localChatPreview/liveTransport.ts
+index 20331a6..b3ece87 100644
+--- a/src/pages/localChatPreview/liveTransport.ts
++++ b/src/pages/localChatPreview/liveTransport.ts
+@@ -9,6 +9,7 @@ export type ChatMessage = {
+   seq: number;
+   conversation_id: number;
+   sender_id: number;
++  system_order_no?: string;
+   text: string;
+   created_at: string;
+   revoked: boolean;
+@@ -65,7 +66,7 @@ export type OrderConversation = ConversationSummary & {
+ };
+
+ export type OrderHistoryActionState = {busy: boolean; error?: string};
+-export type Conversation = OrderConversation | (ConversationSummary & {kind?: 'direct'; peer: Contact});
++export type Conversation = OrderConversation | (ConversationSummary & {kind?: 'direct' | 'system'; peer: Contact});
+
+ type History = {messages: ChatMessage[]; has_more: boolean; has_newer: boolean};
+ type SearchResults = {messages: ChatMessage[]; count: number; has_more: boolean};

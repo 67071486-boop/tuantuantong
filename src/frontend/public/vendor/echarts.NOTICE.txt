@@ -1,0 +1,13 @@
+ECharts 3.6.2
+=============
+
+本目录的 `echarts.min.js` 是 Apache ECharts 3.6.2 的原样副本（629 KB），
+来源 = 对标物鸡蛋铺的离线产物 `/JS2019/echarts.min.js`（`.tools/recon/suqing1/assets/JS2019/echarts.min.js`，
+不进 git），2026-10-17 由 D-0247 线复制进本仓库。
+
+- 项目主页：https://echarts.apache.org/
+- 许可证：Apache License 2.0（https://www.apache.org/licenses/LICENSE-2.0）
+- 版权：Copyright 2017-2021 The Apache Software Foundation / Apache ECharts contributors
+
+⛔ 不要为了让 `git status` 安静而删掉本文件；升级 ECharts 时同一次替换
+`echarts.min.js`、更新本文件里的版本号，并回归「经营报表」页的 4 张图。

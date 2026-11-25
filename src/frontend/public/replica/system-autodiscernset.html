@@ -1,0 +1,115 @@
+<!-- 复刻证据件：对标物 /System/autodiscernset 的页内 <style> 段 + 处理过的 body 标记。
+     生成源：.tools/replica-draft/system-autodiscernset.json（只读 .tools/recon/<对标取数快照>/ 的离线证据）。
+     与对标原文的差异：PII 已清空（见交付报告）、laytpl 表达式已解、非标记 script 元素已删。 -->
+<style>
+
+        body {
+            background-color: #fff
+        } 
+        .layadmin-pagetabs {
+            height: 40px;
+            line-height: 40px;
+            padding: 0 80px 0 40px;
+            background-color: #fafafa;
+            box-sizing: border-box;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+            border-bottom: 1px solid #1AA094;
+        }
+            .layadmin-pagetabs .layui-tab-title li.layui-this, .layadmin-pagetabs .layui-tab-title li:hover {
+                background-color: #009688;
+                color: #fff;
+            }
+    
+
+    .layui-table-cell {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 5px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        box-sizing: border-box;
+        font-size: 12px;
+    }
+
+    .lableb {
+        display: inline-block;
+        padding: 2px 4px;
+        font-size: 12px;
+        line-height: 14px;
+        color: #fff;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #999;
+        overflow: hidden;
+        border-radius: 3px;
+        margin-right: 2px;
+    }
+</style>
+
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      
+      
+    <![endif]-->
+    
+
+
+<style type="text/css">
+    .layui-table-cell {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 5px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        box-sizing: border-box;
+        font-size: 12px;
+    }
+
+    .lableb {
+        display: inline-block;
+        padding: 2px 4px;
+        font-size: 12px;
+        line-height: 14px;
+        color: #fff;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #999;
+        overflow: hidden;
+        border-radius: 3px;
+        margin-right: 2px;
+    }
+</style>
+<form class="layui-form" action="" lay-filter="dis"> 
+    <div class="" style="">
+        <table class="layui-hide" id="tableList" lay-filter="tableList"></table>
+        <script type="text/html" id="baroperating">
+            <a class="layui-btn layui-btn-xs layui-btn-warm" style="" lay-event="submitEdit" title="修改关键词"><i class="layui-icon layui-icon-edit"></i>修改关键词</a>
+        </script>
+    </div>
+
+    <div class="change" style="display:none">
+        <div class="layui-form-pane" style="margin-top:10px;margin-left:10px;margin-right:10px">
+            <div class="layui-form-item">
+                <label class="layui-form-label">编辑关键词</label>
+                <div class="layui-input-block">
+                    <input type="text" name="key" id="key" lay-verify="" autocomplete="off" placeholder="请设定能识别订单内容中的项目名称关键词，例如：账号 密码，每个关键词之间用逗号或空格分隔" maxlength="25" class="layui-input layui-input-shadow boxshadow-success" value="">
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align:center;align-items:center">
+            <div class="layui-input-inline">
+                <button class="layui-btn layui-btn-normal layui-btn-lg w-lg" id="saveBtn" lay-submit="" type="button" lay-filter="savebtn" style="">保存设定</button>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="disID" name="disID" value="" />
+</form>  
+
+
+
+

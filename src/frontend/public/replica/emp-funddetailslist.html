@@ -1,0 +1,164 @@
+<!-- 复刻证据件：对标物 `/Emp/funddetailslist`（鸡蛋铺资金明细与提现）的页内 `<style>` 原文 + 处理过的 body 标记。
+     来源：`.tools/recon/<对标取数快照>/html/Emp__funddetailslist.html`（离线证据）
+     —— head `<style>` L24-41、body `<style>` L52-125、`<form>` L126-189，逐字。
+     与对标原文的差异：删掉 2 段 IE 条件注释与页尾非标记 `<script src>`；
+     🚫 **删掉 L174 的 `<input type="hidden" id="jdpDesc" value="…">`** —— 那是对标服务端下发的
+     **Base64 充值令牌（凭据）**，按 PII 红线不入库（草稿 `dropped` 已登记）。
+     `#amtMsg`（鸡蛋铺官方账户 + 余额文案，租户财务数据）在对标服务端渲染时**本来就是空**，
+     我们也不调 `/EmpAjax/GetBalanceAndFreeAmount`，故保持为空。
+     PII：无（表格为服务端空表；租户账号/余额/令牌均已清空或删除）。 -->
+    <style>
+        body {
+            background-color: #fff
+        } 
+        .layadmin-pagetabs {
+            height: 40px;
+            line-height: 40px;
+            padding: 0 80px 0 40px;
+            background-color: #fafafa;
+            box-sizing: border-box;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+            border-bottom: 1px solid #1AA094;
+        }
+            .layadmin-pagetabs .layui-tab-title li.layui-this, .layadmin-pagetabs .layui-tab-title li:hover {
+                background-color: #009688;
+                color: #fff;
+            }
+    </style>
+<style type="text/css">
+    .layui-table-cell {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 4px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        box-sizing: border-box;
+        font-size: 12px;
+    }
+
+    .layui-table td, .layui-table th {
+        padding: 6px 6px;
+        min-height: 20px;
+        line-height: 20px;
+        border: 1px solid #e2e2e2;
+    }
+
+    .lableb {
+        display: inline-block;
+        padding: 2px 4px;
+        font-size: 12px;
+        line-height: 14px;
+        color: #fff;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #999;
+        overflow: hidden;
+        border-radius: 3px;
+        margin-right: 2px;
+    }
+    /*单元格宽度不够时不需要显示下拉*/
+    .layui-table-grid-down {
+        display: none;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .text-sm {
+        font-size: 14px;
+        line-height: 22px;
+    }
+
+    .text-muted {
+        color: #afb9c3;
+    }
+
+    .block {
+        display: block;
+    }
+
+    .layui-rate {
+        padding: 0px 5px 0px 0;
+        font-size: 0;
+    }
+
+    .layui-form-pane .layui-form-label {
+        width: 110px;
+        padding: 8px 8px;
+        height: 38px;
+        line-height: 20px;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: 2px 0px 0px 2px;
+        text-align: center;
+        background-color: rgb(251, 251, 251);
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+</style>
+<form class="layui-form" action="" lay-filter="fm1"> 
+    <blockquote class="layui-elem-quote">
+    <div class="layui-form-item"><div style="color:#ff6a00;font-weight:600;margin-bottom:10px" id="amtMsg"></div>
+        
+        <button class="layui-btn layui-btn-warm excash"  title="去提现">去提现</button>
+    </div>
+    </blockquote>
+    
+    <div class="" style="padding-left: 5px;padding-top:10px">
+        <div class="layui-form-pane">
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 80px">发生时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="sDate" id="sDate" lay-verify="date" placeholder="" autocomplete="off" class="layui-input" value="2026-07-20">
+                </div>
+                <div class="layui-input-inline">-</div>
+                <div class="layui-input-inline">
+                    <input type="text" name="eDate" id="eDate" lay-verify="date" placeholder="" autocomplete="off" class="layui-input" value="2026-09-20">
+                </div>
+            </div>
+
+
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 80px;">资金方向</label>
+                <div class="layui-input-inline">
+                    <select name="fundType" id="fundType" lay-filter="">
+                        <option value="0">全部</option>
+                        <option value="10">出账</option>
+                        <option value="20">入账</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 80px">搜索</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="key" id="key" style="width:250px" lay-verify="" placeholder="订单号/支付流水号/备注关键字" autocomplete="off" class="layui-input" value="">
+                </div>
+            </div>
+
+
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="">
+                    <button class="layui-btn layui-btn-normal" lay-submit="" type="button" lay-filter="seachBtn" style="width: 80px">搜索</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="" style="">
+        <table class="layui-hide" id="tableList" lay-filter="tableList"></table>
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="refresh" type="button" title="刷新当前数据"><i class="layui-icon">&#xe669;</i>刷新列表</button>
+            </div>
+            <div style="color:#ff6a00" id="total"></div>
+        </script>
+    </div>
+
+</form>

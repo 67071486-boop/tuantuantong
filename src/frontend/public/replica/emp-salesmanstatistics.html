@@ -1,0 +1,199 @@
+<!-- 复刻证据件：对标物 /Emp/salesmanstatistics（客服销售和发单统计明细）的页内 <style> 段 + 处理过的 body 标记。
+     生成源：.tools/recon/<对标取数快照>/html/Emp__salesmanstatistics.html + .tools/replica-draft/emp-salesmanstatistics.json。
+     与对标原文的差异：
+       1. 非标记 <script> 已删（保留 2 个 `type="text/html"` 工具栏模板）；
+       2. laytpl：本页 HTML **无** `{{ }}`（中文硬编码在 salesmanstatistics.js 里）；
+       3. PII：静态标记里没有租户数据（金额/人员都在接口返回里），无需清空。
+     ⚠️ 两个工具栏模板里各有 `<div id="total">`（**重复 id**，对标自身缺陷）——只渲染第一张表，
+        所以运行时只有 1 个 `#total` 元素（另一个在 `<script type="text/html">` 里，不是元素）。
+     ⚠️ `#tableList2`（第二张表，20 列）的 `table.render` 写在 `loadLevelData()` 里，
+        只有点 `.layui-badge` 才会执行 ⇒ **初始态不渲染**；页内 4 个函数
+        （`viewOrderDetails`/`exportEmp`/`refrshTaobaoSta`/`settSta`）与 `reloadOrderList2`
+        在对标里同样不可达（死代码），**不复刻**。 -->
+<style>
+        body {
+            background-color: #fff
+        } 
+        .layadmin-pagetabs {
+            height: 40px;
+            line-height: 40px;
+            padding: 0 80px 0 40px;
+            background-color: #fafafa;
+            box-sizing: border-box;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+            border-bottom: 1px solid #1AA094;
+        }
+            .layadmin-pagetabs .layui-tab-title li.layui-this, .layadmin-pagetabs .layui-tab-title li:hover {
+                background-color: #009688;
+                color: #fff;
+            }
+    
+
+    .layui-table-cell {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 5px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        box-sizing: border-box;
+        font-size: 12px;
+    }
+
+    .lableb {
+        display: inline-block;
+        padding: 2px 4px;
+        font-size: 12px;
+        line-height: 14px;
+        color: #fff;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #999;
+        overflow: hidden;
+        border-radius: 3px;
+        margin-right: 2px;
+    }
+</style>
+
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      
+      
+    <![endif]-->
+    
+ 
+<style type="text/css">
+    .layui-table-cell {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 5px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        box-sizing: border-box;
+        font-size: 12px;
+    }
+
+    .lableb {
+        display: inline-block;
+        padding: 2px 4px;
+        font-size: 12px;
+        line-height: 14px;
+        color: #fff;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #999;
+        overflow: hidden;
+        border-radius: 3px;
+        margin-right: 2px;
+    }
+</style>
+<form class="layui-form" action="" style="background: #f2f2f2;" lay-filter="form">
+    <div class="" style="padding-left: 5px;padding-top:10px;margin-bottom:10px">
+        <div class="layui-form-pane">
+            <div class="layui-inline">
+                <label class="layui-form-label" style="">选择游戏</label>
+                <div class="layui-input-inline">
+                    <select id="gameName" name="gameName" lay-filter="selectGame">
+                        <option value="0" selected="selected">全部游戏</option>
+                                    <option value="21714">全部游戏</option>
+                                    <option value="21708">崩坏：星穹铁道</option>
+                                    <option value="21701">原神</option>
+                                    <option value="21703">三角洲行动</option>
+                                    <option value="21704">鸣潮</option>
+                                    <option value="21706">绝区零</option>
+                                    <option value="21707">无限暖暖</option>
+                                    <option value="21722">遗忘之海</option>
+                                    <option value="21721">异环</option>
+                                    <option value="21720">王者荣耀世界</option>
+                                    <option value="21719">洛克王国：世界</option>
+                                    <option value="21718">逆战：未来</option>
+                                    <option value="21717">明日方舟：终末地</option>
+                                    <option value="21716">燕云十六声</option>
+
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="width:90px">
+                    <select id="dateType" name="dateType" lay-filter="dateType">
+                        <option value="10">录单时间</option>
+                        <option value="20">完单时间</option>
+                        <option value="30">发单时间</option>
+                    </select>
+                </div>
+                <div class="layui-input-inline">
+                    <input type="text" name="sDate" id="sDate" lay-verify="datetime" placeholder="" autocomplete="off" class="layui-input" value="2026-08-20 00:00:00">
+                </div>
+                <div class="layui-input-inline">-</div>
+                <div class="layui-input-inline">
+                    <input type="text" name="eDate" id="eDate" lay-verify="datetime" placeholder="" autocomplete="off" class="layui-input" value="2026-09-20 23:59:59">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="width:90px">
+                    <select id="customerType" name="customerType" lay-filter="customerType">
+                        <option value="0">销售客服</option>
+                        <option value="10">发单人</option>
+                        <option value="20">录单人</option>
+                    </select>
+                </div>
+                <div class="layui-input-inline">
+                    <select name="inputOrderKefu" id="inputOrderKefu" xm-select="inputOrderKefu" xm-select-skin="default" xm-select-height="36px" class="" title=""></select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">代练项目</label>
+                <div class="layui-input-inline" style="">
+                    <select name="projectSelect" id="projectSelect" xm-select-radio lay-search="" xm-select-create xm-select="projectSelect" xm-select-skin="default" xm-select-height="36px" xm-select-search="" xm-select-search-type="title">
+                        <option value="">选择或输入后再选择</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="">
+                    <button class="layui-btn layui-btn-normal" lay-submit="" type="button" lay-filter="seachBtn" style="width: 80px">搜索</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-row">
+        <div class="layui-col-lg12 layui-col-md12 layui-col-sm12 layui-col-xs12">
+            <section class="layui-card">
+                <div class="layui-card-header">
+                    接发单统计明细
+                </div>
+                <div class="layui-card-body">
+                    <table class="layui-hide" id="tableList" lay-filter="tableList"></table>
+                    <script type="text/html" id="toolbarDemo">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-xs" lay-event="refresh" type="button" title="刷新当前数据"><i class="layui-icon">&#xe669;</i>刷新数据</button>
+                        </div>
+                        <div style="color:#ff6a00" id="total"></div>
+                    </script> 
+                </div>
+            </section>
+        </div>
+        <div class="layui-col-lg12 layui-col-md12 layui-col-sm12 layui-col-xs12">
+            <section class="layui-card">
+                <div class="layui-card-header v2">
+                    旗下二级人员接单统计
+                </div>
+                <div class="layui-card-body">
+                    <table class="layui-hide" id="tableList2" lay-filter="tableList2"></table>
+                    <script type="text/html" id="toolbarDemo2">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-xs" lay-event="refresh" type="button" title="刷新当前数据"><i class="layui-icon">&#xe669;</i>刷新数据</button>
+                        </div>
+                        <div style="color:#ff6a00" id="total"></div>
+                    </script>
+                </div>
+            </section>
+        </div>
+    </div>
+</form>
+
+

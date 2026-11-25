@@ -1,0 +1,128 @@
+{
+ "meta": {
+  "source": "live-probe",
+  "measured_at": "2026-09-28",
+  "note": "逐端点的**分页口径**（真机实测）。字段含义：`page_param`/`limit_param` 是翻页参数名；`start_page` 是首页页号；`limit_effective=false` 表示服务端**忽略**每页条数、固定回 `page_size` 行；`count_key` 是业务壳里**总行数**的键，`total_key` 是聚合 dict（各状态计数与金额合计）的键。⚠️ 这是**描述性元数据**：`client.iter_all()` 目前不会自动按它翻页（默认 `page_size=100` 撞上「每页固定 20」的端点会在第一页就判「不满页」而提前结束）——要用 `iter_all` 就显式传 `page_size=<page_size>`。只登记**实测过**的端点；没登记的端点**不写 `pagination` 键**。同批实测的筛选口径：`gameName` 需传**完整游戏名**，简称/别名不匹配、返回 0 行（不登记具体游戏名——那是租户侧目录数据）。证据与过程见团团通仓 docs/JIDANPU-API.md 与 docs/specs/2026-09-25-jidanpu-hall-sync-design.md。",
+  "probe_added": 16,
+  "probe_measured_at": "2026-10-07",
+  "probe_skipped": 15
+ },
+ "endpoints": {
+  "/OrderAjax/GetMyOrderList": {
+   "page_param": "page",
+   "start_page": 1,
+   "limit_param": "limit",
+   "limit_effective": false,
+   "page_size": 20,
+   "count_key": "count",
+   "total_key": "total"
+  },
+  "/OrderAjax/GetInternalOrderGrabbingList": {
+   "page_param": "page",
+   "start_page": 1,
+   "limit_param": "limit",
+   "limit_effective": false,
+   "page_size": 20,
+   "count_key": "count",
+   "total_key": "total"
+  },
+  "/CustomerAjax/GetIntervalLevel": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": false
+  },
+  "/EmpAjax/GetSalesmanStatistics": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": false,
+   "count_key": "count"
+  },
+  "/GameAjax/GetGameServerMangeList": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": false,
+   "count_key": "count"
+  },
+  "/OrderAjax/GetOrderList": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": true,
+   "start_page": 1,
+   "count_key": "count"
+  },
+  "/OrderAjax/GetOrderRecycleList": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": true,
+   "start_page": 1,
+   "count_key": "count"
+  },
+  "/SmsAjax/GetSmsSettingMangeList": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": false,
+   "count_key": "count"
+  },
+  "/SystemAjax/GetAllRoleJobList": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": false,
+   "count_key": "count"
+  },
+  "/SystemAjax/GetAutoDiscernSetList": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": false,
+   "count_key": "count"
+  },
+  "/SystemAjax/GetOrderSoureMangeList": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": false,
+   "count_key": "count"
+  },
+  "/SystemAjax/GetPlatformPushOrderConfigList": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": false,
+   "count_key": "count"
+  },
+  "/SystemAjax/GetUserGroupList": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": false,
+   "count_key": "count"
+  },
+  "/SystemAjax/GetVerifiAddOrderKeyStrByGameList": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": false,
+   "count_key": "count"
+  },
+  "/UserAjax/GetAllUserTableByGameName": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": true,
+   "count_key": "count"
+  },
+  "/UserAjax/GetUserCheckInList": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": true,
+   "start_page": 1,
+   "count_key": "count"
+  },
+  "/UserAjax/GetUserCheckInStaticList": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": true,
+   "start_page": 1,
+   "count_key": "count"
+  },
+  "/UserAjax/GetZpRootUsers": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": false
+  }
+ }
+}

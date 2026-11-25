@@ -1,0 +1,240 @@
+<!-- 复刻证据件：对标物 /Order/insiderecorderlist（内部接单大厅）的页内 <style> 段 + 处理过的 body 标记。
+     生成源：.tools/replica-draft/order-insiderecorderlist.json（只读 .tools/recon/<对标取数快照>/ 的离线证据，绝不联网取）。
+     与对标原文的差异：非标记 <script> 已删（含 IE 条件注释里的 CDN 引用）；已解 1 处 laytpl 逻辑块（const i18n = layui.i18n;）与全部
+     i18n.$t(…) 表达式（中文取自 assets/JS2019/Order/insiderecorderlist.js 的 i18nData zh-CN 字典）；
+     去掉了 <div id="root"> / <template id="template"> 外壳（理由同 order-myorderlist.html 的注释）。
+     该页 HTML 里没有 #toolbarDemo 模板（对标自己的悬空引用，渲染结果就是「无工具栏按钮」），故本件也没有。
+     PII/凭据：可见 #total 里的 2 处租户名 → 「—」（多租户数据，绝不入库）；
+     <input id="company"> 的租户名置空；<input id="serverTime"> 的服务端渲染时间戳置空（运行期值）；
+     <input name="__RequestVerificationToken"> 的真实 CSRF token 置空（凭据，绝不入库）。 -->
+<style>
+        body {
+            background-color: #fff
+        } 
+        .layadmin-pagetabs {
+            height: 40px;
+            line-height: 40px;
+            padding: 0 80px 0 40px;
+            background-color: #fafafa;
+            box-sizing: border-box;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+            border-bottom: 1px solid #1AA094;
+        }
+            .layadmin-pagetabs .layui-tab-title li.layui-this, .layadmin-pagetabs .layui-tab-title li:hover {
+                background-color: #009688;
+                color: #fff;
+            }
+    
+
+    .layui-table-cell {
+        height: 45px;
+        line-height: 45px;
+        padding: 0 5px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        box-sizing: border-box;
+        font-size: 12px;
+    }
+
+    .layui-table th {
+        padding: 6px 6px;
+        min-height: 22px;
+        line-height: 22px;
+        border: 1px solid #e2e2e2;
+        font-size: 14px;
+    }
+
+    .layui-table td {
+        padding: 6px 6px;
+        min-height: 30px;
+        line-height: 30px;
+        border: 1px solid #e2e2e2;
+        font-size: 13px;
+    }
+
+    .lableb {
+        display: inline-block;
+        padding: 2px 4px;
+        font-size: 14px;
+        line-height: 14px;
+        color: #fff;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #999;
+        overflow: hidden;
+        border-radius: 3px;
+        margin-right: 2px;
+    }
+</style>
+<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      
+      
+    <![endif]-->
+    
+
+
+
+
+
+
+<style type="text/css">
+    .layui-table-cell {
+        height: 45px;
+        line-height: 45px;
+        padding: 0 5px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        box-sizing: border-box;
+        font-size: 12px;
+    }
+
+    .layui-table th {
+        padding: 6px 6px;
+        min-height: 22px;
+        line-height: 22px;
+        border: 1px solid #e2e2e2;
+        font-size: 14px;
+    }
+
+    .layui-table td {
+        padding: 6px 6px;
+        min-height: 30px;
+        line-height: 30px;
+        border: 1px solid #e2e2e2;
+        font-size: 13px;
+    }
+
+    .lableb {
+        display: inline-block;
+        padding: 2px 4px;
+        font-size: 14px;
+        line-height: 14px;
+        color: #fff;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #999;
+        overflow: hidden;
+        border-radius: 3px;
+        margin-right: 2px;
+    }
+</style>
+
+        
+        <div id="LAY_app">
+            <form class="layui-form" action="" lay-filter="fm">
+                <div class="" style="padding-left: 5px;padding-top:10px">
+                    <div class="layui-form-pane">
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 80px">选择游戏</label>
+                            <div class="layui-input-inline" style="width:100px">
+                                <select id="gameName" name="gameName" lay-filter="selectGame">
+                                                <option value="崩坏：星穹铁道" selected=&#39;selected&#39;>崩坏：星穹铁道</option>
+                                                <option value="原神" >原神</option>
+                                                <option value="三角洲行动" >三角洲行动</option>
+                                                <option value="鸣潮" >鸣潮</option>
+                                                <option value="绝区零" >绝区零</option>
+                                                <option value="无限暖暖" >无限暖暖</option>
+                                                <option value="遗忘之海" >遗忘之海</option>
+                                                <option value="异环" >异环</option>
+                                                <option value="王者荣耀世界" >王者荣耀世界</option>
+                                                <option value="洛克王国：世界" >洛克王国：世界</option>
+                                                <option value="逆战：未来" >逆战：未来</option>
+                                                <option value="明日方舟：终末地" >明日方舟：终末地</option>
+                                                <option value="燕云十六声" >燕云十六声</option>
+
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 90px;padding:8px 10px">服务区/平台</label>
+                            <div class="layui-input-inline" style="width:160px">
+                                <select name="gameArea" id="gameArea" xm-select-radio xm-select-create lay-search="" xm-select="gameArea" xm-select-skin="default" xm-select-height="36px" xm-select-search="" xm-select-search-type="title">
+                                    <option value="">请选择或输入</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline layui-hide">
+                            <label class="layui-form-label" style="width: 80px">服务器</label>
+                            <div class="layui-input-inline" style="width:140px">
+                                <select name="gameServer" id="gameServer" xm-select-radio xm-select-create lay-search="" xm-select="gameServer" xm-select-skin="default" xm-select-height="36px" xm-select-search="" xm-select-search-type="title">
+                                    <option value="">请选择或输入</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline layui-hide">
+                            <label class="layui-form-label" style="width: 80px">代练项目</label>
+                            <div class="layui-input-inline" style="width:200px">
+                                <select name="dlProject" id="dlProject" xm-select-radio lay-search="" xm-select-create xm-select="dlProject" xm-select-skin="default" xm-select-height="36px" xm-select-search="" xm-select-search-type="title">
+                                    <option value="">请选择或输入</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline layui-hide">
+                            <label class="layui-form-label" style="width: 80px">订单类型</label>
+                            <div class="layui-input-inline" style="width: 120px">
+                                <select id="bussType" name="bussType">
+                                    <option value="0">全部</option>
+                                    <option value="1">代练订单</option>
+                                    <option value="2">陪玩订单</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 80px">搜索</label>
+                            <div class="layui-input-inline" style="width: 180px;">
+                                <input type="text" name="key1" id="key1" lay-verify="" placeholder="订单号/角色名" autocomplete="off" class="layui-input" value="">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 80px">项目</label>
+                            <div class="layui-input-inline" style="width: 180px;">
+                                <input type="text" name="project" id="project" lay-verify="" placeholder="代练/陪玩项目" autocomplete="off" class="layui-input" value="">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline" style="">
+                                <button class="layui-btn layui-btn-normal sechbtn" lay-submit="" type="button" lay-filter="seachBtn" style="width: 80px">搜索</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="" style="">
+                    <div class="" style="margin-top:12px;margin-left:10px">
+                        <a class="layui-btn layui-btn-xs layui-btn-danger refresh" title="刷新当前数据">刷新列表</a>
+                        <a class="layui-btn layui-btn-xs layui-btn-normal" target="_blank" href="https://publicfile-1302227758.cos.ap-shanghai.myqcloud.com/video/%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E5%86%85%E9%83%A8%E6%8A%A2%E5%8D%95%E6%96%B0%E5%8D%95%E5%8D%B3%E6%97%B6%E6%8F%90%E9%86%92.mp4" lay-tips="当这里有新订单时，若您需要第一时间接收新单提醒，并且快速抢单，可以点击这里查看">了解如何开通有新单提醒和快速抢单点我</a>
+                    </div>
+                    <div style="color: #ff6a00; font-size: 14px; margin-top: 10px; margin-left: 10px" id="total">
+                        本系统为—内部订单管理系统，并非交易平台，不提供任何担保服务，所有订单请自行与—处理结算问题。当前共有0笔订单等待接单，总金额0元
+                    </div>
+                    
+                    <div class="" style="">
+                        <table class="layui-hide" id="tableList" lay-filter="tableList"></table>
+                    </div>
+                    
+                </div>
+
+                <input type="hidden" id="serverTime" value="" />
+                <input type="hidden" id="tableCount" value="0" />
+                <input type="hidden" id="currentPage" value="0" />
+                <input type="hidden" id="errmsg" value="" />
+                <input type="hidden" id="cgameArea" value="" />
+                <input type="hidden" id="cgameServer" value="" />
+                <input type="hidden" id="cproJect" value="" />
+                <input type="hidden" id="company" value="" />
+            </form>
+
+        </div>
+    
+
+<input name="__RequestVerificationToken" type="hidden" value="" />

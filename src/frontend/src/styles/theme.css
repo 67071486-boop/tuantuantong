@@ -1,0 +1,124 @@
+/* 视觉主题 token。**唯一出处**：docs/FRONTEND-THEME.md
+ * 证据等级与每个值的来源见该规范：§1.1 是三级标注（实测 / 读码 / 推断），
+ * §2.1 另有两条该三级之外的来源标注——「业务方」「实现细节」，此处不再复制理由。 */
+
+:root {
+  /* —— 语义 token（--tt-*）—— 规范 §2.1 —— */
+  --tt-color-primary: #16baaa;
+  --tt-color-primary-active: #16b777;
+  --tt-color-danger: #ff5722;
+  /* 对标物「游戏维护」三页名称列的链接蓝（layui 默认链接色 #1E9FFF，读码，决策 D-0023）。
+   * 加在这里而不是写字面量：颜色只能有 token 一个出处（AGENTS §5）。 */
+  --tt-color-link: #1E9FFF;
+  --tt-color-warning: #ffb800;
+  --tt-color-success: #16b777;
+  --tt-color-info: #909399;
+  --tt-text-strong: #333;
+  --tt-text-primary: #666;
+  --tt-text-secondary: #999;
+  --tt-text-on-dark: rgba(255,255,255,.8);
+  --tt-bg-page: #f2f2f2;
+  --tt-bg-card: #fff;
+  --tt-bg-subtle: #f8f8f8;
+  /* 表格**行 hover** 的底色。出处：对标物自己的 `zdy.css` 覆盖了 layui 默认值——
+   *   `.layui-table-click, .layui-table-hover, .layui-table[lay-even] tbody tr:nth-child(even)
+   *    { background-color: #abf8dd }`
+   * 所以对标站点上（含这三页）hover 是**浅绿**，不是 layui 默认的 `#f8f8f8`。
+   * 三页的落地在 `styles/game-config.css`（只作用于 `.gc-table`，不牵连其它页面的表格）。 */
+  --tt-table-row-hover: #abf8dd;
+  /* 顶栏：深色皮肤（业务方指定 + 其截图逐像素实测）。默认皮肤是白，见契约 §2.1 的更正块。 */
+  --tt-shell-topbar-bg: #393D49;
+  --tt-shell-topbar-text: #fff;
+  /* 对标物默认白皮肤的顶栏下边框；它的引用点（shell.css 顶栏那条下边框）已删，
+   * 全 `src/frontend/src` 只剩下面这行声明——声明是有意保留的：它记的是默认皮肤那条
+   * `1px solid #f6f6f6`，两个皮肤的对照记在契约 §2.1 的更正块里。 */
+  --tt-shell-topbar-border: #f6f6f6;
+  --tt-shell-side-bg: #20222A;
+  --tt-shell-logo-bg: #20222A;
+  --tt-shell-tabbar-bg: #fafafa;
+  --tt-shell-tabbar-active: #009688;
+  --tt-shell-tabbar-border: #1AA094;
+  --tt-shell-tabbar-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+  --tt-shell-account-avatar-size: 72px;
+  /* 占位头像里首字的字号：实现细节（对标物有真实头像图，没有这一处），非实测值。 */
+  --tt-shell-avatar-initial-size: 24px;
+  --tt-shell-menu-item-h: 44px;
+  --tt-border: #d2d2d2;
+  --tt-border-light: #e2e2e2;
+  --tt-border-lighter: #f6f6f6;
+  --tt-radius: 2px;
+  --tt-shadow-card: 0 1px 2px 0 rgba(0,0,0,.05);
+
+  /* —— 排版与形态 —— 规范 §2.2 —— */
+  --tt-font-family: -apple-system, Roboto, 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+  --tt-font-size-base: 14px;
+  --tt-line-height: 1.6;
+}
+
+/* 映射给 Element Plus。**双写 `:root:root`**：组件样式由按需引入插件运行时注入，
+ * 可能排在本文件之后；同权重下后者胜，颜色就会白改。双写权重更高，与注入顺序无关。 */
+:root:root {
+  /* 主色：规范 §3.3 的派生阶梯（照抄规范给出的 7 个值，不在此重算）。 */
+  --el-color-primary: var(--tt-color-primary);
+  --el-color-primary-light-3: #5ccfc4;
+  --el-color-primary-light-5: #8adcd4;
+  --el-color-primary-light-7: #b9eae6;
+  --el-color-primary-light-8: #d0f1ee;
+  --el-color-primary-light-9: #e8f8f6;
+  --el-color-primary-dark-2: #129588;
+  --el-color-primary-rgb: 22,186,170;
+
+  /* 危险 / 警告 / 成功：§3.2 要求「同形阶梯」，而 §3.3 只给了主色的值 →
+   * 这 21 个值按 §3.3 的公式算出，并已**落进规范 §3.4**（含取整口径），此处照抄 §3.4。 */
+  --el-color-danger: var(--tt-color-danger);
+  --el-color-danger-light-3: #ff8964;
+  --el-color-danger-light-5: #ffab90;
+  --el-color-danger-light-7: #ffcdbd;
+  --el-color-danger-light-8: #ffddd3;
+  --el-color-danger-light-9: #ffeee9;
+  --el-color-danger-dark-2: #cc461b;
+  --el-color-danger-rgb: 255,87,34;
+
+  --el-color-warning: var(--tt-color-warning);
+  --el-color-warning-light-3: #ffcd4d;
+  --el-color-warning-light-5: #ffdc80;
+  --el-color-warning-light-7: #ffeab3;
+  --el-color-warning-light-8: #fff1cc;
+  --el-color-warning-light-9: #fff8e6;
+  --el-color-warning-dark-2: #cc9300;
+  --el-color-warning-rgb: 255,184,0;
+
+  --el-color-success: var(--tt-color-success);
+  --el-color-success-light-3: #5ccda0;
+  --el-color-success-light-5: #8adbbb;
+  --el-color-success-light-7: #b9e9d6;
+  --el-color-success-light-8: #d0f1e4;
+  --el-color-success-light-9: #e8f8f1;
+  --el-color-success-dark-2: #12925f;
+  --el-color-success-rgb: 22,183,119;
+
+  /* `--el-color-info` 不在规范 §3.2 的映射清单里：§2.1 明确 `--tt-color-info` 就是
+   * Element Plus 默认的 `#909399`，两端同值，无需覆盖（也不为其造阶梯）。 */
+
+  /* 文本：EP 要三个位阶，规范 §2.1 只给了两个文本色 → §2.3(b) 的裁决是
+   * 用**实测**的 `#333` 补齐（`admin.css` 的强文字色），不为 EP 的位阶自造色值。 */
+  --el-text-color-primary: var(--tt-text-strong);
+  --el-text-color-regular: var(--tt-text-primary);
+  --el-text-color-secondary: var(--tt-text-secondary);
+
+  /* 边框：EP 四级由浅到深依次 `-extra-light` < `-lighter` < `-light` < 默认。
+   * 规范 §2.1 只给了两个边框灰；第三级 `#f6f6f6` 由 §2.3(a)/§3.4 另立为
+   * `--tt-border-lighter`（实测：`admin.css` 里 9 处 `#f6f6f6` 有 7 处是 border-*）。 */
+  --el-border-color: var(--tt-border);
+  --el-border-color-light: var(--tt-border-light);
+  --el-border-color-lighter: var(--tt-border-lighter);
+  --el-border-color-extra-light: var(--tt-bg-subtle);
+
+  --el-bg-color: var(--tt-bg-card);
+  --el-bg-color-page: var(--tt-bg-page);
+  --el-fill-color-light: var(--tt-bg-subtle);
+
+  --el-border-radius-base: var(--tt-radius);
+  --el-font-size-base: var(--tt-font-size-base);
+  --el-font-family: var(--tt-font-family);
+}

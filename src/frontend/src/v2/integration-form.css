@@ -1,0 +1,112 @@
+.integration-form {
+  --el-component-size: 38px;
+}
+
+.integration-form .cv2-field {
+  grid-template-columns: 144px minmax(0, 1fr);
+  gap: 0;
+  align-items: stretch;
+  min-width: 0;
+}
+
+.integration-form .cv2-field-label {
+  display: flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 10px;
+  box-sizing: border-box;
+  border: 1px solid var(--tt2-filter-line);
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+  background: var(--tt2-filter-label-bg);
+  color: var(--tt2-dim);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.integration-form .cv2-field > .cv2-input,
+.integration-form .cv2-field :deep(.el-input),
+.integration-form .cv2-field :deep(.el-select),
+.integration-form .cv2-field :deep(.el-textarea) {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.integration-form .cv2-field > .cv2-input {
+  min-height: 38px;
+  border-color: var(--tt2-filter-line);
+  border-radius: 0 4px 4px 0;
+}
+
+.integration-form .cv2-field :deep(.el-input__wrapper),
+.integration-form .cv2-field :deep(.el-select__wrapper),
+.integration-form .cv2-field :deep(.el-textarea__inner) {
+  border-radius: 0 4px 4px 0;
+}
+
+.integration-form .cv2-field > :is(.wm-server-row, .wm-enabled-row, .wc-inline, .wc-switchline, .qb-switchline, .qb-share-controls, .qb-policy-controls, .wq-actions, .wq-inline, .wq-mono) {
+  min-height: 38px;
+  padding: 0 12px;
+  box-sizing: border-box;
+  border: 1px solid var(--tt2-filter-line);
+  border-radius: 0 4px 4px 0;
+  background: var(--tt2-panel);
+}
+
+.integration-form .cv2-field > .wq-mono {
+  display: flex;
+  align-items: center;
+  overflow-wrap: anywhere;
+}
+
+.integration-form .cv2-field > .wc-inline:has(.cv2-input) {
+  padding: 0;
+  border: 0;
+}
+
+.integration-form .wc-inline > .cv2-input {
+  min-height: 38px;
+  border-color: var(--tt2-filter-line);
+  border-radius: 0 4px 4px 0;
+}
+
+.integration-form .cv2-field > :is(.cv2-field-hint, .qb-hint) {
+  margin-top: 4px;
+}
+
+.integration-note {
+  background: var(--tt2-filter-label-bg);
+}
+
+@media (max-width: 720px) {
+  .integration-form .cv2-field {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .integration-form .cv2-field-label {
+    padding: 7px 10px;
+    border-right: 1px solid var(--tt2-filter-line);
+    border-radius: 4px 4px 0 0;
+  }
+
+  .integration-form .cv2-field > :not(.cv2-field-label) {
+    grid-column: 1;
+  }
+
+  .integration-form .cv2-field > :is(.cv2-input, .wm-server-row, .wm-enabled-row, .wc-inline, .wc-switchline, .qb-switchline, .qb-share-controls, .qb-policy-controls, .wq-actions, .wq-inline, .wq-mono),
+  .integration-form .cv2-field > :deep(.el-input),
+  .integration-form .cv2-field > :deep(.el-select),
+  .integration-form .cv2-field > :deep(.el-textarea) {
+    margin-top: -1px;
+    border-radius: 0 0 4px 4px;
+  }
+
+  .integration-form .cv2-field :deep(.el-input__wrapper),
+  .integration-form .cv2-field :deep(.el-select__wrapper),
+  .integration-form .cv2-field :deep(.el-textarea__inner) {
+    border-radius: 0 0 4px 4px;
+  }
+}

@@ -1,0 +1,279 @@
+diff --git a/src/pages/localChatPreview/liveChat.ts b/src/pages/localChatPreview/liveChat.ts
+index 9f1508f..49af662 100644
+--- a/src/pages/localChatPreview/liveChat.ts
++++ b/src/pages/localChatPreview/liveChat.ts
+@@ -116,13 +116,23 @@ export async function startLiveChat() {
+   }
+ }
+
++function temporaryChatLoad(error: unknown) {
++  if(error instanceof ChatRequestError) {
++    return error.status === undefined || error.status === 408 || error.status === 429 || error.status >= 500;
++  }
++  return error instanceof Error && error.message === '聊天请求超时';
++}
++
+ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnly: boolean, isH5: boolean) {
+   const order = readOnly && await api.orderSummary();
+   const [{user}, {contacts, worker_directory_only: workerDirectoryOnly}, initial] = order ? [
+     {user: {id: 1, display_name: order.members.find(({id}) => id === order.self_member_id)?.name ?? ''}},
+     {contacts: [] as Contact[], worker_directory_only: false},
+-    {conversations: [order], cursor: 0}
+-  ] : await Promise.all([api.me(), api.contacts(), api.conversations()]);
++    {conversations: [order], cursor: 0, order_permission_unavailable: false}
++  ] : await Promise.all([api.me(), api.contacts(), api.conversations().catch((error) => {
++    if(!temporaryChatLoad(error)) throw error;
++    return {conversations: [] as Conversation[], cursor: 0, order_permission_unavailable: true};
++  })]);
+   let initialOrderHistory = order ? await api.history(order.id) : undefined;
+   const myId = user.id.toPeerId(false);
+   rootScope.myId = myId;
+@@ -460,10 +470,15 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+   };
+   initial.conversations.forEach(setConversation);
+
+-  async function dropOrder(id: number, reason = '订单权限已撤销') {
++  let refreshConversationsOnSync = initial.order_permission_unavailable;
++  let navigation = 0;
++  let deferredOpen: {id: number; messageId?: number; retained?: boolean; peerId: PeerId} | undefined;
++
++  async function dropOrder(id: number) {
+     const peerId = peerByConversation.get(id);
+     const conversation = conversations.get(peerId);
+     if(conversation?.kind !== 'order') return;
++    refreshConversationsOnSync = true;
+     const dialog = dialogs.get(peerId);
+     conversations.delete(peerId);
+     api.invalidateOrder(id);
+@@ -475,7 +490,7 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+     const {default: appImManager} = await import('@lib/appImManager');
+     if(appImManager.chat.peerId === peerId) {
+       document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape', bubbles: true}));
+-      toast(reason);
++      toast('订单权限已撤销');
+     }
+   const {default: appSidebarRight} = await import('@components/sidebarRight');
+   renderRevokedAlbumItem = (groupedId, message, remaining) => {
+@@ -524,16 +539,14 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+     seedMirror('peers', String(peerId), undefined);
+   }
+
+-  let pausedOrder: string | undefined;
+   async function refreshDialogs() {
+-    const {conversations: fresh, order_permission_unavailable: unavailable} = await api.conversations();
+-    if(unavailable) {
+-      const current = conversations.get(appImManager.chat.peerId);
+-      if(current?.kind === 'order') pausedOrder = current.local_order_no || current.order_no;
+-    }
+-    const freshIds = new Set(fresh.map(({id}) => id));
+-    for(const conversation of conversations.values()) {
+-      if(conversation.kind === 'order' && !freshIds.has(conversation.id)) await dropOrder(conversation.id, unavailable ? '暂时无法确认订单权限，请稍后重试' : '订单权限已撤销');
++    const {conversations: fresh, order_permission_unavailable: unavailable, order_list_complete: complete} = await api.conversations();
++    // Separate offset pages can skip a visible room when incoming messages reorder the list.
++    if(complete) {
++      const freshIds = new Set(fresh.map(({id}) => id));
++      for(const conversation of conversations.values()) {
++        if(conversation.kind === 'order' && !freshIds.has(conversation.id)) await dropOrder(conversation.id);
++      }
+     }
+     const changed = new Map<PeerId, {dialog: ChatDialog}>();
+     for(const conversation of fresh) {
+@@ -544,6 +557,12 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+     for(const {dialog} of changed.values()) {
+       rootScope.dispatchEvent('dialog_unread', {peerId: dialog.peerId, dialog});
+     }
++    if(!unavailable && deferredOpen && api.visible()) {
++      const target = deferredOpen;
++      deferredOpen = undefined;
++      if(target.peerId === appImManager.chat.peerId) void openConversation(target.id, target.messageId, target.retained);
++    }
++    return !unavailable;
+   }
+
+   const refreshConversationLabels = () => rootScope.dispatchEvent('dialogs_multiupdate', new Map(
+@@ -779,7 +798,6 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+   let orderVisibilityToken: string | null | undefined;
+   let syncing = false;
+   let pending = false;
+-  let refreshConversationsOnSync = false;
+   async function synchronize() {
+     pending = true;
+     if(syncing) return;
+@@ -790,13 +808,7 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+         const forceRefresh = refreshConversationsOnSync;
+         refreshConversationsOnSync = false;
+         const page = await api.sync(cursor);
+-        if(page.order_permission_unavailable) {
+-          const current = conversations.get(appImManager.chat.peerId);
+-          if(current?.kind === 'order') {
+-            pausedOrder = current.local_order_no || current.order_no;
+-            await dropOrder(current.id, '暂时无法确认订单权限，请稍后重试');
+-          }
+-        }
++        if(page.order_permission_unavailable) refreshConversationsOnSync = true;
+         const revokedAlbums = new Map<number, string>();
+         for(const {kind, message} of page.changes) {
+           if(kind !== 'message.revoked' || !message) continue;
+@@ -806,20 +818,25 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+         for(const change of page.changes) {
+           if(change.kind === 'conversation.removed') await dropOrder(change.conversation_id);
+         }
+-        const visibilityChanged = page.order_visibility_token !== undefined && page.order_visibility_token !== orderVisibilityToken;
+-        if(forceRefresh || page.changes.length || visibilityChanged) await refreshDialogs();
+-        orderVisibilityToken = page.order_visibility_token;
++        const trustedToken = !page.order_permission_unavailable && page.order_visibility_token !== undefined;
++        const visibilityChanged = trustedToken && page.order_visibility_token !== orderVisibilityToken;
++        if(forceRefresh || deferredOpen || page.changes.length || visibilityChanged) {
++          if(!await refreshDialogs()) refreshConversationsOnSync = true;
++        }
++        if(trustedToken) orderVisibilityToken = page.order_visibility_token;
+         for(const {message} of page.changes) {
+           if(message?.album_id && !message.revoked) cacheMessage(message);
+         }
+         for(const change of page.changes) {
+           if(change.message) publishMessage(change.message, change.kind === 'message.revoked', revokedAlbums.get(change.message.id));
+         }
+-        cursor = page.cursor;
+-        pending ||= page.has_more;
++        // A null core token means order events were omitted; replay instead of skipping them.
++        const replayCorePage = page.order_permission_unavailable && page.order_visibility_token === null;
++        if(!replayCorePage) cursor = page.cursor;
++        pending ||= page.has_more && !replayCorePage;
+       }
+     } catch{
+-      // Reconnection or the next update retries from the last completed page.
++      refreshConversationsOnSync = true;
+     } finally {
+       syncing = false;
+       if(pending) void synchronize();
+@@ -1382,30 +1399,24 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+     rootScope.dispatchEvent('dialogs_multiupdate', new Map([[dialog.peerId, {dialog}]]));
+   });
+   api.authorization.addEventListener('change', (event) => {
+-    const {conversationId, message} = (event as CustomEvent<{conversationId: number; message: string}>).detail;
+-    const conversation = conversations.get(peerByConversation.get(conversationId));
+-    if(conversation?.kind !== 'order') return;
+-    pausedOrder = conversation.local_order_no || conversation.order_no;
+-    void dropOrder(conversation.id, message);
++    const {conversationId} = (event as CustomEvent<{conversationId: number}>).detail;
++    void dropOrder(conversationId);
+   });
+   let checkingOrder = false;
+   async function checkOpenOrder() {
+     if(checkingOrder || !api.visible()) return;
+     const current = conversations.get(appImManager.chat.peerId);
+-    const number = current?.kind === 'order' ? current.local_order_no || current.order_no : pausedOrder;
++    if(current?.kind !== 'order') return;
++    const number = current.local_order_no || current.order_no;
+     if(!number) return;
+     checkingOrder = true;
+     try {
+-      const updated = await api.orderSummary(number);
++      const updated = await api.orderSummary(number, current.id);
++      if(updated.id !== current.id) return;
+       const dialog = setConversation(updated);
+-      pausedOrder = undefined;
+       rootScope.dispatchEvent('dialogs_multiupdate', new Map([[dialog.peerId, {dialog}]]));
+-    } catch(error) {
+-      if(current?.kind === 'order' && error instanceof ChatRequestError &&
+-          (error.status === 403 || error.status === 503)) {
+-        pausedOrder = number;
+-        await dropOrder(current.id, error.status === 403 ? '订单权限已撤销' : '暂时无法确认订单权限，请稍后重试');
+-      }
++    } catch {
++      // Transient detail requests are retried by the next authority poll.
+     } finally { checkingOrder = false; }
+   }
+   const authorityTimer = window.setInterval(() => {
+@@ -1517,24 +1528,35 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+   });
+   document.title = '团团通内部通讯';
+   api.changed.addEventListener('change', synchronize);
+-  let navigation = 0;
+-  api.connectNavigation(async(id, messageId, retained) => {
++  function deferOpen(id: number, messageId?: number, retained?: boolean) {
++    deferredOpen = {id, messageId, retained, peerId: appImManager.chat.peerId};
++    refreshConversationsOnSync = true;
++    return true;
++  }
++
++  async function openConversation(id: number, messageId?: number, retained?: boolean) {
+     const serial = ++navigation;
++    deferredOpen = undefined;
+     try {
+-      if(!peerByConversation.has(id)) await refreshDialogs();
++      const available = peerByConversation.has(id) || await refreshDialogs();
+       if(serial !== navigation) return false;
+       const peerId = peerByConversation.get(id);
+       if(peerId !== undefined) {
+         await appImManager.setInnerPeer({peerId, lastMsgId: messageId});
+         if(appImManager.chat.peerId === peerId || !retained) return true;
+-      } else toast('未找到该会话');
++      } else if(!available) return deferOpen(id, messageId, retained);
++      else toast('未找到该会话');
+     } catch(error) {
+-      if(serial === navigation) reportSendFailure(error);
++      if(serial === navigation) {
++        if(temporaryChatLoad(error)) return deferOpen(id, messageId, retained);
++        reportSendFailure(error);
++      }
+     }
+     if(!retained || serial !== navigation) return false;
+     await appImManager.setPeer({isDeleting: true}, false);
+     return serial === navigation && !isDisplayedHistory(appImManager.chat.peerId);
+-  });
++  }
++  api.connectNavigation(openConversation);
+   window.addEventListener('online', synchronize);
+   void synchronize();
+ }
+diff --git a/src/pages/localChatPreview/liveTransport.ts b/src/pages/localChatPreview/liveTransport.ts
+index 4c3942e..e91a1e6 100644
+--- a/src/pages/localChatPreview/liveTransport.ts
++++ b/src/pages/localChatPreview/liveTransport.ts
+@@ -191,8 +191,7 @@ export function createLiveTransport(orderNo?: string) {
+       pending.delete(data.id);
+       window.clearTimeout(item.timer);
+       const revoked = data.errorStatus === 403 && data.error === '订单权限已撤销';
+-      const unavailable = data.errorStatus === 503 && data.error === '暂时无法确认订单权限，请稍后重试';
+-      if((revoked || unavailable) && item.conversationId !== undefined) {
++      if(revoked && item.conversationId !== undefined) {
+         invalidateOrder(item.conversationId);
+         authorization.dispatchEvent(new CustomEvent('change', {detail: {
+           conversationId: item.conversationId, message: data.error, status: data.errorStatus
+@@ -219,7 +218,7 @@ export function createLiveTransport(orderNo?: string) {
+   });
+   window.parent.postMessage({type: 'tt:chat.ready'}, parentOrigin);
+
+-  function request<T>(method: 'get' | 'post', path: string, body?: object): Promise<T> {
++  function request<T>(method: 'get' | 'post', path: string, body?: object, orderConversationId?: number): Promise<T> {
+     if(orderPath && (method !== 'get' || !path.startsWith(orderPath))) {
+       return Promise.reject(new Error('订单消息预览只能读取当前订单'));
+     }
+@@ -230,7 +229,7 @@ export function createLiveTransport(orderNo?: string) {
+         reject(new Error('聊天请求超时'));
+       }, 20_000);
+       const match = /^\/api\/internal-chat\/conversations\/([1-9]\d*)\//.exec(path);
+-      const conversationId = match ? Number(match[1]) : undefined;
++      const conversationId = match ? Number(match[1]) : orderConversationId;
+       pending.set(id, {resolve: (data) => resolve(data as T), reject, timer, conversationId,
+         generation: generations.get(conversationId) ?? 0, orderEpoch});
+       window.parent.postMessage({type: 'tt:chat.request', id, method, path, body}, parentOrigin);
+@@ -244,7 +243,7 @@ export function createLiveTransport(orderNo?: string) {
+     visibility,
+     authorization,
+     invalidateOrder,
+-    orderSummary: (number?: string) => request<OrderConversation>('get', orderPath || api + `orders/${number}/`),
++    orderSummary: (number?: string, id?: number) => request<OrderConversation>('get', orderPath || api + `orders/${number}/`, undefined, id),
+     reopen: (number: string) => request<OrderConversation>('post', api + `orders/${number}/reopen/`),
+     reportOrderHistory: (ready: boolean) => window.parent.postMessage(ready ?
+       {type: 'tt:order-history.ready'} :
+@@ -305,7 +304,7 @@ export function createLiveTransport(orderNo?: string) {
+       }
+       return {conversations: [...all.values()].filter(row => row.kind !== 'order' ||
+         (!unavailable && (invalidatedAt.get(row.id) ?? 0) <= started)), cursor,
+-      order_permission_unavailable: unavailable};
++      order_permission_unavailable: unavailable, order_list_complete: !unavailable && offset === 0};
+     },
+     start: (peer: number) => request<Conversation>('post', api + 'conversations/', {peer_id: peer}),
+     history: (id: number, query: Record<string, string> = {}) => request<History>(

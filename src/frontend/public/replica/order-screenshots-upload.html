@@ -1,0 +1,148 @@
+<!--
+  证据件：【上传进度图】弹层（对标 `/Order/UploadPic?orderId=<单号>`，`<title>上传进度图</title>`）。
+
+  来源：`.tools/recon/media-storage/Order__UploadPic.html`（**不进 git**）——
+  页内 `<style>` 逐字取自 L52-104，`<form>` 逐字取自 L105-165。
+  ⛔ 取值不许凭 layui 默认值或记忆猜（`FRONTEND-REPLICA-STANDARD.md` §3）。
+
+  ## 有意改动（逐条，别当成漏抄）
+
+  1. **顶部那句 `提示：截图有效时间为90天…` 只删掉「90 天」那半句，其余**（`D-0153` ④，业务方
+     2026-09-25 裁定）**按证据件原标签与原内联样式逐字保留**（证据件 L106-108 的 `<p
+     style="color:#808080">`）：
+     `提示：如果出现上传不了，请多尝试几次，或每次上传数量少一点；群聊二维码仅限一张，再次上传会覆盖原二维码！`
+     ⛔ 「截图有效时间为90天，90天后将自动失效」那半句**一个字都不许带回来**——业务方裁定 A3：
+     本项目**永久保留**、不配生命周期，写那句就是**说假话**（原文按 `AGENTS.md` §4 保留在证据件里）。
+  2. **删掉 4 个隐藏域**（证据件 L160-163 的 `orderId` / `gameAccId` / `sid` / `taskId`）：
+     单号改从 island 的 URL 参数 `order_no` 取；`sid`（=5819）与那个真单号是对标租户的数据
+     （PII 纪律：真值不进 git）；`gameAccId` / `taskId` 是对标的子单概念，我们没有。
+  3. **两颗行内按钮的图标换成 stock**：证据件 `#baroperating` 里两颗都用
+     `layui-icon layui-xiugaimima1`（那是**对标私有的 iconfont**，我们没有；而且「修改密码」
+     这个字形被复用成「浏览图片」和「删除」，本身是对标自己的笔误）
+     ⇒ 换成 vendored layui 2.13.9 里真实存在的 `layui-icon-eye` / `layui-icon-delete`
+     （`FRONTEND-REPLICA-STANDARD.md` §7「私有图标字形」那一条）。
+  4. `#fileInput` 的样式规则**一字未动**（证据件 L70-78，在那份 HTML 里是**死代码**——
+     对标由 layui 的 `upload.render({elem:'#drop_area'})` 运行期造文件输入）。我们按它的
+     原意把它**做成真节点**（`order-screenshots-upload.ts` 往 `.wrap` 里插 `<input id="fileInput">`），
+     于是这条规则生效：一个铺满拖拽区、完全透明的文件输入 —— 点击任意处都能开文件框。
+  5. **只取页内那一段 `<style>`（证据件 L52-104），不取 `<head>` 里那段（L24-41）**：
+     后者是**外壳 / 页签条**的规则（`.layadmin-pagetabs`、`body{background-color:#fff}`），
+     而弹层跑在 island 的 iframe 里，那些值由 `bootstrapIsland` 的共享覆盖样式统一给
+     （`layui/island.ts` 的 `ISLAND_OVERRIDES`：`body{background-color:#fff;font-size:12px}`）。
+     弹层自己的视觉值（拖拽区 / 进度条 / 文件输入 / 表格 / 按钮）全在上面那段里，一条没少。
+
+  ⚠️ **谁负责复位**（`AGENTS.md` §5-D / `E-0079` 的问法）：本页由父页用
+  `layer.open({type:2, content:'…?page=order-screenshots-upload'})` 打开，跑在**独立 iframe
+  文档**里（对标同样是 iframe）⇒ 每开一次就是一个新文档、模块级状态天然是新的。
+  页面自己的状态（待保存的那几张）仍全部住在 `mount` 的闭包里，卸载时随
+  `root.innerHTML = ''` 一起消失——包括 `URL.createObjectURL` 出来的那些 blob URL
+  （`releasePreview` 在「认领成功 / 被删除 / 整页卸载」三条路上都显式释放）。
+-->
+<style>
+    .wrap{
+        position:relative;
+        width:100%;
+    }
+    .drop_area {
+        border: 2px dashed #ccc;
+        width: 100%;
+        height:180px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row;
+        cursor: pointer;
+        box-sizing: border-box;
+    }
+
+    #fileInput {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 100;
+        opacity: 0;
+    }
+    #uploadInput {
+        line-height: 36px;
+        border: 1px solid #ccc !important;
+        position: relative;
+        margin: 10px auto 0;
+        font-size:18px
+    }
+
+    [contenteditable="true"]:focus {
+        outline: none;
+    }
+    .uploadTips {
+        position: absolute;
+        color: #999; /* 占位符颜色 */
+        cursor: text;
+        left: 10px;
+        line-height: 36px;
+        top: 0px;
+        font-size:18px;
+    }
+
+    /* 聚焦时隐藏占位符（可选） */
+    #uploadInput:focus::before {
+        content: none;
+    }
+</style>
+<form class="layui-form layui-form-pane" action="" style="padding-top:10px;margin-left:10px;margin-right:10px">
+    <p style="color:#808080">
+        提示：如果出现上传不了，请多尝试几次，或每次上传数量少一点；群聊二维码仅限一张，再次上传会覆盖原二维码！
+    </p>
+
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>请先点击上传图片，再点击保存</legend>
+    </fieldset>
+        <div class="layui-form-item">
+            <label class="layui-form-label">图片类型：</label>
+            <div class="layui-input-inline" style="width:70%">
+                <input type="radio" name="imgType" value="0" title="订单截图" checked>
+                <input type="radio" name="imgType" value="1" title="群聊二维码">
+            </div>
+        </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">图片备注：</label>
+        <div class="layui-input-inline" style="width:70%">
+            <input type="text" name="remark" id="remark" autocomplete="off" placeholder="可以给图片做个备注说明" class="layui-input layui-input-shadow" maxlength="50">
+        </div>
+    </div>
+    <div class="layui-upload">
+        <div class="wrap">
+            <div style="position: absolute;height: 30px;width: 100%;">
+                <div class="layui-progress layui-progress-big" lay-showPercent="yes" lay-filter="progressBar" id="progressBar" style="display:none;">
+                    <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
+                </div>
+            </div>
+            <div class="drop_area" id="drop_area">
+                <i class="layui-icon layui-icon-addition" style="font-size: 50px;"></i>
+                <div>将文件拖到此处，或<span class="upload-txt">点击上传图片文件</span></div>
+            </div>
+        </div>
+
+        <div style="position: relative; width: 90%; margin: 0 auto;">
+            <div class="uploadTips">点击此处可粘贴图片</div>
+            <div id="uploadInput" contenteditable="true">
+            </div>
+        </div>
+
+
+        <div>
+            <button type="button" class="layui-btn layui-btn-danger w-md" lay-submit="" lay-filter="savebtn" style="width:100%;margin-top:10px"><i class="layui-icon layui-icon-upload-drag"></i>点我将上传的图片提交保存</button>
+        </div>
+        <div class="layui-upload-list">
+            <table class="layui-hide" id="tableList" lay-filter="tableList"></table>
+            <script type="text/html" id="baroperating">
+                <a class="layui-btn layui-btn-xs layui-btn-normal" style="" lay-event="viewPic" title="浏览图片"><i class="layui-icon layui-icon-eye"></i>浏览图片</a>
+                <a class="layui-btn layui-btn-xs layui-btn-danger" style="" lay-event="delitem" title="浏览图片"><i class="layui-icon layui-icon-delete"></i>删除</a>
+            </script>
+        </div>
+        <p style="color:#ff6a00;margin-top:10px">提示：全部上传完成前，请勿关闭本界面。上传完成后请再浏览一次订单截图以确保全部上传成功！</p>
+    </div>
+
+</form>

@@ -1,0 +1,89 @@
+<!--
+  证据件：【管理订单截图】弹层（对标 `/Order/PicMange?orderId=<单号>`，`<title>管理订单截图</title>`）。
+
+  来源：`.tools/recon/media-storage/Order__PicMange.html`（**不进 git**）——
+  页内 `<style>` 逐字取自 L51-89，`<form>` 取自 L90-125。
+  ⛔ 取值不许凭 layui 默认值或记忆猜（`FRONTEND-REPLICA-STANDARD.md` §3）。
+  小图尺寸 `li img { width:200px; height:160px }`（L64-67）与 `li { height:248px }`（L52-62）
+  是本页的**核心视觉值**，由 `order-screenshots-manage.spec.ts` 直接钉住这三行。
+
+  ## 有意改动（逐条，别当成漏抄）
+
+  1. **删掉顶部那条 `blockquote`**：它**只有一句**话——
+     `提示：距离上传时间超过90天的将会被自动删除，会出现无法浏览的情况`（证据件 L91-93），
+     同样是对标那句 90 天承诺的另一个说法。业务方裁定 A3 / spec §4-5「**不显示「截图有效时间
+     90 天」提示**」⇒ 与上传弹层同一处理：**整句不写**（写了就是说假话，我们永久保留）。
+     ⚠️ 代价（如实）：页面上少一个 `layui-elem-quote` 灰底块（A3 的直接后果，不是漏抄）。
+     那一格自己的 `.layui-elem-quote` 样式规则**照旧留在下面的 `<style>` 里**（整段 `<style>`
+     逐字照抄，不挑着删；规则失去元素后不影响任何渲染）。
+  2. **`<ul class="imgList">` 清空**：证据件里那一个 `<li>` 装的是**对标租户自己的运行期数据**
+     （带真实上传人名的备注、图中对象的地址、真主键 `data-id`）⇒
+     **一行都不留**（PII 纪律：真值不进 git；而且那本来就是运行期渲染的结果）。
+     每张图由页面在运行期按后端列表渲染成**同形**的 `<li>`（时间 / 备注 / 删除 / 勾选框）。
+  3. **删掉 2 个隐藏域**（证据件 L123-124 的 `orderId` / `taskId`）：单号改从 URL 参数
+     `order_no` 取；`taskId` 是对标的子单概念，我们没有。
+  4. **只取页内那一段 `<style>`（证据件 L51-89），不取 `<head>` 里那段（L24-41）**：
+     后者是**外壳 / 页签条**的规则（`.layadmin-pagetabs`、`body{background-color:#fff}`），
+     而弹层跑在 island 的 iframe 里，那些值由 `bootstrapIsland` 的共享覆盖样式统一给
+     （`layui/island.ts` 的 `ISLAND_OVERRIDES`：`body{background-color:#fff;font-size:12px}`）。
+
+  ⚠️ 图标未改：本页两颗工具栏按钮（打包下载 / 批量删除）里，打包下载那颗带一个 layui **stock**
+  字形 `&#xe601;`（证据件 L118）⇒ 照抄保留；批量删除那颗本来就没有 `<i>`。
+
+  ⚠️ **谁负责复位**（`AGENTS.md` §5-D / `E-0079` 的问法）：本页由父页用
+  `layer.open({type:2, content:'…?page=order-screenshots-manage'})` 打开，跑在**独立 iframe
+  文档**里 ⇒ 每开一次都是新文档。⚠️ 但**列表与勾选是运行期状态**：`renderList()` 每次重渲染
+  都把 `#checkall` 一起复位——它在 `<ul class="imgList">` **外面**，不复位就会留下
+  「全选还勾着、底下一条都没勾」的假状态（对标整页 `location.reload()`，所以它那边不存在这个问题）。
+-->
+<style>
+    li {
+        height: 248px;
+        float: left;
+        display: inline-block;
+        margin-left: 10px;
+        padding: 2px 2px;
+        margin-top: 20px;
+        border-color: #e2dede;
+        border-width: 1px;
+        border-style: solid
+    }
+
+        li img {
+            width: 200px;
+            height: 160px;
+        }
+
+        li div {
+            text-align: center;
+            margin-top: 2px
+        }
+    .layui-elem-quote {
+        margin-bottom: 10px;
+        padding: 10px;
+        line-height: 22px;
+        border-left: 5px solid #009688;
+        border-radius: 0 2px 2px 0;
+        background-color: #f2f2f2;
+    }
+    .picnote {
+        text-align:left;
+        width:190px;
+        overflow: hidden;
+        white-space:nowrap;
+        margin-bottom:5px;
+        text-overflow:ellipsis;
+    }
+</style>
+<form class="layui-form layui-form-pane" action="" lay-filter="formTest">
+    <input lay-skin="primary" type="checkbox" id="checkall" name="type" lay-filter="allChoose" value="checkall" /><span>全选</span>
+    <ul class="imgList">
+    </ul>
+                <div class="layui-form-item" style="padding-top:10px">
+                    <div class="layui-input-block" style=" margin-left:10px;margin-bottom:10px">
+                        <button class="layui-btn layui-btn-sm layui-btn-normal" title="打包下载该订单所有截图" lay-submit="" lay-filter="importBtn"><i class="layui-icon">&#xe601;</i>打包下载</button>
+                        <button type="submit" class="layui-btn layui-btn-sm layui-btn-danger" lay-submit="" lay-filter="delbtns">批量删除</button>
+                    </div>
+                </div>
+
+</form>

@@ -1,0 +1,4520 @@
+{
+ "meta": {
+  "source": "tenant-frontend-js",
+  "note": "只存参数名，不存值；值可能含一次调用的活数据",
+  "endpoints": 394,
+  "endpoints_with_params": 320,
+  "har_merged_endpoints": 13
+ },
+ "endpoints": {
+  "/Api/CustomerApi/UpdateCustomerLevel": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Customer/hylevelsetting.js"
+   ]
+  },
+  "/Api/UserApi/getUserRnameCertToSystem": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/UserContractSigning.js"
+   ]
+  },
+  "/CommonPermissionAjax/DelSingleImg": {
+   "params": [
+    "imgpath"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/systemsetting.js",
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/CommonPermissionAjax/GetAliOssPolicy": {
+   "params": [
+    "bk"
+   ],
+   "method": "GET",
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/clientordergenerate.js",
+    "/JS2019/System/PlatformAutoReply.js"
+   ]
+  },
+  "/CommonPermissionAjax/UploadSingleImg": {
+   "params": [],
+   "method": "POST",
+   "url_query": [
+    "ed"
+   ],
+   "pages": [
+    "/JS2019/System/systemsetting.js",
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/CommonPermissionAjax/UploadSingleTxtToRoot": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechartsetting.js"
+   ]
+  },
+  "/CustomerAjax/DelBack": {
+   "params": [
+    "ids"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Customer/backlist.js"
+   ]
+  },
+  "/CustomerAjax/GetCustomerBackList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "key"
+   ],
+   "pages": [
+    "/JS2019/Customer/backlist.js"
+   ]
+  },
+  "/CustomerAjax/GetIntervalLevel": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/CustomerAjax/GetMemberAddOrderSimpInfo": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "moblie"
+   ],
+   "pages": [
+    "/JS2019/Order/addorder.js"
+   ]
+  },
+  "/CustomerAjax/GetMemberBalance": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "bossName",
+    "moblie"
+   ],
+   "pages": [
+    "/JS2019/Order/addorder.js"
+   ]
+  },
+  "/CustomerAjax/SaveIntervalLevel": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Customer/hylevelsetting.js"
+   ]
+  },
+  "/EmpAjax/AcceptSettAgreenMent": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Emp/emplist.js"
+   ]
+  },
+  "/EmpAjax/AddBindAlipaySettAuthData": {
+   "params": [
+    "alipayAcc",
+    "alipayAccName",
+    "remark",
+    "channel"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Emp/BindAlipaySettAuth.js"
+   ]
+  },
+  "/EmpAjax/AddEditQATypeName": {
+   "params": [
+    "id",
+    "value",
+    "type"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Emp/qacenter.js"
+   ]
+  },
+  "/EmpAjax/ApplicationEmp": {
+   "params": [
+    "empId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Emp/myemp.js"
+   ]
+  },
+  "/EmpAjax/BatchDeductFee": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Emp/emplist.js"
+   ]
+  },
+  "/EmpAjax/ChangeEmpRemark": {
+   "params": [
+    "idx",
+    "remark"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Emp/emplist.js"
+   ]
+  },
+  "/EmpAjax/ChangeOrderRecPrice": {
+   "params": [
+    "empId",
+    "fee",
+    "type"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Emp/emplist.js"
+   ]
+  },
+  "/EmpAjax/ChangePrivatePhoneCallLogRemark": {
+   "params": [
+    "ids",
+    "remark"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Emp/privatephonecalllog.js"
+   ]
+  },
+  "/EmpAjax/CheckOnlinePaySetRecName": {
+   "params": [
+    "ids",
+    "ptype"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Emp/emplist.js"
+   ]
+  },
+  "/EmpAjax/DelBook": {
+   "params": [
+    "bookId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Emp/booklist.js"
+   ]
+  },
+  "/EmpAjax/DelEmp": {
+   "params": [
+    "empId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Emp/emplist.js"
+   ]
+  },
+  "/EmpAjax/DelLearmInformation": {
+   "params": [
+    "ids"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Emp/learminformationlist.js"
+   ]
+  },
+  "/EmpAjax/DeleteBindAlipaySettAuth": {
+   "params": [
+    "bid",
+    "channel"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Emp/BindAlipaySettAuth.js"
+   ]
+  },
+  "/EmpAjax/GetBindAlipaySettAuthList": {
+   "params": [],
+   "method": "POST",
+   "url_query": [
+    "getSoure"
+   ],
+   "pages": [
+    "/JS2019/Emp/BindAlipaySettAuth.js"
+   ]
+  },
+  "/EmpAjax/GetBookList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "stime",
+    "etime",
+    "addUserId",
+    "bookType",
+    "key"
+   ],
+   "pages": [
+    "/JS2019/Emp/booklist.js"
+   ]
+  },
+  "/EmpAjax/GetEmpList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "gameName",
+    "stime",
+    "etime",
+    "empType",
+    "dateType",
+    "settingSta",
+    "orderSta",
+    "taobaoSta",
+    "recUser",
+    "kefu",
+    "applicationSetSta",
+    "key",
+    "key2",
+    "orderSoure",
+    "taskId",
+    "key3",
+    "orderType",
+    "customerType",
+    "isCert",
+    "furlSta",
+    "recUserName"
+   ],
+   "pages": [
+    "/JS2019/Emp/emplist.js"
+   ]
+  },
+  "/EmpAjax/GetJdpBalance": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Emp/emplist.js"
+   ]
+  },
+  "/EmpAjax/GetLearmInformationList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "gameId",
+    "key"
+   ],
+   "pages": [
+    "/JS2019/Emp/learminformationlist.js"
+   ]
+  },
+  "/EmpAjax/GetLingyuefangzhouSystemSettleBalance": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Emp/emplist.js"
+   ]
+  },
+  "/EmpAjax/GetMyEmp": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "gameName",
+    "stime",
+    "etime",
+    "dateType",
+    "settingSta",
+    "orderSta",
+    "key",
+    "key2",
+    "page",
+    "limit"
+   ],
+   "pages": [
+    "/JS2019/Emp/myemp.js"
+   ]
+  },
+  "/EmpAjax/GetPrivatePhoneCallLogList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "stime",
+    "etime",
+    "addUserId",
+    "moblie",
+    "orderid"
+   ],
+   "pages": [
+    "/JS2019/Emp/privatephonecalllog.js"
+   ]
+  },
+  "/EmpAjax/ModityBindAlipaySettAuthRemarkResetAuth": {
+   "params": [
+    "bid",
+    "modityType",
+    "channel"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Emp/BindAlipaySettAuth.js"
+   ]
+  },
+  "/EmpAjax/OnlinePaySetRec": {
+   "params": [
+    "ids",
+    "payMode",
+    "authId",
+    "ptype"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Emp/emplist.js"
+   ]
+  },
+  "/EmpAjax/OnlinePaySetRecGetFailResult": {
+   "params": [
+    "bizId",
+    "payMode"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Emp/emplist.js"
+   ]
+  },
+  "/EmpAjax/RefshPlatformOrderStatusByTaoBao": {
+   "params": [
+    "seachParam",
+    "orderId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Emp/emplist.js"
+   ]
+  },
+  "/EmpAjax/SynchEmpOrderToMySystem": {
+   "params": [
+    "empIdx"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Emp/myemp.js"
+   ]
+  },
+  "/GameAccountsAjax/AddEditGameAccount": {
+   "params": [
+    "param",
+    "gameName",
+    "gameArea",
+    "gameServer",
+    "gameJob",
+    "gameGroup"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/GameAccounts/addeditaccount.js"
+   ]
+  },
+  "/GameAccountsAjax/ChangeAccRemark": {
+   "params": [
+    "gameAccId",
+    "remark"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/GameAccounts/accountlist.js"
+   ]
+  },
+  "/GameAccountsAjax/ChangeGameAccountJiWei": {
+   "params": [
+    "idx",
+    "remark"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/GameAccounts/accountlist.js"
+   ]
+  },
+  "/GameAccountsAjax/ChangeGameAccountPrice": {
+   "params": [
+    "idx",
+    "changeType",
+    "fee"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/GameAccounts/accountlist.js"
+   ]
+  },
+  "/GameAccountsAjax/ChangeGameAccountProStatus": {
+   "params": [
+    "idx",
+    "status",
+    "remark"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/GameAccounts/accountlist.js"
+   ]
+  },
+  "/GameAccountsAjax/ChangeGameAccountUseStatus": {
+   "params": [
+    "idx",
+    "status",
+    "ftime"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/GameAccounts/accountlist.js"
+   ]
+  },
+  "/GameAccountsAjax/ChangeGameAccountUseType": {
+   "params": [
+    "idx",
+    "useType"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/GameAccounts/accountlist.js"
+   ]
+  },
+  "/GameAccountsAjax/DelGameAccountByIDX": {
+   "params": [
+    "gameAccId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/GameAccounts/accountlist.js"
+   ]
+  },
+  "/GameAccountsAjax/DisAddGameAccountContent": {
+   "params": [
+    "value",
+    "gameName"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/GameAccounts/addeditaccount.js"
+   ]
+  },
+  "/GameAccountsAjax/GetAccTipsList": {
+   "params": [
+    "gameName"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/GameAccounts/accountlist.js",
+    "/JS2019/GameAccounts/addeditaccount.js"
+   ]
+  },
+  "/GameAccountsAjax/GetAllGameAccountUseTypeSelect": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "selectValue"
+   ],
+   "pages": [
+    "/JS2019/GameAccounts/accountlist.js",
+    "/JS2019/GameAccounts/addeditaccount.js"
+   ]
+  },
+  "/GameAccountsAjax/GetGameAccList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "gameName",
+    "stime",
+    "etime",
+    "timeType",
+    "accType",
+    "sellNo",
+    "gameArea",
+    "gameServer",
+    "recUserId",
+    "groupName",
+    "key3",
+    "key2",
+    "info2key",
+    "accStatus",
+    "useType",
+    "proStatus",
+    "tipsSelect",
+    "sellUid",
+    "remark"
+   ],
+   "pages": [
+    "/JS2019/GameAccounts/accountlist.js"
+   ]
+  },
+  "/GameAccountsAjax/ImputGameAccByExecl": {
+   "params": [
+    "gameName",
+    "formats",
+    "gtype"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/GameAccounts/importacc.js"
+   ]
+  },
+  "/GameAccountsAjax/SellAccAction": {
+   "params": [
+    "gid",
+    "sellPrice",
+    "sellChoee",
+    "tradeNo",
+    "changeBindPhone"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/GameAccounts/accountlist.js"
+   ]
+  },
+  "/GameAccountsAjax/SellAccGetInfo": {
+   "params": [
+    "gid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/GameAccounts/accountlist.js"
+   ]
+  },
+  "/GameAjax/AddEditGame": {
+   "params": [
+    "gameId",
+    "gameName"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Game/gameserver.js"
+   ]
+  },
+  "/GameAjax/AddEditProject": {
+   "params": [
+    "gameId",
+    "pid",
+    "projectName",
+    "orderBy"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Game/projectsetting.js"
+   ]
+  },
+  "/GameAjax/AddModityOrderType": {
+   "params": [
+    "gameId",
+    "pid",
+    "projectName",
+    "orderBy",
+    "before",
+    "after",
+    "platidx"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Game/OrderTypsSetting.js"
+   ]
+  },
+  "/GameAjax/ChangeGameSendSmsSwitch": {
+   "params": [
+    "gameId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Game/gameserver.js"
+   ]
+  },
+  "/GameAjax/DelGame": {
+   "params": [
+    "gameId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Game/gameserver.js"
+   ]
+  },
+  "/GameAjax/DelGameItem": {
+   "params": [
+    "itemId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Game/gameitemlist.js"
+   ]
+  },
+  "/GameAjax/DelOrderType": {
+   "params": [
+    "pid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Game/OrderTypsSetting.js"
+   ]
+  },
+  "/GameAjax/DelProject": {
+   "params": [
+    "pid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Game/projectsetting.js"
+   ]
+  },
+  "/GameAjax/GetAllOrderTypeList": {
+   "params": [],
+   "method": "GET",
+   "url_query": [
+    "gameId",
+    "gameName",
+    "defOrderType"
+   ],
+   "pages": [
+    "/JS2019/Game/OrderTypsSetting.js",
+    "/JS2019/Order/CoreOrderCenter.js",
+    "/JS2019/Order/OrderList20191212.js",
+    "/JS2019/Order/addorder.js",
+    "/JS2019/System/AutomaticAdJustPriceSet.js"
+   ]
+  },
+  "/GameAjax/GetGameAttrInfoTitle": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "game"
+   ],
+   "pages": [
+    "/JS2019/Order/addorder.js"
+   ]
+  },
+  "/GameAjax/GetGameItemList": {
+   "params": [],
+   "method": "POST",
+   "url_query": [
+    "gameId",
+    "postion",
+    "key1"
+   ],
+   "pages": [
+    "/JS2019/Game/gameitemlist.js"
+   ]
+  },
+  "/GameAjax/GetGameServerMangeList": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Game/gameserver.js"
+   ]
+  },
+  "/GameAjax/GetProjectList": {
+   "params": [],
+   "method": "POST",
+   "url_query": [
+    "gameId"
+   ],
+   "pages": [
+    "/JS2019/Game/projectsetting.js"
+   ]
+  },
+  "/GameAjax/PWGameByGameID": {
+   "params": [
+    "gameId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Game/gameserver.js"
+   ]
+  },
+  "/GameAjax/ReshrefGameServerCache": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Game/gameserver.js"
+   ]
+  },
+  "/GameAjax/SetGameIsMoblieGame": {
+   "params": [
+    "gameId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Game/gameserver.js"
+   ]
+  },
+  "/GameAjax/TopGameByGameID": {
+   "params": [
+    "gameId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Game/gameserver.js"
+   ]
+  },
+  "/GameAjax/UpdateGameOrderNum": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Game/gameserver.js"
+   ]
+  },
+  "/GameAjax/getGameData": {
+   "params": [
+    "gameId"
+   ],
+   "method": "GET",
+   "url_query": [
+    "type",
+    "parentId",
+    "selectValue"
+   ],
+   "pages": [
+    "/JS2019/GameAccounts/accountlist.js",
+    "/JS2019/GameAccounts/addeditaccount.js",
+    "/JS2019/Group/addeditgroup.js",
+    "/JS2019/Group/grouplist2020.js",
+    "/JS2019/Order/OrderList20191212.js",
+    "/JS2019/Order/addorder.js",
+    "/JS2019/Order/insiderecorderlist.js",
+    "/JS2019/Order/myorderlist.js"
+   ]
+  },
+  "/GameAjax/getGameItemInfoByItemID": {
+   "params": [
+    "itemId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Game/gameitemlist.js"
+   ]
+  },
+  "/GameAjax/getProject": {
+   "params": [
+    "gameId"
+   ],
+   "method": null,
+   "url_query": [
+    "gameId"
+   ],
+   "pages": [
+    "/JS2019/Group/addeditgroup.js",
+    "/JS2019/Order/OrderList20191212.js",
+    "/JS2019/Order/addorder.js",
+    "/JS2019/Order/insiderecorderlist.js"
+   ]
+  },
+  "/OrderAJax/ChangeOrderBussType": {
+   "params": [
+    "orderIdx",
+    "value"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/AddOrderAjax": {
+   "params": [
+    "strParameter",
+    "gameName",
+    "gameArea",
+    "gameServer",
+    "gameJob",
+    "gameGroup",
+    "emps"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/addorder.js"
+   ]
+  },
+  "/OrderAjax/AddOrderAutoDisKeys": {
+   "params": [
+    "content",
+    "gameName"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/addorder.js"
+   ]
+  },
+  "/OrderAjax/AddOrderRefundLogs": {
+   "params": [
+    "orderIdx",
+    "refundModel",
+    "fee",
+    "sdate",
+    "tranNo",
+    "remark",
+    "changeOrderStatus"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/CoreOrderCenter.js",
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/AppendAllTransctionOrderPrice": {
+   "params": [
+    "orderId",
+    "fee"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/AppendTransctionOrderPrice": {
+   "params": [
+    "tid",
+    "fee",
+    "platfromId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/CoreOrderCenter.js"
+   ]
+  },
+  "/OrderAjax/BuilderSellEmpOrderLog": {
+   "params": [
+    "orderId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/ChangeOrderGameRoleNameByOrderId": {
+   "params": [
+    "orderId",
+    "newRoleName"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/GameAccounts/accountlist.js",
+    "/JS2019/Order/CoreOrderCenter.js",
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/ChangeOrderLock": {
+   "params": [
+    "orderId",
+    "value"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/ChangeOrderNetReceiptsPrice": {
+   "params": [
+    "orderId",
+    "fee"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/ChangeOrderPrice": {
+   "params": [
+    "orderId",
+    "fee"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/CoreOrderCenter.js",
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/ChangeOrderProject": {
+   "params": [
+    "orderId",
+    "newProject"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/ChangeOrderRemark": {
+   "params": [
+    "orderId",
+    "remark"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/CoreOrderCenter.js",
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/ChangeOrderShphone": {
+   "params": [
+    "idx",
+    "sphone"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/ChangeOrderSoureId": {
+   "params": [
+    "orderId",
+    "value"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/ChangeTransctionOrderArbitration": {
+   "params": [
+    "tid",
+    "value",
+    "msgContent"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/CoreOrderCenter.js"
+   ]
+  },
+  "/OrderAjax/ChangeTransctionOrderLock": {
+   "params": [
+    "tid",
+    "value",
+    "platfromId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/ChangeTransctionOrderRevoke": {
+   "params": [
+    "tid",
+    "value",
+    "payAmount",
+    "pcAmount",
+    "remark",
+    "platfromId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/ChcekAsynFailOrder": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/myorderlist.js"
+   ]
+  },
+  "/OrderAjax/ClearOrderToGroupManger": {
+   "params": [
+    "orderIdx"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/ConfigmTransctionOrder": {
+   "params": [
+    "tid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/CoreOrderCenter.js"
+   ]
+  },
+  "/OrderAjax/CopyOrderLog": {
+   "params": [
+    "orderId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/CoreOrderCenter.js",
+    "/JS2019/Order/OrderList20191212.js",
+    "/JS2019/Order/myorderlist.js"
+   ]
+  },
+  "/OrderAjax/CopyOrderToNewOrder": {
+   "params": [
+    "orderId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/DeTransctionAllPlatformOrder": {
+   "params": [
+    "orderId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/DeTransctionPlatformOrder": {
+   "params": [
+    "tid",
+    "platfromId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/CoreOrderCenter.js",
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/DelOrderByIDX": {
+   "params": [
+    "orderID",
+    "isDelEmp"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/DisGameNameByContent": {
+   "params": [
+    "content"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/addorder.js"
+   ]
+  },
+  "/OrderAjax/DisMissRecPlayerChat": {
+   "params": [
+    "ids"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/RecCustomerChatLog.js"
+   ]
+  },
+  "/OrderAjax/EditTransctionOrderPrice": {
+   "params": [
+    "orderId",
+    "tid",
+    "fee",
+    "platfromId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/CoreOrderCenter.js",
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/GeneRateCustomerOrderAjax": {
+   "params": [
+    "gameName",
+    "project",
+    "orderSoure",
+    "soureOrderId",
+    "price",
+    "day",
+    "hours",
+    "ww"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/clientordergenerate.js"
+   ]
+  },
+  "/OrderAjax/GetBuiderGameScanQrCode": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "orderId",
+    "class",
+    "target",
+    "title"
+   ],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/GetGeneRateCustomerOrderLogList": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/clientordergenerate.js"
+   ]
+  },
+  "/OrderAjax/GetInternalOrderGrabbingList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "gameName",
+    "gameArea",
+    "gameServer",
+    "dlProject",
+    "key",
+    "bussType",
+    "project",
+    "page",
+    "limit"
+   ],
+   "pages": [
+    "/JS2019/Order/insiderecorderlist.js"
+   ]
+  },
+  "/OrderAjax/GetMyOrderList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "gameName",
+    "sDate",
+    "eDate",
+    "stime",
+    "etime",
+    "gameArea",
+    "gameServer",
+    "gameJob",
+    "groupName",
+    "orderSta",
+    "key1",
+    "key2",
+    "key3",
+    "key4",
+    "viewIsNewOrder",
+    "isJiaji",
+    "bussType",
+    "idx",
+    "page",
+    "limit"
+   ],
+   "pages": [
+    "/JS2019/Order/myorderlist.js"
+   ]
+  },
+  "/OrderAjax/GetOrderClientOrderUrlLink": {
+   "params": [
+    "orderId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/GetOrderContentById": {
+   "params": [
+    "orderId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/CoreOrderCenter.js",
+    "/JS2019/Order/myorderlist.js"
+   ]
+  },
+  "/OrderAjax/GetOrderGroupMangerLog": {
+   "params": [
+    "orderId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/GetOrderJobGroupTotal": {
+   "params": [
+    "gameName",
+    "stime",
+    "etime",
+    "minPrice",
+    "maxPrice",
+    "limit",
+    "page",
+    "taskId",
+    "gameArea",
+    "gameServer",
+    "gameJob",
+    "project",
+    "recUserId",
+    "customerServiceUserId",
+    "orderSoure",
+    "orderGroupUser",
+    "setSta",
+    "timeType",
+    "groupName",
+    "orderSta",
+    "isJiaji",
+    "isLeakOrder",
+    "showPriceType",
+    "operatorName",
+    "bussType",
+    "kefuType",
+    "projectTypeName",
+    "batchOrderId",
+    "keytid",
+    "orderLabel"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/GetOrderList": {
+   "params": [
+    "gameName",
+    "stime",
+    "etime",
+    "minPrice",
+    "maxPrice",
+    "limit",
+    "page",
+    "taskId",
+    "gameArea",
+    "gameServer",
+    "gameJob",
+    "project",
+    "recUserId",
+    "customerServiceUserId",
+    "orderSoure",
+    "orderGroupUser",
+    "setSta",
+    "timeType",
+    "groupName",
+    "orderSta",
+    "isJiaji",
+    "isLeakOrder",
+    "showPriceType",
+    "operatorName",
+    "bussType",
+    "kefuType",
+    "projectTypeName",
+    "batchOrderId",
+    "keytid",
+    "orderLabel"
+   ],
+   "method": "POST",
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/GetOrderRecycleList": {
+   "params": [],
+   "method": "POST",
+   "url_query": [
+    "gameName",
+    "stime",
+    "etime",
+    "orderSta",
+    "key1",
+    "key2",
+    "orderSoure"
+   ],
+   "pages": [
+    "/JS2019/Order/orderrecycle.js"
+   ]
+  },
+  "/OrderAjax/GetPlatformOrderList": {
+   "params": [
+    "gameName",
+    "stime",
+    "etime",
+    "minPrice",
+    "maxPrice",
+    "limit",
+    "page",
+    "operatorId",
+    "platStatus",
+    "dateType",
+    "orderSoure",
+    "pushPlatm",
+    "orderSta",
+    "seachType",
+    "orderLabel",
+    "orderBy",
+    "projectTypeName"
+   ],
+   "method": "POST",
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/CoreOrderCenter.js"
+   ]
+  },
+  "/OrderAjax/GetPlatmPushOperateReport": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "selectMonth"
+   ],
+   "pages": [
+    "/JS2019/Order/CoreOrderCenter.js"
+   ]
+  },
+  "/OrderAjax/GetRecEmpAmountByOrderId": {
+   "params": [
+    "orderIds"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/GetRecPlayerChatMsgDetailsList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "key"
+   ],
+   "pages": [
+    "/JS2019/Order/RecCustomerChatLog.js"
+   ]
+  },
+  "/OrderAjax/GetRecPlayerChatMsgFilterKey": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/RecCustomerChatLog.js"
+   ]
+  },
+  "/OrderAjax/GetRecPlayerChatMsgList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "sdate",
+    "edate",
+    "recUserId",
+    "key"
+   ],
+   "pages": [
+    "/JS2019/Order/RecCustomerChatLog.js"
+   ]
+  },
+  "/OrderAjax/GetSendGroupNewOrderMsg": {
+   "params": [
+    "ids"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/GetTbSendRecordList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "sDate",
+    "eDate",
+    "result",
+    "key"
+   ],
+   "pages": [
+    "/JS2019/Order/tbsendrecordmang.js"
+   ]
+  },
+  "/OrderAjax/GetTransactionOrderByOrderIdFunc": {
+   "params": [],
+   "method": "GET",
+   "url_query": [
+    "orderId",
+    "class",
+    "target",
+    "title"
+   ],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/GetUserQQByOrderId": {
+   "params": [
+    "orderId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/ImputAddOrderByFile": {
+   "params": [
+    "gameName",
+    "fileSoure",
+    "throwAction",
+    "filterRepeat"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/addorder.js"
+   ]
+  },
+  "/OrderAjax/ReadTaoBaoOrderData": {
+   "params": [],
+   "method": "GET",
+   "url_query": [
+    "tid",
+    "orderSoure"
+   ],
+   "pages": [
+    "/JS2019/Order/addorder.js",
+    "/JS2019/Order/clientordergenerate.js"
+   ]
+  },
+  "/OrderAjax/RecOrderByInternal": {
+   "params": [
+    "orderId",
+    "__RequestVerificationToken"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/insiderecorderlist.js"
+   ]
+  },
+  "/OrderAjax/RefOrderRecycle": {
+   "params": [
+    "orderId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/orderrecycle.js"
+   ]
+  },
+  "/OrderAjax/RelesOrderAndTaskByOrderID": {
+   "params": [
+    "orderId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/RelesOrderToHomeByOrderID": {
+   "params": [
+    "orderId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/SaveOrderToGroupManger": {
+   "params": [
+    "orderIdx",
+    "uid",
+    "fee",
+    "changeOrderStatus"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/SaveRecPlayerChatMsgFilterKey": {
+   "params": [
+    "key"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/RecCustomerChatLog.js"
+   ]
+  },
+  "/OrderAjax/SendAgin": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/tbsendrecordmang.js"
+   ]
+  },
+  "/OrderAjax/SendAginByTxt": {
+   "params": [
+    "source"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/tbsendrecordmang.js"
+   ]
+  },
+  "/OrderAjax/SendOrderToMySystem": {
+   "params": [
+    "orderId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js",
+    "/JS2019/Order/myorderlist.js"
+   ]
+  },
+  "/OrderAjax/SetOrderJiWei": {
+   "params": [
+    "orderId",
+    "jiwei"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js",
+    "/JS2019/Order/myorderlist.js"
+   ]
+  },
+  "/OrderAjax/SetOrderSta": {
+   "params": [
+    "orderId",
+    "sta",
+    "changeSoureType",
+    "remark",
+    "isSyncTaoBao"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Emp/emplist.js",
+    "/JS2019/Order/myorderlist.js"
+   ]
+  },
+  "/OrderAjax/SynchTransctionOrderStatus": {
+   "params": [
+    "tid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/CoreOrderCenter.js"
+   ]
+  },
+  "/OrderAjax/UpSettlementOrderByIDX": {
+   "params": [
+    "orderId",
+    "sta"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/UpdateDLOrderRevPriceByOrderID": {
+   "params": [
+    "orderId",
+    "fee",
+    "action",
+    "insureFee",
+    "pushPriceMode"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/UpdateOrderLabel": {
+   "params": [
+    "ids",
+    "label"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/CoreOrderCenter.js",
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/UrgentOrderByIDX": {
+   "params": [
+    "orderId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/CoreOrderCenter.js",
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/changeOrderJiaji": {
+   "params": [
+    "orderID"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/myorderlist.js"
+   ]
+  },
+  "/OrderAjax/sendDLOrderRevPriceByOrderID": {
+   "params": [
+    "orderId",
+    "fee",
+    "action"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/OrderAjax/upOrderTips": {
+   "params": [
+    "orderId",
+    "content"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/CoreOrderCenter.js",
+    "/JS2019/Order/OrderList20191212.js",
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/PveTaskAjax/AddEditPveTask": {
+   "params": [
+    "param",
+    "jobConfig",
+    "isConfigJob"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/addeditgroup.js"
+   ]
+  },
+  "/PveTaskAjax/ChangeGroupPostionOrderBy": {
+   "params": [
+    "ctype",
+    "id",
+    "value"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/grouplist2020.js"
+   ]
+  },
+  "/PveTaskAjax/ChangeTaskMainInfo": {
+   "params": [
+    "taskId",
+    "taskName",
+    "groupName",
+    "startDate",
+    "remark",
+    "project",
+    "gameServer",
+    "taskMangeUid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/grouplist2020.js"
+   ]
+  },
+  "/PveTaskAjax/ChangeTaskNeedJobRecUser": {
+   "params": [
+    "pid",
+    "userId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/grouplist2020.js"
+   ]
+  },
+  "/PveTaskAjax/ChangeTaskOrderBy": {
+   "params": [
+    "taskId",
+    "value"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/grouplist.js",
+    "/JS2019/Group/grouplist2020.js"
+   ]
+  },
+  "/PveTaskAjax/ChangeTaskStrartTime": {
+   "params": [
+    "taskId",
+    "stime"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/grouplist.js"
+   ]
+  },
+  "/PveTaskAjax/CheckGroupFullInfo": {
+   "params": [
+    "taskId",
+    "content"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/grouplist2020.js"
+   ]
+  },
+  "/PveTaskAjax/CopyToNewGroup": {
+   "params": [
+    "taskId",
+    "taskName",
+    "groupName",
+    "startDate",
+    "remark",
+    "project",
+    "gameServer"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/grouplist2020.js"
+   ]
+  },
+  "/PveTaskAjax/DelGroupAccByTaskIDAccId": {
+   "params": [
+    "taskId",
+    "accId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/grouplist2020.js"
+   ]
+  },
+  "/PveTaskAjax/DelGroupNeedJobByPid": {
+   "params": [
+    "pid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/grouplist2020.js"
+   ]
+  },
+  "/PveTaskAjax/DelPveTask": {
+   "params": [
+    "taskId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/grouplist.js",
+    "/JS2019/Group/grouplist2020.js",
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/PveTaskAjax/DelTaskNeedJobTemplateByTid": {
+   "params": [
+    "tid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/addeditgroup.js"
+   ]
+  },
+  "/PveTaskAjax/DisSelectFileToGroup": {
+   "params": [
+    "taskId",
+    "content",
+    "action"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/grouplist2020.js"
+   ]
+  },
+  "/PveTaskAjax/EditPveTeamPostionAmount": {
+   "params": [
+    "taskId",
+    "amount"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/grouplist.js"
+   ]
+  },
+  "/PveTaskAjax/EditPveTeamProject": {
+   "params": [
+    "taskId",
+    "project"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/grouplist.js"
+   ]
+  },
+  "/PveTaskAjax/GetAllTaskSelectListData": {
+   "params": [],
+   "method": "POST",
+   "url_query": [
+    "gameId"
+   ],
+   "pages": [
+    "/JS2019/Emp/emplist.js",
+    "/JS2019/Group/grouplist2020.js",
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/PveTaskAjax/GetCurrentWeekDayTaskGrapNeedJob": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/grouplist2020.js"
+   ]
+  },
+  "/PveTaskAjax/GetGroupJobNeedList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "taskId"
+   ],
+   "pages": [
+    "/JS2019/Group/addeditgroup.js"
+   ]
+  },
+  "/PveTaskAjax/GetGroupList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "gameId",
+    "taskSta",
+    "leaderId",
+    "taskSort",
+    "key"
+   ],
+   "pages": [
+    "/JS2019/Group/grouplist.js"
+   ]
+  },
+  "/PveTaskAjax/GetNewsGroupList": {
+   "params": [
+    "gameId",
+    "leaderId",
+    "key",
+    "groupName",
+    "taskStatus",
+    "orderBy",
+    "date",
+    "page",
+    "limit"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/grouplist2020.js"
+   ]
+  },
+  "/PveTaskAjax/GetNewsGroupOrderList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "stime",
+    "etime",
+    "gameName",
+    "gameServer",
+    "gameJob",
+    "groupName",
+    "orderSta",
+    "key1",
+    "key2",
+    "info1",
+    "info2",
+    "taskId",
+    "orderSoure"
+   ],
+   "pages": [
+    "/JS2019/Group/grouplist2020.js"
+   ]
+  },
+  "/PveTaskAjax/GetTaskNeedJobTemplate": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/addeditgroup.js"
+   ]
+  },
+  "/PveTaskAjax/GetTaskNeedJobTemplateByTid": {
+   "params": [
+    "tid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/addeditgroup.js"
+   ]
+  },
+  "/PveTaskAjax/PublicNeedJobPostion": {
+   "params": [
+    "taskId",
+    "title",
+    "startDate",
+    "paramStr",
+    "concantwechat",
+    "concantqq"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/grouplist2020.js"
+   ]
+  },
+  "/PveTaskAjax/PublicNeedJobPostionCancel": {
+   "params": [
+    "taskId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/grouplist2020.js"
+   ]
+  },
+  "/PveTaskAjax/SaveGroupLevelImg": {
+   "params": [
+    "value"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/grouplist.js"
+   ]
+  },
+  "/PveTaskAjax/SaveTaskNeedJobTemplate": {
+   "params": [
+    "title",
+    "param",
+    "tid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/addeditgroup.js"
+   ]
+  },
+  "/PveTaskAjax/SetJobNeedItemLevel": {
+   "params": [
+    "pid",
+    "value",
+    "action"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/grouplist2020.js"
+   ]
+  },
+  "/PveTaskAjax/SetPveAccGroup": {
+   "params": [
+    "taskId",
+    "accId",
+    "groupName",
+    "pid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/grouplist2020.js"
+   ]
+  },
+  "/PveTaskAjax/SetTaskAddPostionOrder": {
+   "params": [
+    "currentTaskId",
+    "oid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/grouplist2020.js"
+   ]
+  },
+  "/PveTaskAjax/SetTaskColorValue": {
+   "params": [
+    "taskId",
+    "color"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/grouplist2020.js"
+   ]
+  },
+  "/PveTaskAjax/SetTaskPostionMutual": {
+   "params": [
+    "cTaskId",
+    "cpid",
+    "cAccLogId",
+    "toTaskId",
+    "toPid",
+    "toAccLogId",
+    "action"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/grouplist2020.js"
+   ]
+  },
+  "/PveTaskAjax/SetTaskPostionOrder": {
+   "params": [
+    "taskId",
+    "pid",
+    "orderId",
+    "throwFee",
+    "oid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/grouplist2020.js"
+   ]
+  },
+  "/PveTaskAjax/SetTaskReplacePostionOrder": {
+   "params": [
+    "oid",
+    "accLogId",
+    "oldTaskId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/grouplist2020.js"
+   ]
+  },
+  "/PveTaskAjax/StartAutoMatchGroup": {
+   "params": [
+    "taskId",
+    "gameServer",
+    "project",
+    "gameGroup",
+    "date",
+    "matchTfMode",
+    "matchSameTips",
+    "matchOrderStatus",
+    "matchAss",
+    "tid",
+    "zacc"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/grouplist2020.js"
+   ]
+  },
+  "/PveTaskAjax/UpPveTaskSta": {
+   "params": [
+    "taskId",
+    "sta"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/grouplist.js",
+    "/JS2019/Group/grouplist2020.js",
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/SmsAjax/AddSmsTemplate": {
+   "params": [
+    "smsType",
+    "content"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Sms/smstemplatelist.js"
+   ]
+  },
+  "/SmsAjax/GetSmsBulkHairMoblieCount": {
+   "params": [
+    "gameName",
+    "orderSta",
+    "customerServiceUserName",
+    "orderSoure",
+    "stime",
+    "etime"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Sms/smsbulkhair.js"
+   ]
+  },
+  "/SmsAjax/GetSmsSettingMangeList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "gameName"
+   ],
+   "pages": [
+    "/JS2019/Sms/smssetting.js"
+   ]
+  },
+  "/SmsAjax/GetSmsTemplateList": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Sms/smstemplatelist.js"
+   ]
+  },
+  "/SmsAjax/SaveModitySmsApplyAllGame": {
+   "params": [
+    "id"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Sms/smssetting.js"
+   ]
+  },
+  "/SmsAjax/SaveModitySmsContent": {
+   "params": [
+    "id",
+    "content",
+    "asnyTbSms"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Sms/smssetting.js"
+   ]
+  },
+  "/SmsAjax/SaveModitySmsSwictht": {
+   "params": [
+    "id"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Sms/smssetting.js"
+   ]
+  },
+  "/SmsAjax/UploadMoblieTxt": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Sms/smsbulkhair.js"
+   ]
+  },
+  "/SystemAJax/AddModtifyTaobaoInterface": {
+   "params": [
+    "platformType",
+    "id",
+    "appId",
+    "appSecret",
+    "accessToken",
+    "remark",
+    "soureName",
+    "shopSellerNick"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/taobaoshipsetting.js"
+   ]
+  },
+  "/SystemAJax/SaveAddModiftyAutomaticAdJustPriceSet": {
+   "params": [
+    "id",
+    "gameName",
+    "loopAction",
+    "projectType",
+    "addPrice",
+    "actionInterval",
+    "maxPushPrice",
+    "lossCap",
+    "addPriceMode",
+    "actionShour",
+    "actionEhour"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/AutomaticAdJustPriceSet.js"
+   ]
+  },
+  "/SystemAJax/SavePlatformAutoReplySetModify": {
+   "params": [
+    "id",
+    "gameName",
+    "replyOcc",
+    "replyUserType",
+    "replycontent",
+    "platformIds",
+    "pic",
+    "userName"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/PlatformAutoReply.js"
+   ]
+  },
+  "/SystemAJax/SavePlatformPushOrderConfig": {
+   "params": [
+    "id",
+    "pushorderquire",
+    "pushorderphone",
+    "pushorderqq",
+    "pushordersafeamount",
+    "pushordereffamount",
+    "autobuilderprivtephone",
+    "platformIds",
+    "pushPlatfromPriceScale",
+    "autowritephone"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/PlatformPushOrderConfig.js"
+   ]
+  },
+  "/SystemAJax/SavePushOrderGroupMsgSetModify": {
+   "params": [
+    "id",
+    "gameName",
+    "replyOcc",
+    "webhookUrl",
+    "kurl",
+    "callAll",
+    "msgType",
+    "remark"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/OrderPushGroupMsgSet.js"
+   ]
+  },
+  "/SystemAJax/SaveTransfromInterfaceAddModify": {
+   "params": [
+    "id",
+    "platformId",
+    "platformAcc",
+    "platformLoginPwd",
+    "platformPayPwd",
+    "appId",
+    "appSecret",
+    "remark",
+    "concactQQ",
+    "concactPhone"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/tripartiteplatformsetting.js"
+   ]
+  },
+  "/SystemAjax/AddEdiSoure": {
+   "params": [
+    "soureId",
+    "soureName",
+    "remark",
+    "orderBy",
+    "shopType"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/sourelist.js"
+   ]
+  },
+  "/SystemAjax/AddModityOrderLabel": {
+   "params": [
+    "id",
+    "gameName",
+    "labelName",
+    "remark",
+    "orderBy",
+    "colorValue"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/OrderLabelList.js"
+   ]
+  },
+  "/SystemAjax/BatchEditReplyContent": {
+   "params": [
+    "ids",
+    "content"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/PlatformAutoReply.js"
+   ]
+  },
+  "/SystemAjax/ChangePublicSeachOrderQuestionHot": {
+   "params": [
+    "qid",
+    "value"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/systemsetting.js"
+   ]
+  },
+  "/SystemAjax/ChangePublicSeachOrderQuestionSta": {
+   "params": [
+    "qid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/systemsetting.js"
+   ]
+  },
+  "/SystemAjax/ChangeSoureDoNotSendSms": {
+   "params": [
+    "id"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/sourelist.js"
+   ]
+  },
+  "/SystemAjax/ChangeWehcatAppShopItemIsNeedGroup": {
+   "params": [
+    "shopId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/ClearPlatformPushOrderConfig": {
+   "params": [
+    "id"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/PlatformPushOrderConfig.js"
+   ]
+  },
+  "/SystemAjax/ClearSystemJdpBind": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/systemsetting.js"
+   ]
+  },
+  "/SystemAjax/CopyRoelNewJob": {
+   "params": [
+    "currentJobId",
+    "jobName",
+    "remark"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/roleauthority.js"
+   ]
+  },
+  "/SystemAjax/DelAutomaticAdJustPriceSet": {
+   "params": [
+    "id"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/AutomaticAdJustPriceSet.js"
+   ]
+  },
+  "/SystemAjax/DelAwardByIds": {
+   "params": [
+    "id"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/DelOrderLabel": {
+   "params": [
+    "id"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/OrderLabelList.js"
+   ]
+  },
+  "/SystemAjax/DelPlatformAutoReplySet": {
+   "params": [
+    "id"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/PlatformAutoReply.js"
+   ]
+  },
+  "/SystemAjax/DelPublicNewsByIds": {
+   "params": [
+    "ids"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/DelPublicSeachOrderQuestion": {
+   "params": [
+    "qid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/systemsetting.js"
+   ]
+  },
+  "/SystemAjax/DelPushOrderGroupMsg": {
+   "params": [
+    "id"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/OrderPushGroupMsgSet.js"
+   ]
+  },
+  "/SystemAjax/DelRole": {
+   "params": [
+    "roleId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/roleauthority.js"
+   ]
+  },
+  "/SystemAjax/DelShopItem": {
+   "params": [
+    "id"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/DelSoure": {
+   "params": [
+    "soureId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/sourelist.js"
+   ]
+  },
+  "/SystemAjax/DelSystemNotice": {
+   "params": [
+    "id"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/systemnotice.js"
+   ]
+  },
+  "/SystemAjax/DelTaobaoInterface": {
+   "params": [
+    "id"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/taobaoshipsetting.js"
+   ]
+  },
+  "/SystemAjax/DelTransfromInterface": {
+   "params": [
+    "id"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/tripartiteplatformsetting.js"
+   ]
+  },
+  "/SystemAjax/DelWechatAppHyDisc": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/DelWechatAppShopFulDec": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/DelWechatAppShopItemTypeName": {
+   "params": [
+    "typeName"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/DeldelIntegralItem": {
+   "params": [
+    "id"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/DeliverAward": {
+   "params": [
+    "id"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/EditAutoDiscernSet": {
+   "params": [
+    "disId",
+    "key"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/autodiscernset.js"
+   ]
+  },
+  "/SystemAjax/EditWechatAppShopItemTypeName": {
+   "params": [
+    "yname",
+    "newname"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/GetAllLotteryAwardList": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/GetAllRoleJobList": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/roleauthority.js"
+   ]
+  },
+  "/SystemAjax/GetAllRoleList": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/SystemAjax/GetAutoDiscernSetList": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/autodiscernset.js"
+   ]
+  },
+  "/SystemAjax/GetAutomaticAdJustPriceSetList": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/AutomaticAdJustPriceSet.js"
+   ]
+  },
+  "/SystemAjax/GetIntegarlExchangeItemInfoById": {
+   "params": [
+    "id"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/GetIntegarlItemInfoById": {
+   "params": [
+    "id"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/GetIntegralCommodityByTypeList": {
+   "params": [
+    "typeId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/GetIntegralCommodityExchangeList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "status"
+   ],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/GetIntegralCommodityList": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/GetLotteryAwardGrantList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "grantStatus",
+    "key"
+   ],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/GetMyBindHomeSystemList": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/homesystemsetting.js"
+   ]
+  },
+  "/SystemAjax/GetOnlineConsultationSetList": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/OnlineConsultationSet.js"
+   ]
+  },
+  "/SystemAjax/GetOrderLabelList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "gameName",
+    "status",
+    "getCa"
+   ],
+   "pages": [
+    "/JS2019/Order/CoreOrderCenter.js",
+    "/JS2019/Order/OrderList20191212.js",
+    "/JS2019/System/OrderLabelList.js"
+   ]
+  },
+  "/SystemAjax/GetOrderSoureList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "selectValue"
+   ],
+   "pages": [
+    "/JS2019/Emp/emplist.js",
+    "/JS2019/Group/grouplist2020.js",
+    "/JS2019/Order/CoreOrderCenter.js",
+    "/JS2019/Order/OrderList20191212.js",
+    "/JS2019/Order/addorder.js",
+    "/JS2019/Order/clientordergenerate.js",
+    "/JS2019/Order/orderrecycle.js",
+    "/JS2019/Sms/smsbulkhair.js"
+   ]
+  },
+  "/SystemAjax/GetOrderSoureMangeList": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/sourelist.js"
+   ]
+  },
+  "/SystemAjax/GetPlatformAutoReplySetList": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/PlatformAutoReply.js"
+   ]
+  },
+  "/SystemAjax/GetPlatformPushOrderConfig": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "gameName"
+   ],
+   "pages": [
+    "/JS2019/Order/addorder.js"
+   ]
+  },
+  "/SystemAjax/GetPlatformPushOrderConfigList": {
+   "params": [],
+   "method": "POST",
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/PlatformPushOrderConfig.js"
+   ]
+  },
+  "/SystemAjax/GetPublicNews": {
+   "params": [
+    "id"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/GetPublicNewsList": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/GetPublicSeachOrderQuestionMList": {
+   "params": [
+    "qid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/systemsetting.js"
+   ]
+  },
+  "/SystemAjax/GetPushJdp_TemplateList": {
+   "params": [
+    "gameName"
+   ],
+   "method": null,
+   "url_query": [
+    "gameName",
+    "_"
+   ],
+   "pages": [
+    "/JS2019/Order/addorder.js"
+   ]
+  },
+  "/SystemAjax/GetPushOrderGroupMsgSetList": {
+   "params": [],
+   "method": "POST",
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/OrderPushGroupMsgSet.js"
+   ]
+  },
+  "/SystemAjax/GetShopItemInfoById": {
+   "params": [
+    "id"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/GetShopItemList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "gameName"
+   ],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/GetSystemGroupList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "groupType",
+    "page",
+    "limit"
+   ],
+   "pages": [
+    "/JS2019/System/OnlineConsultationSet.js",
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/SystemAjax/GetSystemNoticeList": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/systemnotice.js"
+   ]
+  },
+  "/SystemAjax/GetTaoBaoInterfaceList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "platform"
+   ],
+   "pages": [
+    "/JS2019/System/taobaoshipsetting.js"
+   ]
+  },
+  "/SystemAjax/GetTransfromInterfaceList": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/tripartiteplatformsetting.js"
+   ]
+  },
+  "/SystemAjax/GetUserListByOnlineConsultationSet": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/OnlineConsultationSet.js"
+   ]
+  },
+  "/SystemAjax/GetVerifiAddOrderKeyStrByGameList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "gameName"
+   ],
+   "pages": [
+    "/JS2019/System/VerifiAddOrderKey.js"
+   ]
+  },
+  "/SystemAjax/GetWeChatCustomerList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "key"
+   ],
+   "pages": [
+    "/JS2019/System/wechartsetting.js"
+   ]
+  },
+  "/SystemAjax/GetWechatAppShopFulDecList": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/GetWechatAppShopItemTypeList": {
+   "params": [
+    "gameName"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/ModifyOnlineConsultationSet": {
+   "params": [
+    "strparameter"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/OnlineConsultationSet.js"
+   ]
+  },
+  "/SystemAjax/ModifyPlatformAutoReplySetStatus": {
+   "params": [
+    "id"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/PlatformAutoReply.js"
+   ]
+  },
+  "/SystemAjax/ModifyPlatformPayPassWord": {
+   "params": [
+    "id",
+    "pwd"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/tripartiteplatformsetting.js"
+   ]
+  },
+  "/SystemAjax/ModifySoureSmsSign": {
+   "params": [
+    "id",
+    "smsSign"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/sourelist.js"
+   ]
+  },
+  "/SystemAjax/ModifyTransfromInterfaceHelperSwitch": {
+   "params": [
+    "id",
+    "modifyType"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/tripartiteplatformsetting.js"
+   ]
+  },
+  "/SystemAjax/ModityOrderLabelStatus": {
+   "params": [
+    "id"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/OrderLabelList.js"
+   ]
+  },
+  "/SystemAjax/ModityPushOrderGroupMsgStatus": {
+   "params": [
+    "id"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/OrderPushGroupMsgSet.js"
+   ]
+  },
+  "/SystemAjax/ModityShopItemSellCount": {
+   "params": [
+    "id",
+    "value"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/OpenSmsSig": {
+   "params": [
+    "signature"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Sms/smssetting.js"
+   ]
+  },
+  "/SystemAjax/PddShipSetting": {
+   "params": [
+    "param"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/OrderPushGroupMsgSet.js",
+    "/JS2019/System/PlatformAutoReply.js"
+   ]
+  },
+  "/SystemAjax/QSendSms": {
+   "params": [
+    "gameName",
+    "orderSta",
+    "customerServiceUserName",
+    "orderSoure",
+    "stime",
+    "etime",
+    "smsContent",
+    "soure"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Sms/smsbulkhair.js"
+   ]
+  },
+  "/SystemAjax/ResetVerifiAddOrderKeyStr": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/VerifiAddOrderKey.js"
+   ]
+  },
+  "/SystemAjax/SaveAward": {
+   "params": [
+    "id",
+    "title",
+    "atype",
+    "cid",
+    "range",
+    "prizeimg",
+    "prizeValue",
+    "awardunit",
+    "stockNumber"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/SaveAwardSetting": {
+   "params": [
+    "awardStatus",
+    "awardamount",
+    "awardcount",
+    "awardWay",
+    "awardunit"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/SaveBindHomeSystemVer": {
+   "params": [
+    "company",
+    "homeHost",
+    "homeAcc",
+    "homePwd"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/homesystemsetting.js"
+   ]
+  },
+  "/SystemAjax/SaveClientWriteOrderSetting": {
+   "params": [
+    "mark",
+    "pic",
+    "swtich"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/clientordergenerate.js"
+   ]
+  },
+  "/SystemAjax/SaveIntegralCommodity": {
+   "params": [
+    "param",
+    "contentTxt"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/SaveIntegralExChangeItem": {
+   "params": [
+    "param",
+    "eid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/SaveOrderExportPwd": {
+   "params": [
+    "orginpwd",
+    "newpwd"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/systemsetting.js"
+   ]
+  },
+  "/SystemAjax/SavePrivacyPhoneServiceSetting": {
+   "params": [
+    "privacyPhoneServiceSwicth",
+    "param"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/customerphoneprivatesetting.js"
+   ]
+  },
+  "/SystemAjax/SavePublicNew": {
+   "params": [
+    "title",
+    "imgUrl",
+    "conetnt",
+    "contentTxt",
+    "id",
+    "newsType"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/SavePublicSeachOrderQuestion": {
+   "params": [
+    "qid",
+    "title",
+    "content"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/systemsetting.js"
+   ]
+  },
+  "/SystemAjax/SaveShopItem": {
+   "params": [
+    "param",
+    "contentTxt"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/SaveSystemNotice": {
+   "params": [
+    "id",
+    "content"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/systemnotice.js"
+   ]
+  },
+  "/SystemAjax/SaveTripartitlePlatForm": {
+   "params": [
+    "param"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/tripartiteplatformsetting.js"
+   ]
+  },
+  "/SystemAjax/SaveVerifiAddOrderKeyStr": {
+   "params": [
+    "id",
+    "key",
+    "resultStr"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/VerifiAddOrderKey.js"
+   ]
+  },
+  "/SystemAjax/SaveWechatAppHyDisc": {
+   "params": [
+    "id",
+    "shopItemId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/SaveWechatAppShopFulDec": {
+   "params": [
+    "id",
+    "shopItemId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/SmsSetting": {
+   "params": [
+    "param"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Sms/smssetting.js"
+   ]
+  },
+  "/SystemAjax/SystemOrderSetting": {
+   "params": [
+    "param"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/systemsetting.js"
+   ]
+  },
+  "/SystemAjax/TaobaoShipSetting": {
+   "params": [
+    "param"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/taobaoshipsetting.js"
+   ]
+  },
+  "/SystemAjax/UnBindHomeSystem": {
+   "params": [
+    "sid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/homesystemsetting.js"
+   ]
+  },
+  "/SystemAjax/UpDownIntegralItem": {
+   "params": [
+    "id",
+    "type"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/UpDownShopItem": {
+   "params": [
+    "id",
+    "type"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechatappmange.js"
+   ]
+  },
+  "/SystemAjax/UpdateAutomaticAdJustPriceSetStatus": {
+   "params": [
+    "id",
+    "type"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/AutomaticAdJustPriceSet.js"
+   ]
+  },
+  "/SystemAjax/VeryJdpAcc": {
+   "params": [
+    "acc",
+    "pwd"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/systemsetting.js"
+   ]
+  },
+  "/SystemAjax/WeChatChangeBind": {
+   "params": [
+    "wechatId",
+    "moblie"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechartsetting.js"
+   ]
+  },
+  "/SystemAjax/WeChatSetting": {
+   "params": [
+    "param"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechartsetting.js"
+   ]
+  },
+  "/SystemAjax/WeChatUnBind": {
+   "params": [
+    "wechatId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/wechartsetting.js"
+   ]
+  },
+  "/UserAJax/ChangeUserBussType": {
+   "params": [
+    "uid",
+    "value"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/UserAJax/ChangeUserRecOrderPrice": {
+   "params": [
+    "uid",
+    "min",
+    "max"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/UserAjax/AddEditUser": {
+   "params": [
+    "strparameter",
+    "games"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/adduser.js"
+   ]
+  },
+  "/UserAjax/AddModiftySystemUserBackList": {
+   "params": [
+    "bid",
+    "moblie",
+    "wechat",
+    "qq",
+    "remark",
+    "rname",
+    "yy",
+    "alipayacc",
+    "cid",
+    "uid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/BackUserList.js",
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/UserAjax/AddUserLoginRestrictByIP": {
+   "params": [
+    "id",
+    "ip"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/UserLoginRestrict.js"
+   ]
+  },
+  "/UserAjax/AuditOnboarding": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/ApplyOnboardingMange.js"
+   ]
+  },
+  "/UserAjax/ChangeProhibitedViewOrderPhone": {
+   "params": [
+    "uid",
+    "sta"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/UserAjax/ChangeProhibitedViewOrderPwd": {
+   "params": [
+    "uid",
+    "sta"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/UserAjax/ChangeUserBalance": {
+   "params": [
+    "uid",
+    "amount"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/UserAjax/ChangeUserEnsureAmount": {
+   "params": [
+    "uid",
+    "value"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/UserAjax/ChangeUserIsAutoSett": {
+   "params": [
+    "uid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/UserAjax/ChangeUserOrderBy": {
+   "params": [
+    "uid",
+    "by"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/UserAjax/CheckAddUserIsContainsBlack": {
+   "params": [
+    "acc",
+    "phone",
+    "qq",
+    "wx",
+    "rname"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/adduser.js"
+   ]
+  },
+  "/UserAjax/CreateGroupOrInvitation": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/UserAjax/CreatePhoneNoAReport": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/myinfo.js"
+   ]
+  },
+  "/UserAjax/DelSystemUserBackListByID": {
+   "params": [
+    "ids"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/BackUserList.js"
+   ]
+  },
+  "/UserAjax/DelUser": {
+   "params": [
+    "uid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/UserAjax/DelUserLoginRestrict": {
+   "params": [
+    "idx"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/UserLoginRestrict.js"
+   ]
+  },
+  "/UserAjax/DeleteOnboarding/": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/ApplyOnboardingMange.js"
+   ]
+  },
+  "/UserAjax/EditUserMark": {
+   "params": [
+    "uid",
+    "tag"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/UserAjax/GetAllUserByGameName": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "gameName",
+    "isFilteJdp",
+    "userOrderBy",
+    "accurate",
+    "seachKey",
+    "isEnlabeDefAssRec",
+    "limit",
+    "page",
+    "selectValue",
+    "isViewGroup",
+    "screen"
+   ],
+   "pages": [
+    "/JS2019/Emp/booklist.js",
+    "/JS2019/Emp/privatephonecalllog.js",
+    "/JS2019/GameAccounts/accountlist.js",
+    "/JS2019/Group/addeditgroup.js",
+    "/JS2019/Group/grouplist.js",
+    "/JS2019/Group/grouplist2020.js",
+    "/JS2019/Order/CoreOrderCenter.js",
+    "/JS2019/Order/addorder.js",
+    "/JS2019/User/UserLoginRestrict.js",
+    "/JS2019/User/adduser.js"
+   ]
+  },
+  "/UserAjax/GetAllUserByGroupName": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "groupType",
+    "isSelectCurrentUser",
+    "gameName",
+    "orderType",
+    "isFilteDevUser"
+   ],
+   "pages": [
+    "/JS2019/Emp/emplist.js",
+    "/JS2019/GameAccounts/accountlist.js",
+    "/JS2019/Order/CoreOrderCenter.js",
+    "/JS2019/Order/OrderList20191212.js",
+    "/JS2019/Order/addorder.js",
+    "/JS2019/Sms/smsbulkhair.js",
+    "/JS2019/System/PlatformAutoReply.js",
+    "/JS2019/User/UserContractSigning.js"
+   ]
+  },
+  "/UserAjax/GetAllUserTableByGameName": {
+   "params": [
+    "gameName",
+    "userRoleId",
+    "key"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/addeditgroup.js",
+    "/JS2019/Group/grouplist2020.js"
+   ]
+  },
+  "/UserAjax/GetCheckIdenticalAliPayAcc": {
+   "params": [],
+   "method": "POST",
+   "url_query": [],
+   "pages": [
+    "/JS2019/Emp/emplist.js",
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/UserAjax/GetContractWhitelist": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/UserContractSigning.js"
+   ]
+  },
+  "/UserAjax/GetDyplsOSSInfoForUploadFile": {
+   "params": [],
+   "method": "GET",
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/myinfo.js"
+   ]
+  },
+  "/UserAjax/GetGroupMangeList": {
+   "params": [
+    "gameName"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/UserAjax/GetGroupUserSelect": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "gameName"
+   ],
+   "pages": [
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/UserAjax/GetJdpUidList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "game",
+    "userRole",
+    "sta",
+    "userType",
+    "key",
+    "bussType",
+    "isCert",
+    "isDisSett",
+    "key2",
+    "key3"
+   ],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/UserAjax/GetMyMessageList": {
+   "params": [],
+   "method": "POST",
+   "url_query": [
+    "isRead",
+    "msgType"
+   ],
+   "pages": [
+    "/JS2019/User/mymessage.js"
+   ]
+  },
+  "/UserAjax/GetOnboardingList": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/ApplyOnboardingMange.js"
+   ]
+  },
+  "/UserAjax/GetRecOrderTotalList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "stime"
+   ],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/UserAjax/GetSysUserSelect": {
+   "params": [],
+   "method": "GET",
+   "url_query": [
+    "key"
+   ],
+   "pages": [
+    "/JS2019/User/UserContractSigning.js"
+   ]
+  },
+  "/UserAjax/GetSystemUserBackList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "key"
+   ],
+   "pages": [
+    "/JS2019/User/BackUserList.js"
+   ]
+  },
+  "/UserAjax/GetUserList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "game",
+    "userRole",
+    "sta",
+    "userType",
+    "key",
+    "bussType",
+    "isCert",
+    "isDisSett",
+    "key2",
+    "key3",
+    "page",
+    "limit"
+   ],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/UserAjax/GetUserLoginRestrictList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "userList",
+    "ip"
+   ],
+   "pages": [
+    "/JS2019/User/UserLoginRestrict.js"
+   ]
+  },
+  "/UserAjax/GetUserPhoneReport": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "_"
+   ],
+   "pages": [
+    "/JS2019/User/myinfo.js"
+   ]
+  },
+  "/UserAjax/GetUserRnameCertLogList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "sdate",
+    "edate",
+    "status",
+    "key1",
+    "key2",
+    "key3"
+   ],
+   "pages": [
+    "/JS2019/User/RnameCertLogAndSetting.js"
+   ]
+  },
+  "/UserAjax/GetZpRootUsers": {
+   "params": [],
+   "method": "GET",
+   "url_query": [
+    "gameName",
+    "orderType"
+   ],
+   "pages": [
+    "/JS2019/Emp/emplist.js",
+    "/JS2019/Order/CoreOrderCenter.js",
+    "/JS2019/Order/OrderList20191212.js"
+   ]
+  },
+  "/UserAjax/QueryRnameCertResult": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/myinfo.js"
+   ]
+  },
+  "/UserAjax/RefChangePwd": {
+   "params": [
+    "uid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/UserAjax/ResetInterNalNewOrderPushWechatMsgSetting": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/mymessage.js"
+   ]
+  },
+  "/UserAjax/ResetRnameCert": {
+   "params": [
+    "uid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/adduser.js"
+   ]
+  },
+  "/UserAjax/RnameCertInit": {
+   "params": [
+    "rname",
+    "sid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/myinfo.js"
+   ]
+  },
+  "/UserAjax/SaveCertSetting": {
+   "params": [
+    "param"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/RnameCertLogAndSetting.js"
+   ]
+  },
+  "/UserAjax/SaveContractWhitelist": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/UserContractSigning.js"
+   ]
+  },
+  "/UserAjax/SaveTaskListSeachConfigConfig": {
+   "params": [
+    "config"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Group/grouplist.js"
+   ]
+  },
+  "/UserAjax/SaveUserConfigForAssOrderByUserId": {
+   "params": [
+    "orderBy"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/addorder.js"
+   ]
+  },
+  "/UserAjax/SaveUserConfigForMsgSoundSoureByUserId": {
+   "params": [
+    "value"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/mymessage.js"
+   ]
+  },
+  "/UserAjax/SaveUserConfigForMsgSoundSwichtByUserId": {
+   "params": [
+    "status"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/mymessage.js"
+   ]
+  },
+  "/UserAjax/SetForbidViewOrderContent": {
+   "params": [
+    "uid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/UserAjax/SetIsProhibitPublicRecOrder": {
+   "params": [
+    "uid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/UserAjax/SetMyMessageRead": {
+   "params": [
+    "msgId"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/mymessage.js"
+   ]
+  },
+  "/UserAjax/SetUserPrivatePhone": {
+   "params": [
+    "uid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/UserAjax/SetUserProhibitedViewOrderPwd": {
+   "params": [
+    "uid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/UserAjax/SetUserSelfRecOrderMaxCount": {
+   "params": [
+    "uid",
+    "count"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/UserAjax/TotalAllUserOrderComplateRat": {
+   "params": [
+    "user"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/UserAjax/UpUserDisSettSta": {
+   "params": [
+    "uid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/UserAjax/UpUserLoginRestrictStatus": {
+   "params": [
+    "userLoginRestrictId",
+    "status"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/UserLoginRestrict.js"
+   ]
+  },
+  "/UserAjax/UpUserSta": {
+   "params": [
+    "uid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/UserAjax/UpUserStaBatch": {
+   "params": [
+    "uid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/UserAjax/UpUserVerSta": {
+   "params": [
+    "uid"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/UserAjax/UploadMyPic": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/myinfo.js"
+   ]
+  },
+  "/UserAjax/UploadQrCode": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/myinfo.js"
+   ]
+  },
+  "/UserAjax/saveMyFeaturesMyJdpSet": {
+   "params": [
+    "paramStr"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/myinfo.js"
+   ]
+  },
+  "/UserAjax/saveMyFeaturesMySystemSet": {
+   "params": [
+    "paramStr"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/myinfo.js"
+   ]
+  },
+  "/UserAjax/saveMyInfo": {
+   "params": [
+    "paramStr"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/myinfo.js"
+   ]
+  },
+  "/UserAjax/saveMyLoginPwd": {
+   "params": [
+    "paramStr"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/myinfo.js"
+   ]
+  },
+  "/api/CustomerApi/DelLevel": {
+   "params": [
+    "id"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Customer/hylevelsetting.js"
+   ]
+  },
+  "/api/CustomerApi/GetLevelList": {
+   "params": [
+    "levelType"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Customer/hylevelsetting.js"
+   ]
+  },
+  "/api/CustomerApi/SaveLevel": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Customer/hylevelsetting.js"
+   ]
+  },
+  "/api/IMApi/CreateGroup": {
+   "params": [
+    "id",
+    "name"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/OnlineConsultationSet.js"
+   ]
+  },
+  "/api/IMApi/DestroyGroup": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/OnlineConsultationSet.js"
+   ]
+  },
+  "/api/SignContract/BatchCreateContract/": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/api/SignContract/CheckContract": {
+   "params": [
+    "ids"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/api/SignContract/ContractBindSysUser": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/UserContractSigning.js"
+   ]
+  },
+  "/api/SignContract/ContractRescission": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/UserContractSigning.js"
+   ]
+  },
+  "/api/SignContract/ContractRevoke": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/UserContractSigning.js"
+   ]
+  },
+  "/api/SignContract/CreateContract": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/UserContractSigning.js"
+   ]
+  },
+  "/api/SignContract/DeleteContract": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/UserContractSigning.js"
+   ]
+  },
+  "/api/SignContract/GetContractTemplateList": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/UserContractSigning.js",
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/api/SignContract/GetContractUrl": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/UserContractSigning.js"
+   ]
+  },
+  "/api/SignContract/GetSignContractUrl": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/UserContractSigning.js"
+   ]
+  },
+  "/api/SignContract/GetSystemContarctList": {
+   "params": [],
+   "method": "POST",
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/UserContractSigning.js"
+   ]
+  },
+  "/api/SignContract/GetSystemContractTotal": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/UserContractSigning.js"
+   ]
+  },
+  "/api/SignContract/SaveSignConfig": {
+   "params": [
+    "param"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/UserContractSigning.js"
+   ]
+  },
+  "/api/SignContract/SetSignStatus": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/userlist.js"
+   ]
+  },
+  "/api/UserApi/BindEmail": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/myinfo.js"
+   ]
+  },
+  "/api/UserApi/GetUserInfo": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/System/systemsetting.js",
+    "/JS2019/User/myinfo.js"
+   ]
+  },
+  "/api/UserApi/SendEmailCode": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/myinfo.js"
+   ]
+  },
+  "/api/UserApi/VerifyEmailCode/": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/User/myinfo.js"
+   ]
+  },
+  "/api/customerApi/GetCustomerSelect": {
+   "params": [],
+   "method": "GET",
+   "url_query": [
+    "keyword"
+   ],
+   "pages": [
+    "/JS2019/Order/addorder.js"
+   ]
+  },
+  "/systemAjax/AddEditLearmInformation": {
+   "params": [
+    "id",
+    "conent",
+    "title"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/clientordergenerate.js"
+   ]
+  },
+  "/systemAjax/delOrderGuideTemplate": {
+   "params": [
+    "id"
+   ],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/clientordergenerate.js"
+   ]
+  },
+  "/systemAjax/getOrderGuideTemplateList": {
+   "params": [],
+   "method": null,
+   "url_query": [],
+   "pages": [
+    "/JS2019/Order/clientordergenerate.js"
+   ]
+  },
+  "/EmpAjax/GetMyOnLineBillSummaryList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "stime",
+    "etime"
+   ],
+   "pages": []
+  },
+  "/EmpAjax/GetOnLineBillSummaryList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "stime",
+    "etime",
+    "page",
+    "limit"
+   ],
+   "pages": []
+  },
+  "/OrderAjax/GetSoureOrderChangePriceLogList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "sdate",
+    "edate",
+    "page",
+    "limit"
+   ],
+   "pages": []
+  },
+  "/SystemAjax/GetSysmteLogList": {
+   "params": [],
+   "method": null,
+   "url_query": [
+    "stime",
+    "etime",
+    "key2",
+    "page",
+    "limit"
+   ],
+   "pages": []
+  }
+ }
+}

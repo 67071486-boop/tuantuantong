@@ -1,0 +1,4 @@
+allowBuilds:
+  # vue-demi（@vueuse/core@10 的传递依赖）的 postinstall 只为切 Vue 2；本工程纯 Vue 3，
+  # 其出厂默认（lib/index.mjs）已是 isVue3=true，无需构建脚本（读源码核实）。
+  vue-demi: false

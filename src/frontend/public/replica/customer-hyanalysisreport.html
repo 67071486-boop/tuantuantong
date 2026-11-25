@@ -1,0 +1,83 @@
+<!-- 复刻证据件：对标物 /Customer/hyanalysisreport（会员分析报表）的页内 <style> 段 + 处理过的 body 标记。
+     生成源：.tools/replica-draft/customer-hyanalysisreport.json（只读 .tools/recon/<对标取数快照>/ 的离线证据，绝不联网取）。
+     与对标原文的差异：非标记 <script> 已删（含 IE 条件注释里的 2 个 CDN 引用）；
+     该页 laytpl 无未解析表达式；PII 清空情况见本轮报告。 -->
+<style>
+        body {
+            background-color: #fff
+        } 
+        .layadmin-pagetabs {
+            height: 40px;
+            line-height: 40px;
+            padding: 0 80px 0 40px;
+            background-color: #fafafa;
+            box-sizing: border-box;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+            border-bottom: 1px solid #1AA094;
+        }
+            .layadmin-pagetabs .layui-tab-title li.layui-this, .layadmin-pagetabs .layui-tab-title li:hover {
+                background-color: #009688;
+                color: #fff;
+            }
+    
+
+
+    .block {
+        width: 98%;
+        box-sizing:border-box;
+        height: 540px;
+        margin: 0 auto;
+        padding: 10px 0;
+        box-shadow: 5px 0px 10px #888888;
+        border-radius: 2px;
+        background: #fff !important;
+    }
+</style>
+
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      
+      
+    <![endif]-->
+    
+
+
+
+<style>
+
+    .block {
+        width: 98%;
+        box-sizing:border-box;
+        height: 540px;
+        margin: 0 auto;
+        padding: 10px 0;
+        box-shadow: 5px 0px 10px #888888;
+        border-radius: 2px;
+        background: #fff !important;
+    }
+</style>
+
+<div class="layui-row layui-col-space5">
+
+    <div class="layui-col-md6" style="">
+        <div id="SourceType" class="block"></div>
+    </div>
+    <div class="layui-col-md6">
+        <div id="ConsumType" class="block"></div>
+    </div>
+
+</div>
+
+<div class="layui-row layui-col-space5">
+
+    <div class="layui-col-md12" style="">
+        <div id="HyRaise" class="block"></div>
+    </div>
+</div>
+
+
+<div id="main" style="width: 600px;height:400px;"></div> 
+
+
+
+

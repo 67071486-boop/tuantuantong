@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="only light">
+  <meta name="theme-color" content="#ffffff">
+  <title>进入团团通</title>
+  <style>
+    html { color-scheme: only light; background: #fff; }
+    body { margin: 0; background: #fff; color: #20302a; font: 16px/1.5 system-ui, sans-serif; }
+    main { max-width: 26rem; margin: 10vh auto 0; padding: 1.5rem; }
+    h1 { font-size: 1.6rem; }
+    button, a { display: block; box-sizing: border-box; text-align: center; }
+    button { width: 100%; border: 0; border-radius: .6rem; background: #09634b; color: white;
+             padding: .75rem; font: inherit; font-weight: 600; cursor: pointer; }
+    a { margin-top: .75rem; padding: .6rem; color: #345c4d; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>进入团团通</h1>
+    {% if switching_account %}
+      <p>当前浏览器已登录其他账号。确认后将切换到已绑定的打手账号 {{ account_label }}。</p>
+    {% else %}
+      <p>确认登录已绑定的团团通账号 {{ account_label }}。</p>
+    {% endif %}
+    <form method="post" action="{% url 'auth-wxpusher-login' %}">
+      {% csrf_token %}
+      <input type="hidden" name="confirmation" value="{{ confirmation }}">
+      <button type="submit">{% if switching_account %}确认切换{% else %}确认登录{% endif %}</button>
+    </form>
+    <a href="{{ password_entry }}">使用账号密码登录</a>
+  </main>
+</body>
+</html>

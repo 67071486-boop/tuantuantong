@@ -1,0 +1,77 @@
+diff --git a/src/pages/localChatPreview/liveChat.ts b/src/pages/localChatPreview/liveChat.ts
+index abe979a..935e94b 100644
+--- a/src/pages/localChatPreview/liveChat.ts
++++ b/src/pages/localChatPreview/liveChat.ts
+@@ -1432,17 +1432,22 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+   document.title = '团团通内部通讯';
+   api.changed.addEventListener('change', synchronize);
+   let navigation = 0;
+-  api.connectNavigation(async(id, messageId) => {
++  api.connectNavigation(async(id, messageId, retained) => {
+     const serial = ++navigation;
+     try {
+       if(!peerByConversation.has(id)) await refreshDialogs();
+-      if(serial !== navigation) return;
++      if(serial !== navigation) return false;
+       const peerId = peerByConversation.get(id);
+-      if(peerId !== undefined) await appImManager.setInnerPeer({peerId, lastMsgId: messageId});
+-      else toast('未找到该会话');
++      if(peerId !== undefined) {
++        await appImManager.setInnerPeer({peerId, lastMsgId: messageId});
++        if(appImManager.chat.peerId === peerId || !retained) return true;
++      } else toast('未找到该会话');
+     } catch(error) {
+       if(serial === navigation) reportSendFailure(error);
+     }
++    if(!retained || serial !== navigation) return false;
++    await appImManager.setPeer({isDeleting: true}, false);
++    return serial === navigation && !isDisplayedHistory(appImManager.chat.peerId);
+   });
+   window.addEventListener('online', synchronize);
+   void synchronize();
+diff --git a/src/pages/localChatPreview/liveTransport.ts b/src/pages/localChatPreview/liveTransport.ts
+index cabfe4e..17b6c3e 100644
+--- a/src/pages/localChatPreview/liveTransport.ts
++++ b/src/pages/localChatPreview/liveTransport.ts
+@@ -114,7 +114,7 @@ export function createLiveTransport(orderNo?: string) {
+   const visibility = new EventTarget();
+   let visible = false;
+   let listControlsReady = false;
+-  let openConversation: (id: number, messageId?: number) => void;
++  let openConversation: (id: number, messageId?: number, retained?: boolean) => Promise<boolean>;
+   let handleBack: () => boolean;
+   let onPresence: (conversationId: number, online: boolean | null) => void;
+   let orderHistoryActionState: (state: OrderHistoryActionState) => void;
+@@ -141,12 +141,20 @@ export function createLiveTransport(orderNo?: string) {
+       window.parent.postMessage({type: 'tt:chat.backResult', id: data.id, detail: handleBack()}, parentOrigin);
+     } else if(data?.type === 'tt:chat.requestListControlsReady' && listControlsReady) {
+       reportListControlsReady();
+-    } else if(data?.type === 'tt:chat.openConversation') {
++    } else if(data?.type === 'tt:chat.openConversation' || data?.type === 'tt:chat.openRetainedConversation') {
+       const conversationId = typeof data.detail === 'number' ? data.detail : data.detail?.conversationId;
+       const messageId = data.detail?.messageId;
++      const requestId = data.detail?.requestId;
++      const retained = data.type === 'tt:chat.openRetainedConversation';
+       if(Number.isSafeInteger(conversationId) && conversationId > 0 &&
+-         (messageId === undefined || (Number.isSafeInteger(messageId) && messageId > 0))) {
+-        openConversation?.(conversationId, messageId);
++         (messageId === undefined || (Number.isSafeInteger(messageId) && messageId > 0)) &&
++         (!retained || (Number.isSafeInteger(requestId) && requestId > 0))) {
++        function reportResult(settled: boolean) {
++          if(retained) {
++            window.parent.postMessage({type: 'tt:chat.retainedNavigationDone', id: requestId, detail: settled}, parentOrigin);
++          }
++        }
++        void openConversation?.(conversationId, messageId, retained).then(reportResult, () => reportResult(false));
+       }
+     } else if(orderPath && data?.type === 'tt:order-history.action-state' && typeof data.detail?.busy === 'boolean') {
+       orderHistoryActionState?.({
+@@ -197,7 +205,7 @@ export function createLiveTransport(orderNo?: string) {
+       orderHistoryActionState = handler;
+     },
+     visible: () => visible && !document.hidden,
+-    connectNavigation: (handler: (id: number, messageId?: number) => void) => {
++    connectNavigation: (handler: typeof openConversation) => {
+       openConversation = handler;
+       window.parent.postMessage({type: 'tt:chat.navigationReady'}, parentOrigin);
+     },

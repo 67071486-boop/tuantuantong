@@ -1,0 +1,426 @@
+diff --git a/src/components/chat/bubbles.ts b/src/components/chat/bubbles.ts
+index 93abf1a..caa8eea 100644
+--- a/src/components/chat/bubbles.ts
++++ b/src/components/chat/bubbles.ts
+@@ -878,6 +878,7 @@ export default class ChatBubbles {
+   public paddingTop: HTMLDivElement;
+   public paddingBottom: HTMLDivElement;
+
++  private mountedHistoryPeerId: PeerId;
+   private getHistoryTopPromise: Promise<boolean>;
+   private getHistoryBottomPromise: Promise<boolean>;
+
+@@ -2892,6 +2893,10 @@ export default class ChatBubbles {
+     return this.chat.peerId;
+   }
+
++  public hasMountedHistory(peerId: PeerId) {
++    return this.mountedHistoryPeerId === peerId && this.chatInner?.isConnected;
++  }
++
+   public get messagesQueuePromise() {
+     return this.batchProcessor.queuePromise;
+   }
+@@ -6913,9 +6918,10 @@ export default class ChatBubbles {
+     }
+
+     const isGoingToBottomEnd = lastMsgFullMid === topMessageFullMid || (lastMsgFullMid === EMPTY_FULL_MID && !followingUnread);
+-    const isJump = lastMsgFullMid !== topMessageFullMid/*  && overrideAdditionMsgId === undefined */;
++    // An unread anchor is a hint from the dialog snapshot even if it used to be the newest message.
++    const isJump = options.internalChatUnreadEntry || lastMsgFullMid !== topMessageFullMid;
+
+-    if(isGoingToBottomEnd && lastMsgFullMid !== EMPTY_FULL_MID) {
++    if(!options.internalChatUnreadEntry && isGoingToBottomEnd && lastMsgFullMid !== EMPTY_FULL_MID) {
+       const message = this.chat.getMessage(lastMsgFullMid);
+       if(!message) {
+         this.log('fix going to bottom end without existing message', lastMsgFullMid);
+@@ -7293,6 +7299,7 @@ export default class ChatBubbles {
+       // not-cached branch above.
+       this.chat.revealPreparedBackground();
+       scrollable.replaceChildren(this.paddingTop, chatInner, this.paddingBottom);
++      this.mountedHistoryPeerId = peerId;
+       // * the input's height and centering, with the history it goes with mounted - before the initial scroll
+       applyInputLayout?.();
+       applyInputLayout = undefined;
+@@ -7391,7 +7398,7 @@ export default class ChatBubbles {
+           }
+         }
+
+-        if(isTarget && !foundTarget) {
++        if(isTarget && !foundTarget && !options.internalChatUnreadEntry) {
+           afterSetPromise.then(() => {
+             if(!middleware()) return;
+             toastNew({langPackKey: 'MessageNotFound'});
+diff --git a/src/components/dialogsContextMenu.ts b/src/components/dialogsContextMenu.ts
+index 9e99a34..205f55a 100644
+--- a/src/components/dialogsContextMenu.ts
++++ b/src/components/dialogsContextMenu.ts
+@@ -647,14 +647,12 @@ export default class DialogsContextMenu {
+         monoforumThreadId: this.peerId,
+         read: !!dialog.unread_count
+       });
+-    } else if(dialog.unread_count) {
+-      if(!this.threadId) {
+-        managers.appMessagesManager.markDialogUnread({peerId, read: true});
+-      } else {
+-        managers.appMessagesManager.readHistory({peerId, maxId: dialog.top_message, threadId: this.threadId});
+-      }
+     } else if(!this.threadId) {
+-      managers.appMessagesManager.markDialogUnread({peerId});
++      const read = Boolean(dialog.unread_count || (isDialog(dialog) && dialog.pFlags.unread_mark));
++      const action = {peerId, read, userInitiated: true};
++      managers.appMessagesManager.markDialogUnread(action);
++    } else if(dialog.unread_count) {
++      managers.appMessagesManager.readHistory({peerId, maxId: dialog.top_message, threadId: this.threadId});
+     }
+   };
+
+diff --git a/src/components/popups/chatPreview.tsx b/src/components/popups/chatPreview.tsx
+index 3d09e51..38fcbd2 100644
+--- a/src/components/popups/chatPreview.tsx
++++ b/src/components/popups/chatPreview.tsx
+@@ -283,17 +283,14 @@ export default function showChatPreviewPopup(options: ChatPreviewOptions): void
+             monoforumThreadId: options.monoforumThreadId,
+             read: isUnread
+           });
++        } else if(!options.threadId) {
++          const action = {peerId: options.peerId, read: isUnread, userInitiated: true};
++          managers.appMessagesManager.markDialogUnread(action);
+         } else if(isUnread) {
+-          if(!options.threadId) {
+-            managers.appMessagesManager.markDialogUnread({peerId: options.peerId, read: true});
+-          } else {
+-            const topMessage = (dialog as any).top_message;
+-            if(topMessage) {
+-              managers.appMessagesManager.readHistory({peerId: options.peerId, maxId: topMessage, threadId: options.threadId});
+-            }
++          const topMessage = (dialog as any).top_message;
++          if(topMessage) {
++            managers.appMessagesManager.readHistory({peerId: options.peerId, maxId: topMessage, threadId: options.threadId});
+           }
+-        } else if(!options.threadId) {
+-          managers.appMessagesManager.markDialogUnread({peerId: options.peerId});
+         }
+       }, {listenerSetter});
+     }
+diff --git a/src/lib/appImManager.ts b/src/lib/appImManager.ts
+index 070002b..4583dea 100644
+--- a/src/lib/appImManager.ts
++++ b/src/lib/appImManager.ts
+@@ -206,6 +206,7 @@ export type ChatSavedPosition = {
+ export type ChatSetPeerOptions = {
+   peerId: PeerId,
+   lastMsgId?: number,
++  internalChatUnreadEntry?: boolean,
+   pollOption?: string | Uint8Array,
+   /** text to light up inside the `lastMsgId` bubble: the search query it was found by, or the quote that led here */
+   highlight?: TextHighlightMatch,
+diff --git a/src/pages/localChatPreview/liveChat.ts b/src/pages/localChatPreview/liveChat.ts
+index 4553e3d..1daa0b1 100644
+--- a/src/pages/localChatPreview/liveChat.ts
++++ b/src/pages/localChatPreview/liveChat.ts
+@@ -30,7 +30,7 @@ import {installWorkerDirectory, showWorkerDirectory} from './workerDirectory';
+ import {installLiveSearchLayout} from './liveSearchLayout';
+ import {installOrderMediaActions} from './orderMediaActions';
+ import {createPreviewEmojiManager, getMentionedMembers, getOrderMentionPeers, installPreviewMentions} from './composerMentionsEmoji';
+-import {createLiveTransport, type AlbumSendBody, type Contact, type ChatMessage, type ChatImageData, type ChatSearchFilters, type Conversation, type ConversationPreferences, type OrderConversation, type OrderMember, type SendBody} from './liveTransport';
++import {ChatRequestError, createLiveTransport, type AlbumSendBody, type Contact, type ChatMessage, type ChatImageData, type ChatSearchFilters, type Conversation, type ConversationPreferences, type OrderConversation, type OrderMember, type SendBody} from './liveTransport';
+ import {editConversationRemark} from './conversationRemark';
+ import {installConversationLabels} from './conversationLabels';
+ import {installSendRetry} from './sendRetry';
+@@ -38,6 +38,7 @@ import orderGroupAvatar from './order-group-avatar.png';
+ import {chatPhoto, chatPhotoDownloads, encodeChatAlbum, encodeChatImage, installImageOnlyComposer} from './composerImages';
+
+ type ChatDialog = Dialog.dialog & {index_0: number, topMessage?: Message.message};
++type ReadAction = 'history' | 'open-marked' | 'explicit';
+ type HistoryRequest = {
+   peerId: PeerId;
+   offsetId?: number;
+@@ -145,6 +146,7 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+   const rendered = new Map<number, Message.message>();
+   const loaded = new Set<number>();
+   const startedHistory = new Set<PeerId>();
++  const openingUnread = new Map<PeerId, {messageId: number}>();
+   const dialogs = new Map<PeerId, ChatDialog>();
+   const reads = new Map<number, number>();
+   const deferredReads = new Set<PeerId>();
+@@ -385,7 +387,7 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+       _: 'dialog',
+       pFlags: {
+         ...(conversation.pinned && {pinned: true}),
+-        ...(isH5 && conversation.marked_unread && {unread_mark: true})
++        ...(conversation.marked_unread && {unread_mark: true})
+       },
+       peerId,
+       peer: outputPeer(peerId),
+@@ -519,7 +521,7 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+
+   function markUnread(peerId: PeerId) {
+     const conversation = conversations.get(peerId);
+-    if(!conversation || conversation.marked_unread || conversation.unread_count) return;
++    if(readOnly || !api.visible() || !conversation || conversation.marked_unread || conversation.unread_count) return;
+     return changePreferences(peerId, {marked_unread: true});
+   }
+
+@@ -668,10 +670,24 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+     const startsAtNewest = !startedHistory.has(peerId) && offsetId === conversation.last_message?.id && !backLimit;
+     const pageOlder = offsetId && !startsAtNewest && !backLimit && anchor;
+     const queryParams = !offsetId || startsAtNewest ? {} : pageOlder ? {before: String(pageOlder.seq)} : {around: String(offsetId)};
+-    const page = initialOrderHistory && (!offsetId || startsAtNewest) ?
+-      initialOrderHistory : await api.history(conversation.id, queryParams);
+-    initialOrderHistory = undefined;
+-    if(!conversations.has(peerId)) return emptyHistory;
++    const unreadOpening = openingUnread.get(peerId);
++    const retryUnreadAnchor = () => backLimit && unreadOpening?.messageId === offsetId && openingUnread.get(peerId) === unreadOpening;
++    let page: Awaited<ReturnType<typeof api.history>>;
++    try {
++      page = initialOrderHistory && (!offsetId || startsAtNewest) ?
++        initialOrderHistory : await api.history(conversation.id, queryParams);
++      initialOrderHistory = undefined;
++      if(retryUnreadAnchor() && !page.messages.some(({id}) => id === offsetId)) {
++        page = await api.history(conversation.id, {around: String(offsetId)});
++      }
++    } catch(error) {
++      if(!retryUnreadAnchor() || !(error instanceof ChatRequestError) || error.status !== 404) throw error;
++      page = undefined;
++    }
++    if(retryUnreadAnchor() && !page?.messages.some(({id}) => id === offsetId)) {
++      page = await api.history(conversation.id);
++    }
++    if(!page || !conversations.has(peerId)) return emptyHistory;
+     startedHistory.add(peerId);
+     return historyResult(peerId, page, pageOlder ? offsetId : undefined);
+   }
+@@ -883,16 +899,25 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+     return imageSends;
+   }
+
+-  async function saveRead(conversation: Conversation, seq: number) {
++  async function saveRead(conversation: Conversation, seq: number, action: ReadAction = 'history') {
++    if(readOnly) return;
++    const peerId = peerByConversation.get(conversation.id);
+     const pendingRead = reads.get(conversation.id);
+-    if(readOnly || !api.visible() || (isH5 && !isDisplayedHistory(peerByConversation.get(conversation.id))) ||
+-      (pendingRead !== undefined && pendingRead >= seq)) return;
+-    if(seq <= conversation.read_seq && !(isH5 && conversation.marked_unread)) return;
++    if(pendingRead !== undefined && pendingRead >= seq) return;
++    if(seq <= conversation.read_seq && !(action !== 'history' && conversation.marked_unread)) return;
++    if(!api.visible() || (isH5 && action !== 'explicit' && !isDisplayedHistory(peerId))) {
++      if(action === 'history') deferredReads.add(peerId);
++      return;
++    }
+     reads.set(conversation.id, seq);
+     try {
+       const result = await api.read(conversation.id, seq);
+-      if(isH5 && !result) deferredReads.add(peerByConversation.get(conversation.id));
+-      else void synchronize();
++      if(result) {
++        void synchronize();
++      } else if(action === 'history' && !deferredReads.has(peerId)) {
++        deferredReads.add(peerId);
++        if(api.visible()) requestAnimationFrame(readVisibleHistory);
++      }
+     } finally {
+       if(reads.get(conversation.id) === seq) reads.delete(conversation.id);
+     }
+@@ -902,16 +927,28 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+     const conversation = conversations.get(peerId);
+     const message = messages.get(maxId);
+     if(!conversation || message?.conversation_id !== conversation.id) return;
+-    if(isH5 && (!api.visible() || !isDisplayedHistory(peerId)) && message.seq > conversation.read_seq) {
+-      deferredReads.add(peerId);
+-      return;
+-    }
+     return saveRead(conversation, message.seq);
+   }
+
+   function clearManualUnread(peerId: PeerId) {
++    if(!conversations.get(peerId)?.marked_unread || !api.visible() || !isDisplayedHistory(peerId)) return;
++    const chat = appImManager.chat;
++    void Promise.resolve(chat.setPeerPromise).then(() => {
++      const conversation = conversations.get(peerId);
++      if(conversation?.marked_unread && appImManager.chat === chat && isDisplayedHistory(peerId) &&
++        chat.bubbles?.hasMountedHistory(peerId)) {
++        void saveRead(conversation, conversation.read_seq, 'open-marked').catch(reportSendFailure);
++      }
++    });
++  }
++
++  function markDialogUnread({peerId, read, userInitiated}: {peerId: PeerId; read?: boolean; userInitiated?: boolean}) {
++    if(!userInitiated) return;
++    if(!read) return markUnread(peerId);
+     const conversation = conversations.get(peerId);
+-    if(conversation?.marked_unread) void saveRead(conversation, conversation.read_seq).catch(reportSendFailure);
++    if(!conversation) return;
++    const seq = conversation.unread_count ? conversation.last_message?.seq : conversation.read_seq;
++    if(seq !== undefined) return saveRead(conversation, seq, 'explicit').catch(reportSendFailure);
+   }
+
+   async function deleteMessages(peerId: PeerId, mids: number[], revoke: boolean) {
+@@ -1033,7 +1070,9 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+       isDialogPinned: (peerId: PeerId) => Boolean(conversations.get(peerId)?.pinned),
+       getFolderDialogs: (folderId: number) => getDialogs({filterId: folderId}).dialogs,
+       isDialogsLoaded: () => true,
+-      getFolderUnreadCount: () => [...dialogs.values()].reduce((total, dialog) => total + dialog.unread_count, 0),
++      getFolderUnreadCount: () => [...dialogs.values()].reduce(
++        (total, dialog) => total + Math.max(dialog.unread_count, Number(Boolean(dialog.pFlags.unread_mark))), 0
++      ),
+       getForumUnreadCount: () => undefined
+     },
+     appMessagesIdsManager: {incrementMessageId: (id: number, increment: number) => id + increment},
+@@ -1048,12 +1087,12 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+       getDialogOnly: getDialog,
+       toggleDialogPin: ({peerId}: {peerId: PeerId}) => changePreferences(peerId, {pinned: !conversations.get(peerId)?.pinned}),
+       isDialogUnread,
++      // History previews also request automatic clears; entering the main chat owns that transition.
++      markDialogUnread,
+       ...(isH5 && {
+         getDialogsSelectionActions: getSelectionActions,
+         setDialogsPinned: ({peerIds, pinned}: {peerIds: PeerId[]; pinned: boolean}) =>
+           Promise.all(peerIds.map((peerId) => changePreferences(peerId, {pinned}))),
+-        // Native previews also ask to mark a conversation read; only the main chat clears it.
+-        markDialogUnread: ({peerId, read}: {peerId: PeerId; read?: boolean}) => !read && markUnread(peerId),
+         markDialogsUnread: ({peerIds, read}: {peerIds: PeerId[]; read?: boolean}) =>
+           !read && Promise.all(peerIds.map(markUnread))
+       }),
+@@ -1187,62 +1226,66 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+     if(restrictNewPrivateChat(peerId)) return Promise.resolve(false);
+     const firstUnread = conversations.get(peerId)?.first_unread_message_id;
+     const shouldJump = firstUnread && !options.lastMsgId && !options.threadId && appImManager.chat.peerId !== peerId;
+-    const selected = selectPeer(shouldJump ? {...options, lastMsgId: firstUnread} : options, animate);
+-    if(!isH5) return selected;
++    const unreadOpening = isH5 && shouldJump ? {messageId: firstUnread} : undefined;
++    if(unreadOpening) openingUnread.set(peerId, unreadOpening);
++    const selected = selectPeer(shouldJump ? {
++      ...options, lastMsgId: firstUnread, internalChatUnreadEntry: !!unreadOpening
++    } : options, animate);
+     return selected.then((result) => {
+       if(appImManager.chat.peerId === peerId) clearManualUnread(peerId);
+       return result;
++    }).finally(() => {
++      if(unreadOpening && openingUnread.get(peerId) === unreadOpening) openingUnread.delete(peerId);
+     });
+   };
+-  if(isH5) {
+-    function readVisibleHistory() {
+-      const chat = appImManager.chat;
+-      const peerId = chat.peerId;
+-      if(!api.visible() || !isDisplayedHistory(peerId)) return;
+-      const conversation = conversations.get(peerId);
+-      if(!conversation?.unread_count) {
+-        deferredReads.delete(peerId);
+-        return;
+-      }
+-      const history = chat.bubbles?.scrollable?.container;
+-      if(!history) return;
+-      const viewport = history.getBoundingClientRect();
+-      let seq = conversation.read_seq;
+-      for(const item of history.querySelectorAll<HTMLElement>('.bubble[data-mid], .grouped-item[data-mid]')) {
+-        if(item.matches('.bubble') && item.querySelector('.grouped-item[data-mid]')) continue;
+-        const raw = messages.get(Number(item.dataset.mid));
+-        if(raw?.conversation_id !== conversation.id || raw.seq <= seq || raw.revoked ||
+-          senderIsSelf(conversation, raw.sender_id, user.id)) continue;
+-        const bounds = item.getBoundingClientRect();
+-        if(bounds.height && bounds.bottom > Math.max(0, viewport.top) &&
+-          bounds.top < Math.min(innerHeight, viewport.bottom) && bounds.right > 0 && bounds.left < innerWidth) {
+-          seq = raw.seq;
+-        }
++  function readVisibleHistory() {
++    const chat = appImManager.chat;
++    const peerId = chat.peerId;
++    if(!api.visible() || !isDisplayedHistory(peerId) || !chat.bubbles?.hasMountedHistory(peerId)) return;
++    const conversation = conversations.get(peerId);
++    if(!conversation?.unread_count) {
++      deferredReads.delete(peerId);
++      return;
++    }
++    const history = chat.bubbles?.scrollable?.container;
++    if(!history) return;
++    const viewport = history.getBoundingClientRect();
++    let seq = conversation.read_seq;
++    for(const item of history.querySelectorAll<HTMLElement>('.bubble[data-mid], .grouped-item[data-mid]')) {
++      if(item.matches('.bubble') && item.querySelector('.grouped-item[data-mid]')) continue;
++      const raw = messages.get(Number(item.dataset.mid));
++      if(raw?.conversation_id !== conversation.id || raw.seq <= seq || raw.revoked ||
++        senderIsSelf(conversation, raw.sender_id, user.id)) continue;
++      const bounds = item.getBoundingClientRect();
++      if(bounds.height && bounds.bottom > Math.max(0, viewport.top) &&
++        bounds.top < Math.min(innerHeight, viewport.bottom) && bounds.right > 0 && bounds.left < innerWidth) {
++        seq = raw.seq;
+       }
+-      if(seq > conversation.read_seq) void saveRead(conversation, seq).catch(reportSendFailure);
+     }
++    if(seq > conversation.read_seq) void saveRead(conversation, seq).catch(reportSendFailure);
++  }
+
+-    function resumeVisibleHistory() {
+-      if(!api.visible() || !isDisplayedHistory(appImManager.chat.peerId)) return;
+-      clearManualUnread(appImManager.chat.peerId);
++  function resumeVisibleHistory() {
++    const peerId = appImManager.chat.peerId;
++    if(!api.visible() || !isDisplayedHistory(peerId)) return;
++    clearManualUnread(peerId);
++    if(isH5 || deferredReads.has(peerId)) requestAnimationFrame(readVisibleHistory);
++  }
++
++  document.addEventListener('scroll', (event) => {
++    const chat = appImManager.chat;
++    if(api.visible() && deferredReads.has(chat.peerId) && event.target === chat.bubbles?.scrollable?.container) {
+       requestAnimationFrame(readVisibleHistory);
+     }
+-
+-    // Intersection callbacks can run while the H5 keeps the frame or the chat column mounted.
+-    api.visibility.addEventListener('change', resumeVisibleHistory);
+-    const selectTab = appImManager.selectTab.bind(appImManager);
+-    appImManager.selectTab = (id, animate) => {
+-      const selected = selectTab(id, animate);
+-      void selected.then(resumeVisibleHistory);
+-      return selected;
+-    };
+-    document.addEventListener('scroll', (event) => {
+-      const chat = appImManager.chat;
+-      if(api.visible() && deferredReads.has(chat.peerId) && event.target === chat.bubbles?.scrollable?.container) {
+-        requestAnimationFrame(readVisibleHistory);
+-      }
+-    }, true);
+-  }
++  }, true);
++  // Selection can finish before a narrow chat column becomes visible.
++  api.visibility.addEventListener('change', resumeVisibleHistory);
++  const selectTab = appImManager.selectTab.bind(appImManager);
++  appImManager.selectTab = (id, animate) => {
++    const selected = selectTab(id, animate);
++    void selected.then(resumeVisibleHistory);
++    return selected;
++  };
+   refreshPinnedPlate = (peerId, mid) => {
+     if(appImManager.chat.peerId !== peerId) return;
+     if(appImManager.chat.type === ChatType.Pinned) {
+diff --git a/src/pages/localChatPreview/liveTransport.ts b/src/pages/localChatPreview/liveTransport.ts
+index 69d41ad..7267feb 100644
+--- a/src/pages/localChatPreview/liveTransport.ts
++++ b/src/pages/localChatPreview/liveTransport.ts
+@@ -73,6 +73,12 @@ type Change = {
+   message: ChatMessage | null;
+ };
+
++export class ChatRequestError extends Error {
++  constructor(message: string, readonly status?: number) {
++    super(message);
++  }
++}
++
+ export function createLiveTransport(orderNo?: string) {
+   const hosted = import.meta.env.VITE_TTT_CHAT_HOSTED === '1';
+   const parentOrigin = hosted ? location.origin : document.referrer && new URL(document.referrer).origin;
+@@ -146,7 +152,9 @@ export function createLiveTransport(orderNo?: string) {
+       if(!item) return;
+       pending.delete(data.id);
+       window.clearTimeout(item.timer);
+-      if(typeof data.error === 'string') item.reject(new Error(data.error));
++      if(typeof data.error === 'string') {
++        item.reject(new ChatRequestError(data.error, typeof data.errorStatus === 'number' ? data.errorStatus : undefined));
++      }
+       else item.resolve(data.result);
+     }
+   });

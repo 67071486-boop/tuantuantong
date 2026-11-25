@@ -1,0 +1,9 @@
+.m-card.card {
+  box-sizing: border-box;
+  margin: 0 0 10px;
+  padding: 14px 15px;
+  background: #fff;
+  border: 1px solid var(--m-border);
+  border-radius: var(--f7-card-border-radius);
+  box-shadow: none;
+}

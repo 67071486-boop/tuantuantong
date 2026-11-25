@@ -1,0 +1,15 @@
+{
+ "meta": {
+  "source": "live-write-probe",
+  "measured_at": "2026-09-28",
+  "note": "逐端点的成功语义（显式登记，压过默认）。`positive_code` = `code` 是数字且 > 0 才算成功（鸡蛋铺写接口的口径，租户前端 JS 即 `if (data.code > 0)`）。只登记**实测过**的端点；没登记的按端点 `risk` 取默认（`write` → `positive_code`，其余 → `lenient`），默认值在 `client._endpoint_success_rule` 里，不写进生成的清单。这份文件同时是实测证据与**例外清单**（给某个写端点写回 `lenient` 即可覆盖默认）。证据与过程见团团通仓 docs/specs/2026-09-24-jidanpu-sync-design.md §2.8 与 docs/ERRORS.md 的 E-0100。⚠️ 2026-09-24 首次登记 4 个订单写接口；2026-09-28 追加 `/OrderAjax/RecOrderByInternal`（内部抢单大厅「接单」）：真机实测 `POST` + 表单 `data={\"orderId\": <orderId>}` ⇒ 业务壳 `code=1` + msg「接单成功，请到\"我的订单\"里查看订单资料…」⇒ 写接口口径成立（`code > 0`）。这一次 `code` 恰好是 `1`，**不是**「成功码恒为 1」——登记的是口径不是字面值。",
+  "count": 5
+ },
+ "rules": {
+  "/OrderAjax/AddOrderAjax": "positive_code",
+  "/OrderAjax/ChangeOrderPrice": "positive_code",
+  "/OrderAjax/ChangeOrderRemark": "positive_code",
+  "/OrderAjax/DelOrderByIDX": "positive_code",
+  "/OrderAjax/RecOrderByInternal": "positive_code"
+ }
+}

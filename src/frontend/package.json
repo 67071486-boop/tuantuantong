@@ -1,0 +1,58 @@
+{
+  "name": "tenant-web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.4.2",
+  "scripts": {
+    "dev": "vite",
+    "dev:lan": "vite --host 0.0.0.0",
+    "build": "vue-tsc --build --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --build --noEmit",
+    "test": "vitest run",
+    "lint": "eslint . --fix",
+    "e2e": "node e2e/run.mjs",
+    "e2e:write": "TT_E2E_WRITE=1 node e2e/run.mjs",
+    "e2e:headed": "playwright test --config e2e/playwright.config.ts --headed"
+  },
+  "dependencies": {
+    "axios": "^1.20.0",
+    "element-plus": "^2.14.6",
+    "framework7": "9.3.0",
+    "framework7-icons": "5.0.5",
+    "framework7-vue": "9.3.0",
+    "marked": "^18.1.0",
+    "pinia": "^4.0.3",
+    "tdesign-icons-vue-next": "0.4.11",
+    "vue": "^3.5.42",
+    "vue-router": "^5.3.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "@tsconfig/node24": "^24.0.5",
+    "@types/jsdom": "^30.0.0",
+    "@types/node": "^24.13.4",
+    "@vitejs/plugin-vue": "^6.0.8",
+    "@vitest/eslint-plugin": "^1.6.27",
+    "@vue/eslint-config-typescript": "^14.9.0",
+    "@vue/test-utils": "^2.5.0",
+    "@vue/tsconfig": "^0.9.1",
+    "eslint": "^10.10.0",
+    "eslint-plugin-vue": "~10.11.0",
+    "jiti": "^2.7.0",
+    "jsdom": "^30.0.1",
+    "npm-run-all2": "^9.0.3",
+    "typescript": "~6.0.0",
+    "unplugin-auto-import": "^21.1.0",
+    "unplugin-vue-components": "^32.1.0",
+    "vite": "^8.2.2",
+    "vite-plugin-vue-devtools": "^8.2.1",
+    "vitest": "^4.1.11",
+    "vue-eslint-parser": "^10.4.1",
+    "vue-tsc": "^3.3.11"
+  },
+  "engines": {
+    "node": "^22.18.0 || >=24.12.0"
+  }
+}

@@ -1,0 +1,80 @@
+/* 表格密度：docs/FRONTEND-THEME.md §2.2 的实测值（12px / 6px / fixed / 不换行 + 省略号）。
+ *
+ * 为什么是一个**新文件**而不是写进 theme.css / shell.css：
+ * `docs/plans/2026-09-20-frontend-visual-theme.md` 正在**另一个会话**里改那两个文件，
+ * 本计划只碰新文件（spec §5 第 3 条的顺序约束）。
+ * 主题计划把表格密度明确留给「P2 首个列表页」落地（该计划 Task 4 的收尾验收里写着这句话），
+ * 本文件就是那个落点。
+ *
+ * 📌 **裁决：12px / 6px 等密度值故意保持字面量**——它们就是密度规范本身，
+ * 主题计划明确把密度留在这里落地而非 token 化；下一个读者不要「顺手」把它们换成 CSS 变量（该 token 化的只有颜色）。
+ *
+ * ⚠️ 这里**只有尺寸与排版，没有色值**：颜色一律走主题 token（`--tt-*`，登记在
+ * docs/FRONTEND-THEME.md §2；`theme.css` 尚未落地，所以每个都带一个 EP 自己的 token 兜底，
+ * 免得 token 未定义时把 EP 的默认值也一起顶掉）。
+ *
+ * ⚠️ **2026-09-20 追加（视觉主题分支合并后，仅加注、不改上面那句）**：`theme.css` **已经落地**——
+ * `src/frontend/src/styles/theme.css`（103 行）由 `src/frontend/src/main.ts:5`
+ * `import './styles/theme.css'` 引入（本轮读码）。因此上面那些 `var(--tt-…, var(--el-…))` 的
+ * **兜底分支今天是死分支**（本文件引用到的 `--tt-*` 只有两个名字：`--tt-bg-subtle`（`:48`/`:53`）、
+ * `--tt-text-primary`（`:49`），都定义在 `theme.css:18`/`:13`）；兜底保留作防御即可。上面那句写在
+ * `main` 还没有主题文件的时候，按「只增不改」原样留着。
+ *
+ * ⚠️ **这是全局样式表，不是 SFC 的 `<style scoped>`**：`:deep()` 只在 scoped 样式里由
+ * `@vue/compiler-sfc` 编译，写在 `.css` 文件里是非法选择器，整条规则会被浏览器丢弃。
+ * 所以这里直接写 EP 的内部类名。
+ *
+ * ⚠️ 选择器按 EP 自己的实际选择器形状写（`theme-chalk/el-table.css`）：
+ *  - 根节点上同时有 `el-table` 与 `order-table` 两个类（`class="order-table el-table …"`），
+ *    所以「根上的字号」必须写成 `.el-table.order-table`；写成 `.order-table .el-table` 是**后代**选择器，
+ *    永远匹配不到根节点自己；
+ *  - 单元格 padding 在 `.el-table .el-table__cell`（8px 0），`.cell` 的 padding 在 `.el-table .cell`（0 12px）；
+ *    两处都用 `.el-table.order-table` 提一级特异性（0,3,0 > 0,2,0），不依赖样式注入顺序；
+ *  - `table-layout: fixed` **EP 已经设了**（`.el-table__header,.el-table__body,.el-table__footer`），
+ *    所以这里不重复声明；主题规范记的这条值属于对标物，落在本文件里没有额外作用。
+ */
+.el-table.order-table {
+  font-size: 12px;
+}
+
+/* 单元格 padding（EP：`.el-table .el-table__cell{padding:8px 0}`，特异性 0,2,0）。
+ * 这里**不写** `white-space` / `text-overflow`：见下面 `.cell` 那条——文本在**内层** `.cell` 里，
+ * 写在外层 `<td>` 上的 nowrap/ellipsis 会被内层自己的 `white-space:normal` 顶掉。 */
+.el-table.order-table .el-table__cell {
+  padding: 6px;
+}
+
+.el-table.order-table th.el-table__cell {
+  background: var(--tt-bg-subtle, var(--el-table-header-bg-color));
+  color: var(--tt-text-primary, var(--el-table-header-text-color));
+}
+
+.el-table.order-table .el-table__body tr:hover > td.el-table__cell {
+  background: var(--tt-bg-subtle, var(--el-fill-color-light));
+}
+
+/* ⚠️ 「不换行 + 省略号」必须落在**内层 `.cell`** 上：
+ * EP 在 `.el-table .cell`（0,2,0）里写了 `white-space:normal; overflow-wrap:break-word`，
+ * 而 `<td class="el-table__cell">` 是 `.cell` 的**父**元素——父元素上的 `white-space` 会被子元素
+ * 自己的 `normal` 覆盖，于是长 `project_text` 照样换行、行高被撑开。
+ * `.el-table.order-table .cell` 是 0,3,0 > 0,2,0，且 EP 的 `.cell` 自带
+ * `overflow:hidden; text-overflow:ellipsis`，补上 nowrap 省略号即生效。
+ * 这条有静态断言兜底（`OrderListView.spec.ts` 的「表格密度样式」一组）。 */
+.el-table.order-table .cell {
+  padding: 0 4px;
+  white-space: nowrap;
+}
+
+/* 金额列右对齐；等宽数字让上下位数对得上（`.order-table__money` 由列模板加）。
+ * 这两条**不带 `.el-table` 前缀**：小屏卡片流里没有 `el-table`（见 OrderListView.vue），
+ * 但仍要用同一套排版。类名自带 `order-table__` 前缀，全局生效是安全的。 */
+.order-table__money {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 单号列等宽 + 可复制（spec §4.2） */
+.order-table__no {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  user-select: all;
+}

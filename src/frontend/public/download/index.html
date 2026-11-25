@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#111317">
+<title>代代通 App 下载</title>
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:title" content="代代通 App 下载">
+<meta property="og:description" content="打手端安卓安装包，点开就能下">
+<meta property="og:image" content="icon-512.png">
+<style>
+  :root{
+    --ink:#16181d; --muted:#6b7280; --line:#e6e8ee; --bg:#f6f7f9;
+    --card:#fff; --brand:#111317; --brand-ink:#fff; --warn-bg:#fff7e6; --warn-line:#f5d9a3; --warn-ink:#8a5a00;
+    --ok:#0f9d58;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:16px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    -webkit-text-size-adjust:100%;
+    padding:24px 16px calc(40px + env(safe-area-inset-bottom));
+  }
+  main{max-width:560px;margin:0 auto}
+  header{margin:8px 0 20px}
+  .head{display:flex;align-items:center;gap:14px}
+  .logo{width:60px;height:60px;border-radius:15px;flex:none;box-shadow:0 2px 6px rgba(16,24,40,.12)}
+  h1{font-size:24px;line-height:1.3;margin:0 0 6px}
+  .sub{margin:0;color:var(--muted);font-size:14px}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:18px;margin:0 0 14px;box-shadow:0 1px 2px rgba(16,24,40,.04);
+  }
+  .ver{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;font-size:20px;font-weight:600}
+  .build{font-size:13px;font-weight:400;color:var(--muted)}
+  .meta{color:var(--muted);font-size:13px;margin-top:4px}
+  .notes{margin:12px 0 0;font-size:14px;white-space:pre-wrap;color:#333}
+  .notes:empty{display:none}
+  .btn{
+    display:flex;align-items:center;justify-content:center;
+    width:100%;min-height:52px;margin-top:16px;border-radius:12px;
+    background:var(--brand);color:var(--brand-ink);text-decoration:none;
+    font-size:17px;font-weight:600;letter-spacing:.02em;
+  }
+  .btn:active{filter:brightness(.94)}
+  .btn[aria-disabled="true"]{background:#c9cfdc}
+  .sha{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:var(--muted)}
+  .sha code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#333;word-break:break-all}
+  .mini{
+    border:1px solid var(--line);background:#fff;border-radius:8px;color:var(--muted);
+    font-size:12px;padding:3px 8px;cursor:pointer;
+  }
+  .mini:active{background:#f1f3f7}
+  h2{font-size:15px;margin:0 0 10px;color:#333;font-weight:600}
+  .row{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:10px 0;border-top:1px solid var(--line);font-size:14px;
+  }
+  .row:first-of-type{border-top:0}
+  .row .who{min-width:0}
+  .row .who b{font-weight:600}
+  .row .when{color:var(--muted);font-size:12px}
+  .row a{color:var(--brand);text-decoration:none;white-space:nowrap;font-size:14px}
+  .tips{font-size:13px;color:var(--muted);line-height:1.8}
+  .tips strong{color:#333}
+  .warn{
+    background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink);
+    border-radius:12px;padding:12px 14px;font-size:14px;margin:0 0 14px;
+  }
+  .warn[hidden]{display:none}
+  #fallback{color:var(--muted);font-size:14px}
+  #fallback[hidden]{display:none}
+  footer{color:var(--muted);font-size:12px;text-align:center;margin-top:22px}
+  .toast{
+    position:fixed;left:50%;bottom:calc(28px + env(safe-area-inset-bottom));transform:translateX(-50%);
+    background:rgba(22,24,29,.9);color:#fff;font-size:14px;padding:10px 16px;border-radius:999px;
+    opacity:0;pointer-events:none;transition:opacity .18s;max-width:80vw;text-align:center;
+  }
+  .toast.show{opacity:1}
+</style>
+</head>
+<body>
+<main>
+  <header class="head">
+    <img class="logo" src="icon-192.png" alt="" width="60" height="60">
+    <div>
+      <h1>代代通 App</h1>
+      <p class="sub">打手端 · 安卓安装包</p>
+    </div>
+  </header>
+
+  <div class="warn" id="wechat" hidden>
+    你在微信里打开了这个页面。<strong>微信会拦下载</strong>：点右上角「···」→ 选「在浏览器打开」，再点下载。
+  </div>
+
+  <section class="card" id="latest" hidden>
+    <div class="ver"><span id="latest-name"></span><span class="build" id="latest-build"></span></div>
+    <div class="meta" id="latest-meta"></div>
+    <p class="notes" id="latest-notes"></p>
+    <a class="btn" id="latest-link" href="#" rel="noopener">下载安装包</a>
+    <div class="sha">
+      <span>SHA-256</span><code id="latest-sha"></code>
+      <button class="mini" id="copy-sha" type="button">复制校验值</button>
+    </div>
+  </section>
+
+  <section class="card" id="history" hidden>
+    <h2>历史版本</h2>
+    <div id="history-list"></div>
+  </section>
+
+  <section class="card tips">
+    <strong>装不上时先看这三条</strong><br>
+    1. 只支持安卓手机；苹果手机装不了这个包。<br>
+    2. 安装时提示「未知来源 / 外部来源应用」→ 选「允许」再装。<br>
+    3. 下载完打不开或提示文件损坏 → 删掉重下；还不行就核对上面的 SHA-256。
+  </section>
+
+  <p id="fallback" hidden>版本信息没取到，先稍后再试；急着用就联系管理员要安装包。</p>
+
+  <footer>代代通 · 团团通工作室出单系统</footer>
+</main>
+
+<script>
+(function () {
+  // ⛔ 只改这一行就能换桶（改了要跟着重新发版）；安装包的外链前缀不在这里 —— 它在 releases.js 的 base 字段里。
+  var FEED_URL = 'https://tt-app-1440679012.cos.ap-shanghai.myqcloud.com/releases.js';
+  var wechat = /MicroMessenger/i.test(navigator.userAgent);
+  var toastEl = null;
+
+  function toast(text) {
+    if (!toastEl) {
+      toastEl = document.createElement('div');
+      toastEl.className = 'toast';
+      document.body.appendChild(toastEl);
+    }
+    toastEl.textContent = text;
+    toastEl.classList.add('show');
+    clearTimeout(toastEl._timer);
+    toastEl._timer = setTimeout(function () { toastEl.classList.remove('show'); }, 2600);
+  }
+
+  function copy(text, okText) {
+    function done() { toast(okText); }
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(done, function () { toast('复制失败，请手动长按复制'); });
+      return;
+    }
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy') ? done() : toast('复制失败，请手动长按复制'); }
+    catch (e) { toast('复制失败，请手动长按复制'); }
+    document.body.removeChild(ta);
+  }
+
+  function el(id) { return document.getElementById(id); }
+
+  function render(feed) {
+    var releases = (feed && feed.releases) || [];
+    if (!releases.length) { return; }
+    var base = feed.base || '';
+    var newest = releases[0];
+
+    el('latest-name').textContent = 'v' + newest.name;
+    el('latest-build').textContent = 'build ' + newest.code;
+    var when = (newest.uploaded_at || '').slice(0, 10);
+    el('latest-meta').textContent = [when, newest.size_text].filter(Boolean).join(' · ');
+    el('latest-notes').textContent = newest.notes || '';
+    var digest = newest.sha256 || '';
+    el('latest-sha').textContent = digest ? digest.slice(0, 16) + '…' + digest.slice(-8) : '';
+    el('latest-sha').title = digest;
+
+    var link = el('latest-link');
+    link.href = base + newest.file;
+    link.setAttribute('download', newest.file);
+    link.addEventListener('click', function (ev) {
+      if (wechat) {
+        ev.preventDefault();
+        toast('微信里下不了，点右上角「···」→ 在浏览器打开');
+      }
+    });
+
+    if (newest.sha256) {
+      el('copy-sha').addEventListener('click', function () { copy(newest.sha256, '校验值已复制'); });
+    } else {
+      el('copy-sha').hidden = true;
+    }
+    el('latest').hidden = false;
+
+    var older = releases.slice(1);
+    if (older.length) {
+      var list = el('history-list');
+      older.forEach(function (r) {
+        var row = document.createElement('div');
+        row.className = 'row';
+
+        var who = document.createElement('div');
+        who.className = 'who';
+        var name = document.createElement('b');
+        name.textContent = 'v' + r.name;
+        var when2 = document.createElement('div');
+        when2.className = 'when';
+        when2.textContent = [(r.uploaded_at || '').slice(0, 10), r.size_text].filter(Boolean).join(' · ');
+        who.appendChild(name);
+        who.appendChild(when2);
+
+        var a = document.createElement('a');
+        a.href = base + r.file;
+        a.setAttribute('download', r.file);
+        a.textContent = '下载';
+        a.addEventListener('click', function (ev) {
+          if (wechat) { ev.preventDefault(); toast('微信里下不了，点右上角「···」→ 在浏览器打开'); }
+        });
+
+        row.appendChild(who);
+        row.appendChild(a);
+        list.appendChild(row);
+      });
+      el('history').hidden = false;
+    }
+  }
+
+  function fail() {
+    if (el('latest').hidden === false) { return; }
+    el('fallback').hidden = false;
+  }
+
+  if (wechat) { el('wechat').hidden = false; }
+
+  var s = document.createElement('script');
+  s.src = FEED_URL + '?t=' + Date.now();
+  s.onload = function () {
+    if (window.APP_RELEASE_FEED) { render(window.APP_RELEASE_FEED); } else { fail(); }
+  };
+  s.onerror = fail;
+  document.head.appendChild(s);
+  setTimeout(fail, 4000);
+})();
+</script>
+</body>
+</html>

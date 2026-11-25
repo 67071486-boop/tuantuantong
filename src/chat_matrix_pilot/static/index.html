@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>团团通 · 独立聊天测试</title>
+    <link rel="stylesheet" href="/shell.css">
+    <script src="/shell.js" type="module"></script>
+  </head>
+  <body>
+    <header>
+      <div><strong>团团通 · 独立聊天测试</strong><span id="status" role="status">正在检查登录</span></div>
+      <nav>
+        <span id="identity"></span>
+        <button id="logout" type="button" hidden>退出账号</button>
+        <a id="rollback" href="/pilot/rollback">返回原应用</a>
+      </nav>
+    </header>
+    <main>
+      <form id="login" hidden>
+        <h1>登录模拟工作室</h1>
+        <p>使用测试配置中的账号。工作室由登录身份确定。</p>
+        <label for="username">测试账号</label>
+        <input id="username" name="username" autocomplete="username" required>
+        <label for="password">密码</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required>
+        <button type="submit">登录聊天</button>
+        <p id="login-error" role="alert"></p>
+      </form>
+      <div id="chat-host"></div>
+    </main>
+  </body>
+</html>

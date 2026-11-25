@@ -1,0 +1,133 @@
+{
+ "meta": {
+  "source": "live-read-pagination-probe",
+  "measured_at": "2026-10-07",
+  "probe_limits": [
+   5,
+   50
+  ],
+  "note": "只读探测（逐端点断言 risk == 'read'）。判定规则：两种每页条数返回同样多的行且总行数更多 ⇒ limit 无效、服务端固定每页 page_size 行；返回行数变多 ⇒ limit 生效。判不出来的端点**不登记**。`start_page` 只在能干净判定时出现。",
+  "measured": 16,
+  "skipped": 15,
+  "errors": {
+   "ApiError": 1
+  }
+ },
+ "endpoints": {
+  "/CustomerAjax/GetIntervalLevel": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": false
+  },
+  "/EmpAjax/GetSalesmanStatistics": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": false,
+   "count_key": "count"
+  },
+  "/GameAjax/GetGameServerMangeList": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": false,
+   "count_key": "count"
+  },
+  "/OrderAjax/GetOrderList": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": true,
+   "start_page": 1,
+   "count_key": "count"
+  },
+  "/OrderAjax/GetOrderRecycleList": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": true,
+   "start_page": 1,
+   "count_key": "count"
+  },
+  "/SmsAjax/GetSmsSettingMangeList": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": false,
+   "count_key": "count"
+  },
+  "/SystemAjax/GetAllRoleJobList": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": false,
+   "count_key": "count"
+  },
+  "/SystemAjax/GetAutoDiscernSetList": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": false,
+   "count_key": "count"
+  },
+  "/SystemAjax/GetOrderSoureMangeList": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": false,
+   "count_key": "count"
+  },
+  "/SystemAjax/GetPlatformPushOrderConfigList": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": false,
+   "count_key": "count"
+  },
+  "/SystemAjax/GetUserGroupList": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": false,
+   "count_key": "count"
+  },
+  "/SystemAjax/GetVerifiAddOrderKeyStrByGameList": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": false,
+   "count_key": "count"
+  },
+  "/UserAjax/GetAllUserTableByGameName": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": true,
+   "count_key": "count"
+  },
+  "/UserAjax/GetUserCheckInList": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": true,
+   "start_page": 1,
+   "count_key": "count"
+  },
+  "/UserAjax/GetUserCheckInStaticList": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": true,
+   "start_page": 1,
+   "count_key": "count"
+  },
+  "/UserAjax/GetZpRootUsers": {
+   "page_param": "page",
+   "limit_param": "limit",
+   "limit_effective": false
+  }
+ },
+ "skipped": {
+  "/CommonPermissionAjax/GetAliOssPolicy": "载荷不是列表（dict）",
+  "/CustomerAjax/GetMemberAddOrderSimpInfo": "载荷不是列表（dict）",
+  "/EmpAjax/GetBindAlipaySettAuthList": "判不出：limit=5→1 行、limit=50→1 行、总行数=1",
+  "/EmpAjax/GetEmpList": "调用报错（ApiError）",
+  "/EmpAjax/GetKeFuOperationData": "载荷不是列表（dict）",
+  "/EmpAjax/GetLingyuefangzhouSystemSettleBalance": "载荷不是列表（dict）",
+  "/EmpAjax/GetOperationData": "载荷不是列表（dict）",
+  "/EmpAjax/GetSystemBuessionOperationData": "载荷不是列表（dict）",
+  "/OrderAjax/GetOrderContentById": "载荷不是列表（dict）",
+  "/SystemAjax/GetPushOrderGroupMsgSetList": "判不出：limit=5→1 行、limit=50→1 行、总行数=1",
+  "/SystemAjax/GetUserListByOnlineConsultationSet": "载荷不是列表（dict）",
+  "/SystemAjax/GetWechatAppShopFulDecList": "载荷不是列表（dict）",
+  "/SystemAjax/VeryJdpAcc": "载荷不是列表（dict）",
+  "/UserAjax/GetDyplsOSSInfoForUploadFile": "载荷不是列表（dict）",
+  "/UserAjax/GetMyMessageList": "判不出：limit=5→1 行、limit=50→1 行、总行数=1"
+ }
+}

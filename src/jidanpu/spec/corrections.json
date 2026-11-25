@@ -1,0 +1,19 @@
+{
+ "meta": {
+  "source": "live-readonly-sweep",
+  "measured_at": "2026-09-20",
+  "note": "实测修正：清单无 method 字段，read→GET 是推导值；下列接口**实测成功的**方法与此不同。只收录实测成功的接口；四种方式都失败的见 spec/unavailable.json。",
+  "measured": 169,
+  "usable": 122,
+  "total_method_fixes": 7
+ },
+ "method": {
+  "/EmpAjax/GetOrderConseTypeByCondition": "POST",
+  "/GameAjax/GetPriceCalculatorSettingPriceDW": "POST",
+  "/GameAjax/GetPriceSettPackgeName": "POST",
+  "/OrderAjax/GetSendGroupNewOrderMsg": "POST",
+  "/PveTaskAjax/GetNewsGroupList": "POST",
+  "/SystemAjax/VeryJdpAcc": "POST",
+  "/UserAjax/GetGroupMangeList": "POST"
+ }
+}

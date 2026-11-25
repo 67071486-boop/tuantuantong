@@ -1,0 +1,20 @@
+diff --git a/src/components/chat/topbar.ts b/src/components/chat/topbar.ts
+--- a/src/components/chat/topbar.ts
++++ b/src/components/chat/topbar.ts
+@@ -223,6 +223,16 @@
+       this.btnMore
+     ].filter(Boolean));
+
++    if(new URLSearchParams(location.search).get('retainedApp') === '1') {
++      const close = ButtonIcon('close tt-retained-chat-close force-show-on-mobile');
++      close.setAttribute('aria-label', '关闭内部沟通');
++      attachClickEvent(close, (event) => {
++        event.stopPropagation();
++        window.parent.postMessage({type: 'tt:chat.closeFromList'}, location.origin);
++      }, {listenerSetter: this.listenerSetter});
++      this.chatUtils.append(close);
++    }
++
+     this.pushButtonToVerify(this.btnCall, this.verifyCallButton.bind(this, 'voice'));
+     this.pushButtonToVerify(this.btnGroupCall, this.verifyVideoChatButton.bind(this, 'nonadmin'));
+     this.pushButtonToVerify(this.btnGroupCallMenu, this.verifyRtmpButton.bind(this));

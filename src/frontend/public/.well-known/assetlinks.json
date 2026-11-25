@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "chat.suqing.daidaitong",
+      "sha256_cert_fingerprints": [
+        "F9:D6:E5:19:A9:FC:FD:76:E0:EB:63:02:AD:A2:26:69:AB:00:20:17:FB:D4:91:00:75:F3:71:5C:E2:05:2A:91"
+      ]
+    }
+  }
+]

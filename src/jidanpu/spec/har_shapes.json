@@ -1,0 +1,1565 @@
+{
+ "meta": {
+  "source": "browser-har",
+  "note": "只有键名与类型，没有任何值",
+  "endpoints": 26,
+  "with_item_fields": 20,
+  "params_found": 19
+ },
+ "shapes": {
+  "/EmpAjax/GetBalanceAndFreeAmount": {
+   "kind": "dict",
+   "item_fields": {
+    "acc": [
+     "str"
+    ],
+    "b": [
+     "float"
+    ],
+    "f": [
+     "float"
+    ]
+   },
+   "from_variant": "浏览器 HAR"
+  },
+  "/EmpAjax/GetJdpBalance": {
+   "kind": "dict",
+   "item_fields": {
+    "code": [
+     "float"
+    ]
+   },
+   "from_variant": "浏览器 HAR"
+  },
+  "/EmpAjax/GetMyEmp": {
+   "kind": "list",
+   "item_count": 20,
+   "item_fields": {
+    "Add_Time": [
+     "null"
+    ],
+    "Js_Time": [
+     "null"
+    ],
+    "RefundTime": [
+     "null"
+    ],
+    "SDataTime": [
+     "null"
+    ],
+    "alipayAcc": [
+     "null"
+    ],
+    "aplipayAccName": [
+     "null"
+    ],
+    "applicationSett": [
+     "str"
+    ],
+    "bankCardNo": [
+     "null"
+    ],
+    "bankName": [
+     "null"
+    ],
+    "bonusAmount": [
+     "float"
+    ],
+    "completeTime": [
+     "str"
+    ],
+    "createOrderTime": [
+     "null"
+    ],
+    "createOrderTimeDate": [
+     "null"
+    ],
+    "createTime": [
+     "str"
+    ],
+    "deductFee": [
+     "float"
+    ],
+    "dlProject": [
+     "str"
+    ],
+    "empId": [
+     "int"
+    ],
+    "empPayId": [
+     "int"
+    ],
+    "empRemark": [
+     "null"
+    ],
+    "empType": [
+     "str"
+    ],
+    "exceedHours": [
+     "int"
+    ],
+    "expectEndTime": [
+     "null"
+    ],
+    "expectEndTimeDate": [
+     "null"
+    ],
+    "furlStatus": [
+     "null"
+    ],
+    "gameJob": [
+     "null"
+    ],
+    "gameName": [
+     "str"
+    ],
+    "gameRole": [
+     "str"
+    ],
+    "imgCount": [
+     "int"
+    ],
+    "issuePrice": [
+     "int"
+    ],
+    "jionOrder": [
+     "str"
+    ],
+    "kefu": [
+     "null"
+    ],
+    "logUserName": [
+     "str"
+    ],
+    "netReceipts": [
+     "int"
+    ],
+    "orderId": [
+     "str"
+    ],
+    "orderIsDel": [
+     "str"
+    ],
+    "orderSoure": [
+     "null"
+    ],
+    "orderSta": [
+     "str"
+    ],
+    "price": [
+     "int"
+    ],
+    "recipient": [
+     "null"
+    ],
+    "refundFee": [
+     "int"
+    ],
+    "refundModel": [
+     "null"
+    ],
+    "refundTimeStr": [
+     "null"
+    ],
+    "refundUserName": [
+     "null"
+    ],
+    "settingSta": [
+     "str"
+    ],
+    "settingTime": [
+     "str"
+    ],
+    "taobaoPrice": [
+     "int"
+    ],
+    "taobaoSta": [
+     "null"
+    ],
+    "taskId": [
+     "int"
+    ],
+    "tempAmount": [
+     "float"
+    ],
+    "timeLimitHours": [
+     "int"
+    ],
+    "userName": [
+     "str"
+    ],
+    "wangwang": [
+     "null"
+    ]
+   },
+   "from_variant": "浏览器 HAR"
+  },
+  "/EmpAjax/GetOnLineBillSummaryList": {
+   "kind": "list",
+   "item_count": 4,
+   "item_fields": {
+    "amount": [
+     "int"
+    ],
+    "createTime": [
+     "str"
+    ],
+    "empIdx": [
+     "null"
+    ],
+    "payAmount": [
+     "float"
+    ],
+    "payTranOrderNo": [
+     "str"
+    ],
+    "payUserName": [
+     "str"
+    ],
+    "realAmount": [
+     "float"
+    ],
+    "recAliPayAccName": [
+     "null"
+    ],
+    "recAlipayAcc": [
+     "str"
+    ],
+    "serviceAmount": [
+     "float"
+    ],
+    "sid": [
+     "int"
+    ],
+    "uid": [
+     "int"
+    ],
+    "userName": [
+     "str"
+    ]
+   },
+   "from_variant": "浏览器 HAR"
+  },
+  "/GameAjax/GetAllOrderTypeList": {
+   "kind": "list",
+   "item_count": 1,
+   "item_fields": {
+    "AppendTitleByEnd": [
+     "str"
+    ],
+    "AppendTitleByFront": [
+     "str"
+    ],
+    "ExStr1": [
+     "str"
+    ],
+    "GameID": [
+     "int"
+    ],
+    "OrderBy": [
+     "int"
+    ],
+    "SkillType_ID": [
+     "int"
+    ],
+    "TypeName": [
+     "str"
+    ],
+    "assPlatName": [
+     "str"
+    ],
+    "gameName": [
+     "str"
+    ],
+    "selected": [
+     "null"
+    ]
+   },
+   "from_variant": "浏览器 HAR"
+  },
+  "/GameAjax/GetGameAttrInfoTitle": {
+   "kind": "dict",
+   "item_fields": {
+    "company": [
+     "null"
+    ],
+    "d1": [
+     "int"
+    ],
+    "d2": [
+     "int"
+    ],
+    "d3": [
+     "int"
+    ],
+    "d4": [
+     "int"
+    ],
+    "id": [
+     "int"
+    ],
+    "id10": [
+     "int"
+    ],
+    "id2": [
+     "int"
+    ],
+    "id3": [
+     "int"
+    ],
+    "id4": [
+     "int"
+    ],
+    "id5": [
+     "int"
+    ],
+    "id6": [
+     "int"
+    ],
+    "id7": [
+     "int"
+    ],
+    "id8": [
+     "int"
+    ],
+    "id9": [
+     "int"
+    ],
+    "orderId": [
+     "null"
+    ],
+    "str1": [
+     "str"
+    ],
+    "str10": [
+     "null"
+    ],
+    "str11": [
+     "null"
+    ],
+    "str12": [
+     "null"
+    ],
+    "str13": [
+     "null"
+    ],
+    "str14": [
+     "null"
+    ],
+    "str15": [
+     "null"
+    ],
+    "str16": [
+     "null"
+    ],
+    "str17": [
+     "null"
+    ],
+    "str18": [
+     "null"
+    ],
+    "str19": [
+     "null"
+    ],
+    "str2": [
+     "str"
+    ],
+    "str20": [
+     "null"
+    ],
+    "str3": [
+     "null"
+    ],
+    "str4": [
+     "null"
+    ],
+    "str5": [
+     "null"
+    ],
+    "str6": [
+     "null"
+    ],
+    "str7": [
+     "null"
+    ],
+    "str8": [
+     "null"
+    ],
+    "str9": [
+     "null"
+    ]
+   },
+   "from_variant": "浏览器 HAR"
+  },
+  "/GameAjax/GetProjectList": {
+   "kind": "list",
+   "item_count": 5,
+   "item_fields": {
+    "gameName": [
+     "null"
+    ],
+    "id": [
+     "int"
+    ],
+    "orderBy": [
+     "int"
+    ],
+    "projectName": [
+     "str"
+    ]
+   },
+   "from_variant": "浏览器 HAR"
+  },
+  "/GameAjax/getGameData": {
+   "kind": "list",
+   "item_count": 1,
+   "item_fields": {
+    "brokerageType": [
+     "int"
+    ],
+    "children": [
+     "list"
+    ],
+    "click": [
+     "null"
+    ],
+    "disabled": [
+     "str"
+    ],
+    "info1": [
+     "null"
+    ],
+    "info2": [
+     "null"
+    ],
+    "name": [
+     "str"
+    ],
+    "optgroup": [
+     "null"
+    ],
+    "selected": [
+     "str"
+    ],
+    "tichen": [
+     "int"
+    ],
+    "tips": [
+     "str"
+    ],
+    "type": [
+     "null"
+    ],
+    "value": [
+     "str"
+    ]
+   },
+   "from_variant": "浏览器 HAR"
+  },
+  "/OrderAjax/GetInternalOrderGrabbingList": {
+   "kind": "list",
+   "item_count": 20,
+   "item_fields": {
+    "WangWang": [
+     "null"
+    ],
+    "accPwd": [
+     "null"
+    ],
+    "addOrderUserName": [
+     "null"
+    ],
+    "assTime": [
+     "null"
+    ],
+    "assUserName": [
+     "null"
+    ],
+    "autoAssignmentManName": [
+     "null"
+    ],
+    "backListId": [
+     "int"
+    ],
+    "bussType": [
+     "int"
+    ],
+    "completeTime": [
+     "null"
+    ],
+    "createTime": [
+     "str"
+    ],
+    "customerId": [
+     "int"
+    ],
+    "customizeTag": [
+     "null"
+    ],
+    "delTime": [
+     "null"
+    ],
+    "delUserName": [
+     "null"
+    ],
+    "discount": [
+     "int"
+    ],
+    "dynamicRemark": [
+     "null"
+    ],
+    "expectEndTime": [
+     "str"
+    ],
+    "fsid": [
+     "int"
+    ],
+    "gameAcc": [
+     "null"
+    ],
+    "gameArea": [
+     "str"
+    ],
+    "gameGroup": [
+     "str"
+    ],
+    "gameJob": [
+     "str"
+    ],
+    "gameName": [
+     "str"
+    ],
+    "gameServer": [
+     "str"
+    ],
+    "groupId": [
+     "null"
+    ],
+    "groupMangeUid": [
+     "int"
+    ],
+    "hours": [
+     "float"
+    ],
+    "imgCount": [
+     "int"
+    ],
+    "inputOrderManName": [
+     "null"
+    ],
+    "isAllowChangeOrderFee": [
+     "null"
+    ],
+    "isAutoAssignment": [
+     "null"
+    ],
+    "isJiaJi": [
+     "str"
+    ],
+    "isPushJdp": [
+     "null"
+    ],
+    "isRead": [
+     "null"
+    ],
+    "isSettStatus": [
+     "null"
+    ],
+    "isSplitOrder": [
+     "null"
+    ],
+    "isThrowOrder": [
+     "null"
+    ],
+    "itemRemark": [
+     "str"
+    ],
+    "jiwei": [
+     "null"
+    ],
+    "levelMark": [
+     "str"
+    ],
+    "moblie": [
+     "null"
+    ],
+    "netReceipts": [
+     "null"
+    ],
+    "oid": [
+     "int"
+    ],
+    "orderContent": [
+     "null"
+    ],
+    "orderFromOrderId": [
+     "null"
+    ],
+    "orderHoursDescStr": [
+     "str"
+    ],
+    "orderId": [
+     "str"
+    ],
+    "orderIdView": [
+     "str"
+    ],
+    "orderLabel": [
+     "null"
+    ],
+    "orderLabelColor": [
+     "null"
+    ],
+    "orderRemark": [
+     "str"
+    ],
+    "orderSoure": [
+     "null"
+    ],
+    "orderSta": [
+     "str"
+    ],
+    "originPrice": [
+     "int"
+    ],
+    "otherRemark": [
+     "str"
+    ],
+    "payMethod": [
+     "int"
+    ],
+    "price": [
+     "int"
+    ],
+    "project": [
+     "str"
+    ],
+    "projectTypeName": [
+     "null"
+    ],
+    "pushJdpOrderState": [
+     "null"
+    ],
+    "qq": [
+     "null"
+    ],
+    "recFee": [
+     "float"
+    ],
+    "recManName": [
+     "null"
+    ],
+    "recOrderInsureAmount": [
+     "float"
+    ],
+    "recOrderTime": [
+     "str"
+    ],
+    "recSettCount": [
+     "int"
+    ],
+    "refundFee": [
+     "int"
+    ],
+    "refundModel": [
+     "null"
+    ],
+    "refundTimeStr": [
+     "null"
+    ],
+    "refundUserName": [
+     "null"
+    ],
+    "roleName": [
+     "str"
+    ],
+    "serviceAmount": [
+     "int"
+    ],
+    "soureFromHost": [
+     "null"
+    ],
+    "sphone": [
+     "null"
+    ],
+    "splitId": [
+     "null"
+    ],
+    "startTime": [
+     "null"
+    ],
+    "taskId": [
+     "int"
+    ],
+    "taskName": [
+     "null"
+    ],
+    "throwCount": [
+     "int"
+    ],
+    "tid": [
+     "null"
+    ],
+    "transfType": [
+     "int"
+    ],
+    "zgameAcc": [
+     "null"
+    ]
+   },
+   "from_variant": "浏览器 HAR"
+  },
+  "/OrderAjax/GetMyOrderList": {
+   "kind": "list",
+   "item_count": 9,
+   "item_fields": {
+    "WangWang": [
+     "null"
+    ],
+    "accPwd": [
+     "null",
+     "str"
+    ],
+    "addOrderUserName": [
+     "null"
+    ],
+    "assTime": [
+     "null"
+    ],
+    "assUserName": [
+     "null"
+    ],
+    "autoAssignmentManName": [
+     "null",
+     "str"
+    ],
+    "backListId": [
+     "int"
+    ],
+    "bussType": [
+     "int"
+    ],
+    "completeTime": [
+     "null"
+    ],
+    "createTime": [
+     "str"
+    ],
+    "customerId": [
+     "int"
+    ],
+    "customizeTag": [
+     "str"
+    ],
+    "delTime": [
+     "null"
+    ],
+    "delUserName": [
+     "null"
+    ],
+    "discount": [
+     "int"
+    ],
+    "dynamicRemark": [
+     "str"
+    ],
+    "expectEndTime": [
+     "str"
+    ],
+    "fsid": [
+     "int"
+    ],
+    "gameAcc": [
+     "null"
+    ],
+    "gameArea": [
+     "str"
+    ],
+    "gameGroup": [
+     "str"
+    ],
+    "gameJob": [
+     "str"
+    ],
+    "gameName": [
+     "str"
+    ],
+    "gameServer": [
+     "str"
+    ],
+    "groupId": [
+     "null",
+     "str"
+    ],
+    "groupMangeUid": [
+     "int"
+    ],
+    "hours": [
+     "float"
+    ],
+    "imgCount": [
+     "int"
+    ],
+    "inputOrderManName": [
+     "null"
+    ],
+    "isAllowChangeOrderFee": [
+     "null"
+    ],
+    "isAutoAssignment": [
+     "str"
+    ],
+    "isJiaJi": [
+     "str"
+    ],
+    "isPushJdp": [
+     "null"
+    ],
+    "isRead": [
+     "str"
+    ],
+    "isSettStatus": [
+     "null"
+    ],
+    "isSplitOrder": [
+     "str"
+    ],
+    "isThrowOrder": [
+     "null"
+    ],
+    "itemRemark": [
+     "str"
+    ],
+    "jiwei": [
+     "str"
+    ],
+    "levelMark": [
+     "str"
+    ],
+    "moblie": [
+     "null"
+    ],
+    "netReceipts": [
+     "null"
+    ],
+    "oid": [
+     "int"
+    ],
+    "orderContent": [
+     "str"
+    ],
+    "orderFromOrderId": [
+     "null"
+    ],
+    "orderHoursDescStr": [
+     "str"
+    ],
+    "orderId": [
+     "str"
+    ],
+    "orderIdView": [
+     "str"
+    ],
+    "orderLabel": [
+     "null"
+    ],
+    "orderLabelColor": [
+     "null"
+    ],
+    "orderRemark": [
+     "str"
+    ],
+    "orderSoure": [
+     "null"
+    ],
+    "orderSta": [
+     "str"
+    ],
+    "originPrice": [
+     "int"
+    ],
+    "otherRemark": [
+     "str"
+    ],
+    "payMethod": [
+     "int"
+    ],
+    "price": [
+     "int"
+    ],
+    "project": [
+     "str"
+    ],
+    "projectTypeName": [
+     "null"
+    ],
+    "pushJdpOrderState": [
+     "null"
+    ],
+    "qq": [
+     "null"
+    ],
+    "recFee": [
+     "float"
+    ],
+    "recManName": [
+     "str"
+    ],
+    "recOrderInsureAmount": [
+     "int"
+    ],
+    "recOrderTime": [
+     "str"
+    ],
+    "recSettCount": [
+     "int"
+    ],
+    "refundFee": [
+     "int"
+    ],
+    "refundModel": [
+     "null"
+    ],
+    "refundTimeStr": [
+     "null"
+    ],
+    "refundUserName": [
+     "null"
+    ],
+    "roleName": [
+     "str"
+    ],
+    "serviceAmount": [
+     "int"
+    ],
+    "soureFromHost": [
+     "null"
+    ],
+    "sphone": [
+     "str"
+    ],
+    "splitId": [
+     "null"
+    ],
+    "startTime": [
+     "str"
+    ],
+    "taskId": [
+     "int"
+    ],
+    "taskName": [
+     "null"
+    ],
+    "throwCount": [
+     "int"
+    ],
+    "tid": [
+     "null"
+    ],
+    "transfType": [
+     "int"
+    ],
+    "zgameAcc": [
+     "null"
+    ]
+   },
+   "from_variant": "浏览器 HAR"
+  },
+  "/OrderAjax/GetSoureOrderChangePriceLogList": {
+   "kind": "list",
+   "item_count": 20,
+   "item_fields": {
+    "company": [
+     "null"
+    ],
+    "d1": [
+     "float"
+    ],
+    "d2": [
+     "float"
+    ],
+    "d3": [
+     "int"
+    ],
+    "d4": [
+     "int"
+    ],
+    "id": [
+     "int"
+    ],
+    "id10": [
+     "int"
+    ],
+    "id2": [
+     "int"
+    ],
+    "id3": [
+     "int"
+    ],
+    "id4": [
+     "int"
+    ],
+    "id5": [
+     "int"
+    ],
+    "id6": [
+     "int"
+    ],
+    "id7": [
+     "int"
+    ],
+    "id8": [
+     "int"
+    ],
+    "id9": [
+     "int"
+    ],
+    "orderId": [
+     "str"
+    ],
+    "str1": [
+     "str"
+    ],
+    "str10": [
+     "null"
+    ],
+    "str11": [
+     "null"
+    ],
+    "str12": [
+     "null"
+    ],
+    "str13": [
+     "null"
+    ],
+    "str14": [
+     "null"
+    ],
+    "str15": [
+     "null"
+    ],
+    "str16": [
+     "null"
+    ],
+    "str17": [
+     "null"
+    ],
+    "str18": [
+     "null"
+    ],
+    "str19": [
+     "null"
+    ],
+    "str2": [
+     "str"
+    ],
+    "str20": [
+     "null"
+    ],
+    "str3": [
+     "str"
+    ],
+    "str4": [
+     "str"
+    ],
+    "str5": [
+     "str"
+    ],
+    "str6": [
+     "str"
+    ],
+    "str7": [
+     "null"
+    ],
+    "str8": [
+     "null"
+    ],
+    "str9": [
+     "null"
+    ]
+   },
+   "from_variant": "浏览器 HAR"
+  },
+  "/SystemAjax/GetAllRoleList": {
+   "kind": "list",
+   "item_count": 16,
+   "item_fields": {
+    "brokerageType": [
+     "int"
+    ],
+    "children": [
+     "list"
+    ],
+    "click": [
+     "null"
+    ],
+    "disabled": [
+     "str"
+    ],
+    "info1": [
+     "null"
+    ],
+    "info2": [
+     "null"
+    ],
+    "name": [
+     "str"
+    ],
+    "optgroup": [
+     "null"
+    ],
+    "selected": [
+     "str"
+    ],
+    "tichen": [
+     "int"
+    ],
+    "tips": [
+     "str"
+    ],
+    "type": [
+     "null"
+    ],
+    "value": [
+     "str"
+    ]
+   },
+   "from_variant": "浏览器 HAR"
+  },
+  "/SystemAjax/GetMyBindHomeSystemList": {
+   "kind": "list",
+   "item_count": 7,
+   "item_fields": {
+    "BindHomeSystemLogId": [
+     "int"
+    ],
+    "BindTimeStr": [
+     "str"
+    ],
+    "CreateTime": [
+     "str"
+    ],
+    "CreateUid": [
+     "int"
+    ],
+    "HomeAcc": [
+     "str"
+    ],
+    "HomeCompany": [
+     "str"
+    ],
+    "HomeHost": [
+     "str"
+    ],
+    "HomeUid": [
+     "int"
+    ],
+    "UserName": [
+     "null",
+     "str"
+    ]
+   },
+   "from_variant": "浏览器 HAR"
+  },
+  "/SystemAjax/GetOrderSoureList": {
+   "kind": "list",
+   "item_count": 20,
+   "item_fields": {
+    "brokerageType": [
+     "int"
+    ],
+    "children": [
+     "list"
+    ],
+    "click": [
+     "null"
+    ],
+    "disabled": [
+     "str"
+    ],
+    "info1": [
+     "null"
+    ],
+    "info2": [
+     "null"
+    ],
+    "name": [
+     "str"
+    ],
+    "optgroup": [
+     "null"
+    ],
+    "selected": [
+     "str"
+    ],
+    "tichen": [
+     "int"
+    ],
+    "tips": [
+     "str"
+    ],
+    "type": [
+     "null"
+    ],
+    "value": [
+     "str"
+    ]
+   },
+   "from_variant": "浏览器 HAR"
+  },
+  "/SystemAjax/GetPushJdp_TemplateList": {
+   "kind": "list",
+   "item_count": 2,
+   "item_fields": {
+    "content": [
+     "str"
+    ],
+    "isdef": [
+     "str"
+    ],
+    "platformType": [
+     "int"
+    ],
+    "tid": [
+     "int"
+    ],
+    "title": [
+     "str"
+    ]
+   },
+   "from_variant": "浏览器 HAR"
+  },
+  "/SystemAjax/GetSysmteLogList": {
+   "kind": "list",
+   "item_count": 30,
+   "item_fields": {
+    "createTime": [
+     "str"
+    ],
+    "gameName": [
+     "str"
+    ],
+    "gameRoleName": [
+     "str"
+    ],
+    "joinOrderId": [
+     "str"
+    ],
+    "logType": [
+     "int"
+    ],
+    "remark": [
+     "str"
+    ],
+    "soureOrderId": [
+     "str"
+    ],
+    "userName": [
+     "str"
+    ]
+   },
+   "from_variant": "浏览器 HAR"
+  },
+  "/SystemAjax/GetSystemNoticeList": {
+   "kind": "list",
+   "item_count": 3,
+   "item_fields": {
+    "content": [
+     "str"
+    ],
+    "createTime": [
+     "str"
+    ],
+    "id": [
+     "int"
+    ],
+    "title": [
+     "str"
+    ]
+   },
+   "from_variant": "浏览器 HAR"
+  },
+  "/UserAjax/GetAllUserByGameName": {
+   "kind": "list",
+   "item_count": 1000,
+   "item_fields": {
+    "brokerageType": [
+     "int"
+    ],
+    "children": [
+     "list"
+    ],
+    "click": [
+     "null"
+    ],
+    "disabled": [
+     "str"
+    ],
+    "info1": [
+     "null"
+    ],
+    "info2": [
+     "str"
+    ],
+    "name": [
+     "str"
+    ],
+    "optgroup": [
+     "null"
+    ],
+    "selected": [
+     "str"
+    ],
+    "tichen": [
+     "float"
+    ],
+    "tips": [
+     "str"
+    ],
+    "type": [
+     "null"
+    ],
+    "value": [
+     "str"
+    ]
+   },
+   "from_variant": "浏览器 HAR"
+  },
+  "/UserAjax/GetCheckIdenticalAliPayAcc": {
+   "kind": "list",
+   "item_count": 184,
+   "item_fields": {
+    "company": [
+     "null"
+    ],
+    "d1": [
+     "int"
+    ],
+    "d2": [
+     "int"
+    ],
+    "d3": [
+     "int"
+    ],
+    "d4": [
+     "int"
+    ],
+    "id": [
+     "int"
+    ],
+    "id10": [
+     "int"
+    ],
+    "id2": [
+     "int"
+    ],
+    "id3": [
+     "int"
+    ],
+    "id4": [
+     "int"
+    ],
+    "id5": [
+     "int"
+    ],
+    "id6": [
+     "int"
+    ],
+    "id7": [
+     "int"
+    ],
+    "id8": [
+     "int"
+    ],
+    "id9": [
+     "int"
+    ],
+    "orderId": [
+     "null"
+    ],
+    "str1": [
+     "str"
+    ],
+    "str10": [
+     "null"
+    ],
+    "str11": [
+     "null"
+    ],
+    "str12": [
+     "null"
+    ],
+    "str13": [
+     "null"
+    ],
+    "str14": [
+     "null"
+    ],
+    "str15": [
+     "null"
+    ],
+    "str16": [
+     "null"
+    ],
+    "str17": [
+     "null"
+    ],
+    "str18": [
+     "null"
+    ],
+    "str19": [
+     "null"
+    ],
+    "str2": [
+     "str"
+    ],
+    "str20": [
+     "null"
+    ],
+    "str3": [
+     "str"
+    ],
+    "str4": [
+     "str"
+    ],
+    "str5": [
+     "null"
+    ],
+    "str6": [
+     "null"
+    ],
+    "str7": [
+     "null"
+    ],
+    "str8": [
+     "null"
+    ],
+    "str9": [
+     "null"
+    ]
+   },
+   "from_variant": "浏览器 HAR"
+  },
+  "/UserAjax/GetUserList": {
+   "kind": "list",
+   "item_count": 20,
+   "item_fields": {
+    "balance": [
+     "float"
+    ],
+    "bussType": [
+     "int"
+    ],
+    "complateRate": [
+     "float"
+    ],
+    "createUserName": [
+     "str"
+    ],
+    "disableDate": [
+     "str"
+    ],
+    "entryDate": [
+     "str"
+    ],
+    "forbidViewOrderContent": [
+     "int"
+    ],
+    "games": [
+     "str"
+    ],
+    "insureAmount": [
+     "float"
+    ],
+    "isAutoSett": [
+     "str"
+    ],
+    "isExcuseLoginVer": [
+     "str"
+    ],
+    "isNeedPrivatePhone": [
+     "str"
+    ],
+    "isProhibitPublicRecOrder": [
+     "int"
+    ],
+    "isProhibitSettStatus": [
+     "str"
+    ],
+    "isRecEarlyWarningSms": [
+     "str"
+    ],
+    "jdpUid": [
+     "int"
+    ],
+    "jobName": [
+     "str"
+    ],
+    "lastLoginTime": [
+     "str"
+    ],
+    "loginAcc": [
+     "str"
+    ],
+    "mark": [
+     "str"
+    ],
+    "moblie": [
+     "str"
+    ],
+    "orderBy": [
+     "int"
+    ],
+    "pic": [
+     "str"
+    ],
+    "prohibitedViewOrderPwd": [
+     "str"
+    ],
+    "qq": [
+     "str"
+    ],
+    "recOrderMaxCount": [
+     "int"
+    ],
+    "recPriceMaxValue": [
+     "float"
+    ],
+    "recPriceMinValue": [
+     "float"
+    ],
+    "recommend": [
+     "str"
+    ],
+    "remark": [
+     "str"
+    ],
+    "rname": [
+     "str"
+    ],
+    "rnameCertification": [
+     "str"
+    ],
+    "roleId": [
+     "int"
+    ],
+    "signStatus": [
+     "int"
+    ],
+    "sta": [
+     "str"
+    ],
+    "uid": [
+     "int"
+    ],
+    "userName": [
+     "str"
+    ],
+    "userType": [
+     "int"
+    ]
+   },
+   "from_variant": "浏览器 HAR"
+  }
+ }
+}

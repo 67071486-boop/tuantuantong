@@ -1,0 +1,289 @@
+<!-- 复刻证据件：对标物 `/User/adduser`（「新开/编辑系统子账户」）的**页内 <style> 原文** + 处理过的 body 标记。
+     来源：`.tools/recon/<对标取数快照>/html/User__adduser.html`（离线勘察产物，只读）。
+     与对标原文的差异（逐条，别的地方逐字照抄，含 `lay-tips`/`lay-verify`/`checked=&#39;&#39;` 与空白）：
+     1. 删掉非标记的 <script src>（layui / common.js / jquery / 页面 JS 共 4 条）与 HTML 注释；
+        去掉外层 laytpl 的 `<template id="template">` 包裹——对标 adduser.js L476-478 解析后
+        DOM 就是 `#root > #LAY_app`，template 元素本身不留在 DOM 里。
+     2. `{{ const i18n = layui.i18n; }}`（L82）是 laytpl 代码块、无输出 → 删。
+     3. L370 的 `</template>` 删掉后，L371 的 `</div>`（`#root` 闭合）位置不变。
+        ⚠️ 原始标记里 `#root` 的 div 是**不平衡的**（关得比开得多 1 个：L222 第二个
+        `layui-col-md6` 的闭合被写成了 `</div></div>` 而只开了一个 `admin-info`）——
+        这是对标自己的缺陷，浏览器会自动纠正；我们**照抄**，不做「修复」（否则 DOM 会与对标不同）。
+     4. **两个运行期数据块换成空容器**（对标是服务端按租户渲染的真值，属租户数据）：
+        - `勾选游戏权限` 的 15 个 `<input type="checkbox" name="games" lay-skin="tag">`
+          （L272-317，游戏名是对标该租户的游戏）→ `#gamesBox`；
+        - `他的角色职位` 的 9 个 `<input type="radio" name="userRole">`（L323-349，
+          value 13/3/21/20/22/7/5/6/19 是对标租户**自建职位**的 id）→ `#roleBox`。
+        两者由 `layui-island/pages/user-adduser.ts` 分别用我方 `GET /api/config/games/` 与
+        `GET /api/accounts/roles/` 按**同一内层结构**（`div.layui-inline` + 内联 style）渲染。
+        理由见账号线 spec §3.2 / D8（职位词表裁剪为后端 `DEFAULT_ROLES`）与 `docs/FRONTEND-REPLICA-STANDARD.md`
+        「无后端的部分照对标渲染」与「租户数据必须清空」两条。
+     5. `入职日期` 的 `value="2026-09-20"`（对标服务端算的「今天」）已清空，挂载时补今天的日期
+        （对标 adduser.js L506-509 用 laydate 让用户选；值本身是运行期量）。
+        ⛔ **更正（2026-09-22，D-0086）：上面这句「已清空」此前是假的**——那一版实物里
+        `value="2026-09-20"` 一直在（证据件的注释与实物相反），而页面逻辑是「**值空才补今天**」
+        ⇒ 入职日期**永远显示 20 号**（业务方实测报的就是这个，按本文件惯例保留原文并加本块）。
+        本轮才真的删掉该属性并补了结构测试钉住它。
+     6. `<form>` 上加了 `lay-filter="sform"`：对标用 `form.on('submit')` 的 `data.field` 读值，
+        我们额外用 `form.val('sform')` 读**隐藏/未渲染**的复选框（对标 `games` 的 value 是游戏名，
+        我们的要放 id），需要这个 filter 名。它与 `#userlist` 页同款，不影响任何可见渲染。
+     7. **`录的单不发短信` 那一整个 `layui-form-item` 删除**（业务方 2026-09-22：「这个去掉，
+        我们不需要短信功能」，在「删到哪一步」的三选一里选了**彻底删**）——对标那两个 radio
+        （`addOrderNotSendSms` = `N`/`Y`）我方不再渲染；同一次把后端字段 `no_sms_on_intake`
+        与数据库列一起删掉（见 D-0086）。
+     8. **`业务类型`（`bussType`）三项的顺序与默认项改了**：对标是
+        `0 代练+陪玩(checked)` → `1 专做代练` → `2 专做陪玩`，我方按业务方 2026-09-22 裁定改成
+        `1 专做代练(checked)` → `2 专做陪玩` → `0 代练+陪玩`（**只换顺序与默认项**，
+        三个 value 与三段 tooltip 文案逐字不动）。⇒ 这一页**不再与对标逐字段相等**，
+        已登记 `docs/FRONTEND-REPLICA-STANDARD.md` §7。
+     9. **`提成模式` 三项的 `lay-filter="autoBrokerageTypeFilter"` 这次真的接上了**：对标
+        `adduser.js:587-596` 用它把 `提成金额/百分比` 那个标签改成「固定提成金额」/「百分比数值」，
+        我方此前只抄了属性、没接事件（点了标签不动）。⚠️ 这是**补漏**，不是偏离对标。
+     PII 核对：无个人数据。「真实姓名」那一行（`layui-hide` 的那个 `layui-form-item`，input 无 name/无值）
+     本就隐藏且空；
+     身份证号/QQ/电话/支付宝账号等输入框对标原文里全是空的；已跑
+     `grep -nE "1[3-9][0-9]{9}|[0-9]{17}[0-9Xx]"` = 0 命中。 -->
+<style>
+    .layui-form-pane .layui-form-label {
+        width: 110px;
+        padding: 8px 3px;
+        height: 38px;
+        line-height: 20px;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: 2px 0 0 2px;
+        text-align: center;
+        background-color: #FBFBFB;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+
+    .layui-form-radio {
+        line-height: 28px;
+        margin: 6px 10px 0 0;
+        padding-right: 0px;
+        cursor: pointer;
+        font-size: 0;
+    }
+
+    .layui-form-item .layui-inline {
+        margin-bottom: 5px;
+        margin-right: 10px;
+    }
+</style>
+<div id="root">
+        <div id="LAY_app">
+            <form class="layui-form layui-form-pane" action="" lay-filter="sform" style="margin-right:5px">
+
+                <div class="layui-row layui-col-space10">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md6 layui-col-lg6">
+                        <div class="admin-info" style="padding: 10px 10px 20px 10px;">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="color:#ff0000">自定义登录账号</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="loginAcc" id="loginAcc" lay-tips="你帮TA定义一个登录系统的账号，建议用手机号，TA后面可以自己更改" lay-verify="required|loginAcc" autocomplete="off" placeholder="可以用手机号/QQ号/姓名做为登录账号，必填" class="layui-input layui-input-shadow" maxlength="16">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="color:#ff0000">账号名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="userName" id="userName" lay-tips="这个人的真实姓名或昵称，不要带特殊符号或空格，允许用下划线" lay-verify="required|userName" autocomplete="off" placeholder="用户的姓名或昵称都可以，不允许有任何特殊符号、空格，必填" class="layui-input layui-input-shadow" maxlength="24">
+                                </div>
+                            </div>
+                            <div class="layui-form-item layui-hide">
+                                <label class="layui-form-label">真实姓名</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="" autocomplete="off" placeholder="" title="这个子账号已通过了人脸识别实名认证，身份证号已锁定无法修改" disabled="disabled" class="layui-input layui-input-shadow boxshadow-success">
+                                </div>
+                                <div class="layui-form-mid" style="padding: 0!important;">
+                                    <div class="layui-btn layui-btn-primary layui-border-blue resetRnameCertBtn">重新实名</div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item ">
+                                <label class="layui-form-label">身份证号</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="sid" autocomplete="off" title=&#39;有就填没有可不填&#39; placeholder="有则填，没有可以不填" class="layui-input layui-input-shadow boxshadow-success" value="">
+                                </div>
+                            </div>
+                            <div class="layui-form-item" pane="">
+                                <label class="layui-form-label">业务类型</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="bussType" value="1" title="默认" checked=&#39;&#39; />
+                                    <div lay-radio><span lay-tips="如果这个人只做代练业务就选这个">专做代练</span></div>
+                                    <input type="radio" name="bussType" value="2" title="默认"  />
+                                    <div lay-radio><span lay-tips="如果这个人只做陪玩陪练的就选这个">专做陪玩</span></div>
+                                    <input type="radio" name="bussType" value="0" title="默认"  />
+                                    <div lay-radio><span lay-tips="如果这个人做代练+陪玩业务的就选这个">代练+陪玩</span></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item" pane="">
+                                <label class="layui-form-label">成员类型</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="userType" value="0" title="默认" checked=&#39;&#39;>
+                                    <div lay-radio><span lay-tips="用来区分这人是外部还是内部的人，内部的员工或线下人员可选这个，该选项并无实际作用">内部成员</span></div>
+                                    <!-- D-0246（2026-10-16）：「合作用户」**有意不渲染**（业务方拍板
+                                         「没用实际作用」，偏离登记见 docs/FRONTEND-REPLICA-STANDARD.md）。
+                                         ⛔ option **保留在 DOM**（`style="display:none"` 的隐藏容器包住
+                                         input 与它的 lay-radio 标签——layui 渲染出的壳 `i.after(input)`
+                                         插在 input 之后，仍在容器里，一并隐藏）：
+                                         编辑 `member_type=1` 的旧账号时回填要能命中（不炸、保存不改值），
+                                         新增默认仍是 value=0（内部成员）。 -->
+                                    <span style="display:none">
+                                    <input type="radio" name="userType" value="1" title="默认" >
+                                    <div lay-radio><span lay-tips="外部或线上的可选这个，该选项并无实际作用">合作用户</span></div>
+                                    </span>
+                                    <!-- D-0228（2026-10-12）：我方自有新增格（对标没有）——「工作室」勾选。
+                                         仅对「合作用户」有意义：勾上 ⇒ 人员管理页身份分档归「工作室」，
+                                         不勾 ⇒ 归「打手」（业务方原话「只要不是工作室的打手都算打手」）。 -->
+                                    <input type="checkbox" name="isStudio" title="工作室" lay-skin="primary" lay-tips="外部合作方若是一个工作室（而非个人打手）勾这个：人员管理页按身份筛选时会单独归入「工作室」一档">
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="display:none">
+                                <label class="layui-form-label">基本底薪</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="basicSalary" lay-tips="记录该人员的基本底薪" lay-verify="required|number" maxlength="6" autocomplete="off" placeholder="该用户的每月基本底薪金额，可不填" class="layui-input layui-input-shadow boxshadow-success" value="0">
+                                </div>
+                            </div>
+                            <div class="layui-form-item" pane="">
+                                <label class="layui-form-label">销售/代练提成模式</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="autoBrokerageType" lay-filter="autoBrokerageTypeFilter" value="10" title="默认" >
+                                    <div lay-radio><span lay-tips="用来给打手或销售客服记录提成的模式，选这个后两种情况下会起作用：<br>1、这个子账号是销售客服时：订单变成已完成后将按照在下面设定的金额为该子账户记录提成金额；<br>2、把单子指派给这个子账户时：读取在下面你设置的金额作为默认发单价给这个子账号记录提成金额">固定金额</span></div>
+                                    <input type="radio" name="autoBrokerageType" lay-filter="autoBrokerageTypeFilter" value="20" title="默认"  checked=&#39;checked&#39;>
+                                    <div lay-radio><span lay-tips="用来给打手或销售客服记录提成的模式，选这个后两种情况下会起作用：<br>1、这个子账号是销售客服时：将按照订单接单价*设定的百分比数值=这个子账号的客服提成金额；<br>2、把单子指派给这个子账户时：订单接单价格*在下面设定的百分比数值作为发单价给这个子账号记录提成金额">订单价百分比</span></div>
+                                    <input type="radio" name="autoBrokerageType" lay-filter="autoBrokerageTypeFilter" value="30" title="默认" >
+                                    <div lay-radio><span lay-tips="这个选项只适合给录单的销售客服用，代练打手不要选这个。<br>订单变成已完成时，将按照：(接单价-总的发单价)*在下面设定的百分比数值作为这个子账号的提成（系统开启了自动记录接单提成情况下才有效）。如果没有把订单指派出去，是无法算出利润的">利润的百分比</span></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label tcLabel">提成金额/百分比</label>
+                                <div class="layui-input-block ">
+                                    <input type="text" name="brokerageAmount" id="brokerageAmount" lay-verify="required|number" maxlength="6" autocomplete="off" placeholder="固定金额或百分比的数字，例如：5或者20" class="layui-input layui-input-shadow boxshadow-success" value="0">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">结算支付宝账号</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="setAlipayAcc" autocomplete="off" lay-tips="用来给这个人结算用的，也可以让TA自己补充" placeholder="用来收款支付宝账号，没有请留空" class="layui-input layui-input-shadow" maxlength="32">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">结算支付宝姓名</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="setAlipayAccName" autocomplete="off"  lay-tips="用来给这个人结算用的，也可以让TA自己补充" placeholder="用来收款支付宝姓名，没有请留空" class="layui-input layui-input-shadow" value="" maxlength="50">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">结算银行名称</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="setBankName" autocomplete="off" lay-tips="用来给这个人结算用的，或者帮他代报个税时需要，也可以让TA自己补充" placeholder="没有请留空" class="layui-input layui-input-shadow" maxlength="32">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">结算银行卡号</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="setBankCardNo" autocomplete="off" lay-tips="用来给这个人结算用的，或者帮他代报个税时需要，也可以让TA自己补充" placeholder="没有请留空" class="layui-input layui-input-shadow" maxlength="100">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">内部抢代练单上限</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="recOrderMaxCount" autocomplete="off" lay-verify="required|number" lay-tips="限制TA在系统内部抢单页面接代练类型的单子数量，这里填0代表不限制。比如你想让TA同时只能接2笔代练类型的单子，这里就填2" placeholder="限制通过内部接单同时接单数量" class="layui-input layui-input-shadow" value="0" maxlength="4">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">内部抢陪玩单上限</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="recOrderMaxCount2" autocomplete="off" lay-verify="required|number" lay-tips="限制TA在系统内部抢单页面接陪玩类型的单子数量，这里填0代表不限制。比如你想让TA同时只能接2笔陪玩类型的单子，这里就填2" placeholder="限制通过内部接单同时接单数量" class="layui-input layui-input-shadow" value="0" maxlength="4">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">内部抢单价范围</label>
+                                    <div class="layui-input-inline" style="width:68px">
+                                        <input type="text" name="recPriceMin" id="recPriceMin" placeholder="￥" lay-tips="可设置在内部大厅抢单时需满足多少接单价才能接" autocomplete="off" class="layui-input" value="0">
+                                    </div>
+                                    <div class="layui-form-mid">-</div>
+                                    <div class="layui-input-inline" style="width: 68px">
+                                        <input type="text" name="recPriceMax" id="recPriceMax" placeholder="￥" autocomplete="off" lay-tips="可设置在内部大厅抢单时需满足多少接单价才能接" class="layui-input" value="99999">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">打手直播地址</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="livestreaming" id="livestreaming" lay-verify="" maxlength="500" autocomplete="off" placeholder="打手直播的URL地址，没有请留空" class="layui-input layui-input-shadow boxshadow-success">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md6 layui-col-lg6">
+                        <div class="admin-info" style="padding: 10px 10px 20px 10px;">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">QQ/微信</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="qq" lay-verify="" autocomplete="off" placeholder="能联系到该用户的QQ或微信，可留空" class="layui-input layui-input-shadow" maxlength="50">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">联系电话</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="moblie" lay-verify="moblie" lay-tips="尽量填好每一个真实的代练打手或员工的手机号" autocomplete="off" placeholder="能联系到该用户的手机号，可留空" class="layui-input layui-input-shadow boxshadow-success" maxlength="11">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">入职日期</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="inputDate" id="inputDate" lay-verify="required" autocomplete="off" placeholder="" class="layui-input layui-input-shadow boxshadow-success">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">标记</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="tips" autocomplete="off" placeholder="给用户写个标记，没有请留空" class="layui-input layui-input-shadow" maxlength="100">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">备注说明</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="remark" autocomplete="off" placeholder="备注说明，没有请留空" class="layui-input layui-input-shadow" maxlength="50">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">已交保证金</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="insureAmount" lay-tips="如果这个人已向你们缴纳了押金，请在这里填上具体的金额，方便后期你们查阅或退押金用" lay-verify="required|number" maxlength="6" autocomplete="off" placeholder="该用户已交纳保证金" class="layui-input layui-input-shadow boxshadow-success" value="0">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="color:#ff0000">勾选游戏权限</label>
+                                <div class="layui-input-block" id="gamesBox"></div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="color:#ff0000">他的角色职位</label>
+                                <div class="layui-input-block" id="roleBox"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align:center;align-items:center">
+                    <button type="button" class="layui-btn layui-icon layui-toast layui-btn-normal w-lg" lay-submit="" lay-filter="savebtn">保存资料</button>
+                </div>
+
+                <div class="copyurl" style="display:none"></div>
+
+
+                <input type="hidden" name="uid" id="uid" value="0" />
+                <input type="hidden" name="recommend" id="recommend" />
+                <input type="hidden" name="aid" id="aid" />
+            </form>
+        </div>

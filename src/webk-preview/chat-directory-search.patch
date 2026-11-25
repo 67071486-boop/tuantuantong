@@ -1,0 +1,83 @@
+diff --git a/src/pages/localChatPreview/liveChat.ts b/src/pages/localChatPreview/liveChat.ts
+index 0bbc5ef..abe979a 100644
+--- a/src/pages/localChatPreview/liveChat.ts
++++ b/src/pages/localChatPreview/liveChat.ts
+@@ -1,5 +1,6 @@
+ import type {Chat, ChatFull, Dialog, DialogFilter, DraftMessage, Message, MessageEntity, MessagesFilter, Peer, User} from '@layer';
+ import type {AppDraftsManager} from '@appManagers/appDraftsManager';
++import type {AppUsersManager} from '@appManagers/appUsersManager';
+ import sendFlightStyles from '@components/chat/sendFlights.module.scss';
+ import {seedMirror, mockManagers} from '@components/popupSandbox/bootstrapState';
+ import {makeMessage, stickerDocument} from '@components/popupSandbox/fixtures';
+@@ -126,7 +127,8 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+   rootScope.myId = myId;
+   rootScope.premium = false;
+   const peers = new Map<PeerId, User.user>();
+-  const contactsByPeer = new Set(contacts.map(({id}) => id.toPeerId(false)));
++  const initialContactPeers = contacts.map(({id}) => id.toPeerId(false));
++  const contactsByPeer = new Set(initialContactPeers);
+   const groups = new Map<PeerId, Chat.chat>();
+   const orderMembers = new Map<PeerId, Map<number, PeerId>>();
+   const formerOrderPeers = new Set<PeerId>();
+@@ -186,10 +188,36 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+   const contactList = (query = '') => {
+     if(workerDirectoryOnly) return [];
+     const name = query.trim().toLowerCase();
+-    return [...contactsByPeer].map((id) => peers.get(id)).filter((peer) =>
++    return initialContactPeers.map((id) => peers.get(id)).filter((peer) =>
+       !peer.pFlags.self && (!name || peer.first_name?.toLowerCase().includes(name)));
+   };
+
++  const pendingContactSearches = new Map<string, Promise<PeerId[]>>();
++  let contactSearchSerial = 0;
++  const getContactsPeerIds: AppUsersManager['getContactsPeerIds'] = async(query = '', _includeSaved, _sortBy, limit) => {
++    if(workerDirectoryOnly || readOnly) return [];
++    const keyword = query.trim();
++    const serial = ++contactSearchSerial;
++    if(!keyword) return initialContactPeers.slice(0, limit);
++
++    let search = pendingContactSearches.get(keyword);
++    if(!search) {
++      search = api.contacts(keyword).then(({contacts}) => contacts.map((contact) => {
++        const peerId = contact.id.toPeerId(false);
++        contactsByPeer.add(peerId);
++        saveUser(contact);
++        return peerId;
++      })).finally(() => pendingContactSearches.delete(keyword));
++      pendingContactSearches.set(keyword, search);
++    }
++    try {
++      return (await search).slice(0, limit);
++    } catch {
++      if(serial === contactSearchSerial) toast('通讯录搜索失败，请重试');
++      return [];
++    }
++  };
++
+   function storageFor(peerId: PeerId) {
+     return _useHistoryStorage(getHistoryStorageKey({type: 'history', peerId}));
+   }
+@@ -1037,7 +1065,7 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+       getUser: (id: UserId) => peers.get(Number(id).toPeerId(false)),
+       getUserStatusForSort: (id: UserId) => formerOrderPeers.has(id.toPeerId(false)) ? -1 : 0,
+       getContacts: contactList,
+-      getContactsPeerIds: (query?: string) => contactList(query).map(({id}) => Number(id).toPeerId(false)),
++      getContactsPeerIds,
+       searchContacts: (query: string) => ({
+         my_results: contactList(query).map(({id}) => ({_: 'peerUser', user_id: String(id)})),
+         results: [], chats: [], users: []
+diff --git a/src/pages/localChatPreview/liveTransport.ts b/src/pages/localChatPreview/liveTransport.ts
+index 3a31fc6..cabfe4e 100644
+--- a/src/pages/localChatPreview/liveTransport.ts
++++ b/src/pages/localChatPreview/liveTransport.ts
+@@ -212,7 +212,9 @@ export function createLiveTransport(orderNo?: string) {
+       if(/^\d{20}$/.test(number)) window.parent.postMessage({type: 'tt:chat.openOrder', detail: number}, parentOrigin);
+     },
+     me: () => request<{user: {id: number; display_name: string}}>('get', '/api/auth/me'),
+-    contacts: () => request<ContactDirectory>('get', api + 'contacts/'),
++    contacts: (query?: string) => request<ContactDirectory>(
++      'get', api + 'contacts/' + (query ? '?' + new URLSearchParams({q: query}) : '')
++    ),
+     conversations: () => request<{conversations: Conversation[]; cursor?: number}>('get', api + 'conversations/'),
+     start: (peer: number) => request<Conversation>('post', api + 'conversations/', {peer_id: peer}),
+     history: (id: number, query: Record<string, string> = {}) => request<History>(

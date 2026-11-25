@@ -1,0 +1,2352 @@
+openapi: 3.1.0
+info: {title: 团团通工作室业务接口, version: 1.0.0, description: Next.js 服务端使用业务应用凭据。打手接口使用已绑定账号的短期令牌。}
+servers:
+- {url: 'https://studio.example.invalid', description: 替换为所接入的工作室域名。}
+paths:
+  /api/open/oauth/token:
+    post:
+      summary: 应用凭据换令牌
+      operationId: exchangeAppToken
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                grant_type: {const: client_credentials}
+                client_id: {type: string}
+                client_secret: {type: string}
+              required:
+              - grant_type
+              - client_id
+              - client_secret
+              additionalProperties: false
+      responses:
+        '200':
+          description: 应用令牌
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Token'}
+        '401':
+          description: 换令牌失败。
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error: {type: string}
+                  error_description: {type: string}
+                required:
+                - error
+                - error_description
+        '429':
+          description: 换令牌失败。
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error: {type: string}
+                  error_description: {type: string}
+                required:
+                - error
+                - error_description
+  /api/integration/v1/orders/:
+    get:
+      summary: 订单列表
+      operationId: listOrders
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/ListOrdersResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/PageNumber'}
+      - {$ref: '#/components/parameters/PageSize'}
+      - name: status
+        in: query
+        schema:
+          type: string
+          enum:
+          - UNASSIGNED
+          - WAITING_GRAB
+          - IN_PROGRESS
+          - PENDING_REVIEW
+          - COMPLETED
+          - ISSUE
+          - PAUSED
+          - REFUNDED
+      - name: game_id
+        in: query
+        schema: {type: integer, minimum: 1}
+      - name: taker_id
+        in: query
+        schema: {type: integer, minimum: 1}
+      - name: source
+        in: query
+        schema: {type: string}
+      - name: source_order_no
+        in: query
+        schema: {type: string}
+      - name: created_from
+        in: query
+        schema: {type: string, format: date-time}
+      - name: created_to
+        in: query
+        schema: {type: string, format: date-time}
+      - name: updated_since
+        in: query
+        schema: {type: string, format: date-time}
+      - name: after
+        in: query
+        schema: {type: string, pattern: '^([0-9]{20})?$'}
+        description: 快照扫描首轮传空字符串，之后传上一页最后的订单号，每次取第 1 页。
+    post:
+      summary: 录单
+      operationId: createOrder
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/CreateOrderResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+      - {$ref: '#/components/parameters/Actor'}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/OrderCreate'}
+  /api/integration/v1/orders/assignees/:
+    get:
+      summary: 可派打手名单
+      operationId: listAssignees
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/ListAssigneesResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/PageNumber'}
+      - {$ref: '#/components/parameters/PageSize'}
+      - name: game_id
+        in: query
+        schema: {type: integer, minimum: 1}
+  /api/integration/v1/orders/recycle-bin/:
+    get:
+      summary: 订单回收站
+      operationId: listDeletedOrders
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/ListOrdersResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/PageNumber'}
+      - {$ref: '#/components/parameters/PageSize'}
+  /api/integration/v1/orders/{order_no}/:
+    get:
+      summary: 订单详情
+      operationId: getOrder
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/CreateOrderResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/OrderNumber'}
+    patch:
+      summary: 改单及调整订单报价
+      operationId: updateOrder
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/CreateOrderResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/OrderNumber'}
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+      - {$ref: '#/components/parameters/Actor'}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/OrderPatch'}
+  /api/integration/v1/orders/{order_no}/status/:
+    get:
+      summary: 订单状态及时间
+      operationId: getOrderTiming
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/GetOrderTimingResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/OrderNumber'}
+    post:
+      summary: 变更订单状态
+      operationId: changeOrderStatus
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/CreateOrderResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/OrderNumber'}
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+      - {$ref: '#/components/parameters/Actor'}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum:
+                  - PENDING_REVIEW
+                  - COMPLETED
+                  - ISSUE
+                  - PAUSED
+                  - REFUNDED
+                remark: {type: string, maxLength: 255}
+              required:
+              - status
+              additionalProperties: false
+  /api/integration/v1/orders/{order_no}/assign-price/:
+    put:
+      summary: 改发单价
+      operationId: changeHallPrice
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/CreateOrderResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/OrderNumber'}
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+      - {$ref: '#/components/parameters/Actor'}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                price: {type: string, pattern: '^-?[0-9]+(?:\.[0-9]{1,2})?$', example: '125.00'}
+                reason: {type: string}
+              required:
+              - price
+              additionalProperties: false
+  /api/integration/v1/orders/{order_no}/assign/:
+    post:
+      summary: 指派订单
+      operationId: assignOrder
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/CreateOrderResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/OrderNumber'}
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+      - {$ref: '#/components/parameters/Actor'}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                taker_id: {type: integer, minimum: 1}
+                price: {type: string, pattern: '^-?[0-9]+(?:\.[0-9]{1,2})?$', example: '125.00'}
+              required:
+              - taker_id
+              additionalProperties: false
+  /api/integration/v1/orders/{order_no}/reassign/:
+    post:
+      summary: 改派订单
+      operationId: reassignOrder
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/CreateOrderResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/OrderNumber'}
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+      - {$ref: '#/components/parameters/Actor'}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                taker_id: {type: integer, minimum: 1}
+                price: {type: string, pattern: '^-?[0-9]+(?:\.[0-9]{1,2})?$', example: '125.00'}
+              required:
+              - taker_id
+              additionalProperties: false
+  /api/integration/v1/orders/{order_no}/publish/:
+    post:
+      summary: 发到大厅
+      operationId: publishOrder
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/CreateOrderResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/OrderNumber'}
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+      - {$ref: '#/components/parameters/Actor'}
+  /api/integration/v1/orders/{order_no}/withdraw/:
+    post:
+      summary: 撤回大厅订单
+      operationId: withdrawOrder
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/CreateOrderResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/OrderNumber'}
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+      - {$ref: '#/components/parameters/Actor'}
+  /api/integration/v1/orders/{order_no}/clear-taker/:
+    post:
+      summary: 清除接手人
+      operationId: clearOrderTaker
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/CreateOrderResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/OrderNumber'}
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+      - {$ref: '#/components/parameters/Actor'}
+  /api/integration/v1/orders/{order_no}/restore/:
+    post:
+      summary: 恢复订单
+      operationId: restoreOrder
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/CreateOrderResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/OrderNumber'}
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+      - {$ref: '#/components/parameters/Actor'}
+  /api/integration/v1/orders/{order_no}/delete/:
+    post:
+      summary: 软删除订单
+      operationId: deleteOrder
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/CreateOrderResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/OrderNumber'}
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+      - {$ref: '#/components/parameters/Actor'}
+  /api/integration/v1/orders/{order_no}/audit/:
+    get:
+      summary: 订单操作记录
+      operationId: listOrderAudit
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/ListOrderAuditResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/OrderNumber'}
+      - {$ref: '#/components/parameters/PageNumber'}
+      - {$ref: '#/components/parameters/PageSize'}
+  /api/integration/v1/orders/{order_no}/notes/:
+    post:
+      summary: 添加订单备注
+      operationId: addOrderNote
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/AddOrderNoteResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/OrderNumber'}
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+      - {$ref: '#/components/parameters/Actor'}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content: {type: string}
+              required:
+              - content
+              additionalProperties: false
+  /api/integration/v1/orders/{order_no}/split/:
+    post:
+      summary: 本地拆单
+      operationId: splitOrder
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/SplitOrderResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/OrderNumber'}
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+      - {$ref: '#/components/parameters/Actor'}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projects:
+                  type: array
+                  items: {type: string, minLength: 1, maxLength: 900}
+                  minItems: 2
+              required:
+              - projects
+              additionalProperties: false
+  /api/integration/v1/orders/{order_no}/split-peer/:
+    post:
+      summary: 并列拆单
+      operationId: splitPeerOrder
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/SplitPeerOrderResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/OrderNumber'}
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+      - {$ref: '#/components/parameters/Actor'}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/PeerSplitOrder'}
+  /api/integration/v1/orders/{order_no}/images/:
+    get:
+      summary: 读取进度图
+      operationId: listOrderImages
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/ListOrderImagesResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/OrderNumber'}
+      - {$ref: '#/components/parameters/PageNumber'}
+      - {$ref: '#/components/parameters/PageSize'}
+    post:
+      summary: 确认上传进度图
+      operationId: claimOrderImage
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/ClaimOrderImageResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/OrderNumber'}
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+      - {$ref: '#/components/parameters/Actor'}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/ImageClaim'}
+  /api/integration/v1/orders/{order_no}/images/ticket/:
+    post:
+      summary: 获取上传地址
+      operationId: issueOrderImageTicket
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/IssueOrderImageTicketResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/OrderNumber'}
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+      - {$ref: '#/components/parameters/Actor'}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/ImageTicketRequest'}
+  /api/integration/v1/taker/orders/{order_no}/images/:
+    get:
+      summary: 读取进度图
+      operationId: listOrderImagesAsTaker
+      security:
+      - TakerBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/ListOrderImagesAsTakerResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/OrderNumber'}
+      - {$ref: '#/components/parameters/PageNumber'}
+      - {$ref: '#/components/parameters/PageSize'}
+    post:
+      summary: 确认上传进度图
+      operationId: claimOrderImageAsTaker
+      security:
+      - TakerBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/ClaimOrderImageResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/OrderNumber'}
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/ImageClaim'}
+  /api/integration/v1/taker/orders/{order_no}/images/ticket/:
+    post:
+      summary: 获取上传地址
+      operationId: issueOrderImageTicketAsTaker
+      security:
+      - TakerBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/IssueOrderImageTicketResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/OrderNumber'}
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/ImageTicketRequest'}
+  /api/integration/v1/orders/{order_no}/images/{image_id}/:
+    delete:
+      summary: 删除进度图
+      operationId: deleteOrderImage
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/DeleteOrderImageResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/OrderNumber'}
+      - name: image_id
+        in: path
+        schema: {type: integer, minimum: 1}
+        required: true
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+      - {$ref: '#/components/parameters/Actor'}
+  /api/integration/v1/takers/:
+    get:
+      summary: 打手列表
+      operationId: listTakers
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/ListAssigneesResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/PageNumber'}
+      - {$ref: '#/components/parameters/PageSize'}
+      - name: q
+        in: query
+        schema: {type: string, maxLength: 64}
+      - name: is_active
+        in: query
+        schema: {type: boolean}
+      - name: include_deleted
+        in: query
+        schema: {type: boolean, default: false}
+      - name: after
+        in: query
+        schema: {type: integer, minimum: 0}
+        description: 快照扫描首轮传 0，之后传上一页最后的打手编号，每次取第 1 页。
+    post:
+      summary: 新增打手
+      operationId: createTaker
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/CreateTakerResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+      - {$ref: '#/components/parameters/Actor'}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/TakerCreate'}
+  /api/integration/v1/takers/{taker_id}/:
+    get:
+      summary: 打手详情
+      operationId: getTaker
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/CreateTakerResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/TakerId'}
+    patch:
+      summary: 编辑打手
+      operationId: updateTaker
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/CreateTakerResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/TakerId'}
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+      - {$ref: '#/components/parameters/Actor'}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/TakerPatch'}
+  /api/integration/v1/takers/{taker_id}/enable/:
+    post:
+      summary: 启用打手
+      operationId: enableTaker
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/CreateTakerResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/TakerId'}
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+      - {$ref: '#/components/parameters/Actor'}
+  /api/integration/v1/takers/{taker_id}/disable/:
+    post:
+      summary: 停用打手
+      operationId: disableTaker
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/CreateTakerResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/TakerId'}
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+      - {$ref: '#/components/parameters/Actor'}
+  /api/integration/v1/takers/{taker_id}/delete/:
+    post:
+      summary: 软删除打手
+      operationId: deleteTaker
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/CreateTakerResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/TakerId'}
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+      - {$ref: '#/components/parameters/Actor'}
+  /api/integration/v1/takers/{taker_id}/restore/:
+    post:
+      summary: 恢复打手
+      operationId: restoreTaker
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/CreateTakerResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/TakerId'}
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+      - {$ref: '#/components/parameters/Actor'}
+  /api/integration/v1/catalog/games/:
+    get:
+      summary: 游戏字典
+      operationId: listGames
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/ListGamesResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/PageNumber'}
+      - {$ref: '#/components/parameters/PageSize'}
+  /api/integration/v1/catalog/servers/:
+    get:
+      summary: 区服字典
+      operationId: listServers
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/ListServersResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/PageNumber'}
+      - {$ref: '#/components/parameters/PageSize'}
+      - name: game_id
+        in: query
+        schema: {type: integer, minimum: 1}
+  /api/integration/v1/catalog/projects/:
+    get:
+      summary: 项目字典
+      operationId: listProjects
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/ListProjectsResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/PageNumber'}
+      - {$ref: '#/components/parameters/PageSize'}
+      - name: game_id
+        in: query
+        schema: {type: integer, minimum: 1}
+        required: true
+  /api/integration/v1/catalog/order-sources/:
+    get:
+      summary: 订单来源
+      operationId: listOrderSources
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/ListOrderSourcesResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/PageNumber'}
+      - {$ref: '#/components/parameters/PageSize'}
+  /api/integration/v1/taker-bindings/{external_user_id}/:
+    put:
+      summary: 绑定 App 账号与团团通打手
+      operationId: bindTaker
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/BindTakerResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - name: external_user_id
+        in: path
+        schema: {type: string, pattern: '^[A-Za-z0-9_.:@-]{1,64}$'}
+        required: true
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+      - {$ref: '#/components/parameters/Actor'}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                taker_id: {type: integer, minimum: 1}
+              required:
+              - taker_id
+              additionalProperties: false
+    delete:
+      summary: 解除打手账号绑定
+      operationId: unbindTaker
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/UnbindTakerResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - name: external_user_id
+        in: path
+        schema: {type: string, pattern: '^[A-Za-z0-9_.:@-]{1,64}$'}
+        required: true
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+      - {$ref: '#/components/parameters/Actor'}
+  /api/integration/v1/taker-token/:
+    post:
+      summary: 签发已绑定打手的短期令牌
+      operationId: issueTakerToken
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/IssueTakerTokenResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                external_user_id: {type: string, pattern: '^[A-Za-z0-9_.:@-]{1,64}$'}
+              required:
+              - external_user_id
+              additionalProperties: false
+  /api/integration/v1/taker/hall/:
+    get:
+      summary: 查打手可接本地单
+      operationId: listHall
+      security:
+      - TakerBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/ListHallResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/PageNumber'}
+      - {$ref: '#/components/parameters/PageSize'}
+      - name: source_order_no
+        in: query
+        schema: {type: string}
+      - name: keyword
+        in: query
+        schema: {type: string}
+      - name: project_text
+        in: query
+        schema: {type: string}
+      - name: game
+        in: query
+        schema: {type: integer, minimum: 1}
+      - name: server
+        in: query
+        schema: {type: integer, minimum: 1}
+      - name: price_min
+        in: query
+        schema: {type: string, pattern: '^-?[0-9]+(?:\.[0-9]{1,2})?$', example: '125.00'}
+      - name: price_max
+        in: query
+        schema: {type: string, pattern: '^-?[0-9]+(?:\.[0-9]{1,2})?$', example: '125.00'}
+  /api/integration/v1/taker/hall/{order_no}/claim/:
+    post:
+      summary: 打手抢单
+      operationId: claimOrder
+      security:
+      - TakerBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/ClaimOrderResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/OrderNumber'}
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+  /api/integration/v1/taker/my/orders/:
+    get:
+      summary: 查打手已接订单
+      operationId: listMyOrders
+      security:
+      - TakerBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/ListMyOrdersResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/PageNumber'}
+      - {$ref: '#/components/parameters/PageSize'}
+      - name: source_order_no
+        in: query
+        schema: {type: string}
+      - name: updated_since
+        in: query
+        schema: {type: string, format: date-time}
+  /api/integration/v1/taker/orders/{order_no}/:
+    get:
+      summary: 查打手自己的订单
+      operationId: getMyOrder
+      security:
+      - TakerBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/GetMyOrderResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/OrderNumber'}
+  /api/integration/v1/taker/orders/{order_no}/status/:
+    post:
+      summary: 打手交单、报告问题、暂停
+      operationId: changeMyOrderStatus
+      security:
+      - TakerBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/ClaimOrderResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+      parameters:
+      - {$ref: '#/components/parameters/OrderNumber'}
+      - {$ref: '#/components/parameters/IdempotencyKey'}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum:
+                  - PENDING_REVIEW
+                  - ISSUE
+                  - PAUSED
+                remark: {type: string, maxLength: 255}
+              required:
+              - status
+              additionalProperties: false
+  /api/integration/v1/changes/:
+    get:
+      summary: 补拉已提交订单和打手变更
+      operationId: listChanges
+      security:
+      - AppBearer: []
+      responses:
+        '200': {$ref: '#/components/responses/ListChangesResult'}
+        default: {$ref: '#/components/responses/BusinessError'}
+        '410':
+          description: 同步水位已过期。需要重建快照。
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/BusinessError'}
+      parameters:
+      - name: cursor
+        in: query
+        schema: {type: string, maxLength: 512}
+      - name: start
+        in: query
+        schema:
+          type: string
+          enum:
+          - now
+        description: 获取初始化水位。与 cursor 互斥。
+      - name: page_size
+        in: query
+        schema: {type: integer, minimum: 1, maximum: 100, default: 50}
+webhooks:
+  integrationChange:
+    post:
+      summary: 订单和打手变更回调
+      operationId: onIntegrationChange
+      parameters:
+      - name: X-TT-Timestamp
+        in: header
+        schema: {type: integer}
+        required: true
+        description: 发送时间戳，单位为秒。
+      - name: X-TT-Delivery
+        in: header
+        schema: {type: string, pattern: '^[0-9a-f]{32}$'}
+        required: true
+      - name: X-TT-Signature
+        in: header
+        schema: {type: string, pattern: '^[0-9a-f]{64}$'}
+        required: true
+      description: 使用应用密钥验签。先按原报文去除 sign 字段，递归按键排序并紧凑序列化，再对时间戳、投递编号和报文 SHA-256 十六进制摘要用换行连接后计算 HMAC-SHA256。使用 event_id
+        去重。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/ChangeWebhook'}
+      responses:
+        2XX: {description: 回调已处理或者已持久化并等待处理。}
+components:
+  securitySchemes:
+    AppBearer: {type: http, scheme: bearer, description: 工作室业务应用令牌}
+    TakerBearer: {type: http, scheme: bearer, description: 绑定到打手的短期令牌}
+  parameters:
+    OrderNumber:
+      name: order_no
+      in: path
+      schema: {$ref: '#/components/schemas/OrderNumber'}
+      required: true
+    TakerId:
+      name: taker_id
+      in: path
+      schema: {type: integer, minimum: 1}
+      required: true
+    PageNumber:
+      name: page
+      in: query
+      schema: {type: integer, minimum: 1, default: 1}
+    PageSize:
+      name: page_size
+      in: query
+      schema: {type: integer, minimum: 1, maximum: 100, default: 20}
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      schema: {type: string, minLength: 8, maxLength: 128}
+      required: true
+      description: 相同操作重试时复用原键和请求体。
+    Actor:
+      name: X-TT-Actor
+      in: header
+      schema: {type: string, pattern: '^[A-Za-z0-9_.:@-]{1,64}$'}
+      description: 从 Next.js 登录态取得的稳定运营用户编号。
+  responses:
+    BusinessError:
+      description: 认证失败、限流或其他 HTTP 错误。
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/BusinessError'}
+    ListOrdersResult:
+      description: 业务响应。code 为 0 时读取 data。
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - allOf:
+              - {$ref: '#/components/schemas/Envelope'}
+              - type: object
+                properties:
+                  code: {const: 0}
+                  data:
+                    allOf:
+                    - {$ref: '#/components/schemas/Page'}
+                    - type: object
+                      properties:
+                        results:
+                          type: array
+                          items: {$ref: '#/components/schemas/Order'}
+                      required:
+                      - results
+                required:
+                - code
+                - data
+            - {$ref: '#/components/schemas/BusinessError'}
+    CreateOrderResult:
+      description: 业务响应。code 为 0 时读取 data。
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - allOf:
+              - {$ref: '#/components/schemas/Envelope'}
+              - type: object
+                properties:
+                  code: {const: 0}
+                  data: {$ref: '#/components/schemas/Order'}
+                required:
+                - code
+                - data
+            - {$ref: '#/components/schemas/BusinessError'}
+    ListAssigneesResult:
+      description: 业务响应。code 为 0 时读取 data。
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - allOf:
+              - {$ref: '#/components/schemas/Envelope'}
+              - type: object
+                properties:
+                  code: {const: 0}
+                  data:
+                    allOf:
+                    - {$ref: '#/components/schemas/Page'}
+                    - type: object
+                      properties:
+                        results:
+                          type: array
+                          items: {$ref: '#/components/schemas/Taker'}
+                      required:
+                      - results
+                required:
+                - code
+                - data
+            - {$ref: '#/components/schemas/BusinessError'}
+    GetOrderTimingResult:
+      description: 业务响应。code 为 0 时读取 data。
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - allOf:
+              - {$ref: '#/components/schemas/Envelope'}
+              - type: object
+                properties:
+                  code: {const: 0}
+                  data: {$ref: '#/components/schemas/OrderTiming'}
+                required:
+                - code
+                - data
+            - {$ref: '#/components/schemas/BusinessError'}
+    ListOrderAuditResult:
+      description: 业务响应。code 为 0 时读取 data。
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - allOf:
+              - {$ref: '#/components/schemas/Envelope'}
+              - type: object
+                properties:
+                  code: {const: 0}
+                  data:
+                    allOf:
+                    - {$ref: '#/components/schemas/Page'}
+                    - type: object
+                      properties:
+                        results:
+                          type: array
+                          items: {$ref: '#/components/schemas/OrderAudit'}
+                      required:
+                      - results
+                required:
+                - code
+                - data
+            - {$ref: '#/components/schemas/BusinessError'}
+    AddOrderNoteResult:
+      description: 业务响应。code 为 0 时读取 data。
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - allOf:
+              - {$ref: '#/components/schemas/Envelope'}
+              - type: object
+                properties:
+                  code: {const: 0}
+                  data: {$ref: '#/components/schemas/OrderIdentifier'}
+                required:
+                - code
+                - data
+            - {$ref: '#/components/schemas/BusinessError'}
+    SplitOrderResult:
+      description: 业务响应。code 为 0 时读取 data。
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - allOf:
+              - {$ref: '#/components/schemas/Envelope'}
+              - type: object
+                properties:
+                  code: {const: 0}
+                  data: {$ref: '#/components/schemas/SplitOrderResult'}
+                required:
+                - code
+                - data
+            - {$ref: '#/components/schemas/BusinessError'}
+    SplitPeerOrderResult:
+      description: 业务响应。code 为 0 时读取 data。
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - allOf:
+              - {$ref: '#/components/schemas/Envelope'}
+              - type: object
+                properties:
+                  code: {const: 0}
+                  data: {$ref: '#/components/schemas/PeerSplitResult'}
+                required:
+                - code
+                - data
+            - {$ref: '#/components/schemas/BusinessError'}
+    ListOrderImagesResult:
+      description: 业务响应。code 为 0 时读取 data。
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - allOf:
+              - {$ref: '#/components/schemas/Envelope'}
+              - type: object
+                properties:
+                  code: {const: 0}
+                  data:
+                    allOf:
+                    - {$ref: '#/components/schemas/Page'}
+                    - type: object
+                      properties:
+                        results:
+                          type: array
+                          items: {$ref: '#/components/schemas/ManagedOrderImage'}
+                      required:
+                      - results
+                required:
+                - code
+                - data
+            - {$ref: '#/components/schemas/BusinessError'}
+    ClaimOrderImageResult:
+      description: 业务响应。code 为 0 时读取 data。
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - allOf:
+              - {$ref: '#/components/schemas/Envelope'}
+              - type: object
+                properties:
+                  code: {const: 0}
+                  data: {$ref: '#/components/schemas/OrderImage'}
+                required:
+                - code
+                - data
+            - {$ref: '#/components/schemas/BusinessError'}
+    IssueOrderImageTicketResult:
+      description: 业务响应。code 为 0 时读取 data。
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - allOf:
+              - {$ref: '#/components/schemas/Envelope'}
+              - type: object
+                properties:
+                  code: {const: 0}
+                  data: {$ref: '#/components/schemas/ImageTicket'}
+                required:
+                - code
+                - data
+            - {$ref: '#/components/schemas/BusinessError'}
+    ListOrderImagesAsTakerResult:
+      description: 业务响应。code 为 0 时读取 data。
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - allOf:
+              - {$ref: '#/components/schemas/Envelope'}
+              - type: object
+                properties:
+                  code: {const: 0}
+                  data:
+                    allOf:
+                    - {$ref: '#/components/schemas/Page'}
+                    - type: object
+                      properties:
+                        results:
+                          type: array
+                          items: {$ref: '#/components/schemas/OrderImage'}
+                      required:
+                      - results
+                required:
+                - code
+                - data
+            - {$ref: '#/components/schemas/BusinessError'}
+    DeleteOrderImageResult:
+      description: 业务响应。code 为 0 时读取 data。
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - allOf:
+              - {$ref: '#/components/schemas/Envelope'}
+              - type: object
+                properties:
+                  code: {const: 0}
+                  data: {type: 'null'}
+                required:
+                - code
+                - data
+            - {$ref: '#/components/schemas/BusinessError'}
+    CreateTakerResult:
+      description: 业务响应。code 为 0 时读取 data。
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - allOf:
+              - {$ref: '#/components/schemas/Envelope'}
+              - type: object
+                properties:
+                  code: {const: 0}
+                  data: {$ref: '#/components/schemas/Taker'}
+                required:
+                - code
+                - data
+            - {$ref: '#/components/schemas/BusinessError'}
+    ListGamesResult:
+      description: 业务响应。code 为 0 时读取 data。
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - allOf:
+              - {$ref: '#/components/schemas/Envelope'}
+              - type: object
+                properties:
+                  code: {const: 0}
+                  data:
+                    allOf:
+                    - {$ref: '#/components/schemas/Page'}
+                    - type: object
+                      properties:
+                        results:
+                          type: array
+                          items: {$ref: '#/components/schemas/Game'}
+                      required:
+                      - results
+                required:
+                - code
+                - data
+            - {$ref: '#/components/schemas/BusinessError'}
+    ListServersResult:
+      description: 业务响应。code 为 0 时读取 data。
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - allOf:
+              - {$ref: '#/components/schemas/Envelope'}
+              - type: object
+                properties:
+                  code: {const: 0}
+                  data:
+                    allOf:
+                    - {$ref: '#/components/schemas/Page'}
+                    - type: object
+                      properties:
+                        results:
+                          type: array
+                          items: {$ref: '#/components/schemas/GameServer'}
+                      required:
+                      - results
+                required:
+                - code
+                - data
+            - {$ref: '#/components/schemas/BusinessError'}
+    ListProjectsResult:
+      description: 业务响应。code 为 0 时读取 data。
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - allOf:
+              - {$ref: '#/components/schemas/Envelope'}
+              - type: object
+                properties:
+                  code: {const: 0}
+                  data:
+                    allOf:
+                    - {$ref: '#/components/schemas/Page'}
+                    - type: object
+                      properties:
+                        results:
+                          type: array
+                          items: {$ref: '#/components/schemas/Project'}
+                      required:
+                      - results
+                required:
+                - code
+                - data
+            - {$ref: '#/components/schemas/BusinessError'}
+    ListOrderSourcesResult:
+      description: 业务响应。code 为 0 时读取 data。
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - allOf:
+              - {$ref: '#/components/schemas/Envelope'}
+              - type: object
+                properties:
+                  code: {const: 0}
+                  data:
+                    allOf:
+                    - {$ref: '#/components/schemas/Page'}
+                    - type: object
+                      properties:
+                        results:
+                          type: array
+                          items: {$ref: '#/components/schemas/OrderSource'}
+                      required:
+                      - results
+                required:
+                - code
+                - data
+            - {$ref: '#/components/schemas/BusinessError'}
+    BindTakerResult:
+      description: 业务响应。code 为 0 时读取 data。
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - allOf:
+              - {$ref: '#/components/schemas/Envelope'}
+              - type: object
+                properties:
+                  code: {const: 0}
+                  data:
+                    type: object
+                    properties:
+                      taker_id: {type: integer, minimum: 1}
+                      external_user_id: {type: string}
+                    required:
+                    - taker_id
+                    - external_user_id
+                required:
+                - code
+                - data
+            - {$ref: '#/components/schemas/BusinessError'}
+    UnbindTakerResult:
+      description: 业务响应。code 为 0 时读取 data。
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - allOf:
+              - {$ref: '#/components/schemas/Envelope'}
+              - type: object
+                properties:
+                  code: {const: 0}
+                  data:
+                    type: object
+                    properties:
+                      external_user_id: {type: string, pattern: '^[A-Za-z0-9_.:@-]{1,64}$'}
+                    required:
+                    - external_user_id
+                required:
+                - code
+                - data
+            - {$ref: '#/components/schemas/BusinessError'}
+    IssueTakerTokenResult:
+      description: 业务响应。code 为 0 时读取 data。
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - allOf:
+              - {$ref: '#/components/schemas/Envelope'}
+              - type: object
+                properties:
+                  code: {const: 0}
+                  data: {$ref: '#/components/schemas/TakerToken'}
+                required:
+                - code
+                - data
+            - {$ref: '#/components/schemas/BusinessError'}
+    ListHallResult:
+      description: 业务响应。code 为 0 时读取 data。
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - allOf:
+              - {$ref: '#/components/schemas/Envelope'}
+              - type: object
+                properties:
+                  code: {const: 0}
+                  data:
+                    allOf:
+                    - {$ref: '#/components/schemas/Page'}
+                    - type: object
+                      properties:
+                        results:
+                          type: array
+                          items: {$ref: '#/components/schemas/HallOrder'}
+                      required:
+                      - results
+                required:
+                - code
+                - data
+            - {$ref: '#/components/schemas/BusinessError'}
+    ClaimOrderResult:
+      description: 业务响应。code 为 0 时读取 data。
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - allOf:
+              - {$ref: '#/components/schemas/Envelope'}
+              - type: object
+                properties:
+                  code: {const: 0}
+                  data: {$ref: '#/components/schemas/OrderState'}
+                required:
+                - code
+                - data
+            - {$ref: '#/components/schemas/BusinessError'}
+    ListMyOrdersResult:
+      description: 业务响应。code 为 0 时读取 data。
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - allOf:
+              - {$ref: '#/components/schemas/Envelope'}
+              - type: object
+                properties:
+                  code: {const: 0}
+                  data:
+                    allOf:
+                    - {$ref: '#/components/schemas/Page'}
+                    - type: object
+                      properties:
+                        results:
+                          type: array
+                          items: {$ref: '#/components/schemas/ClaimedOrder'}
+                      required:
+                      - results
+                required:
+                - code
+                - data
+            - {$ref: '#/components/schemas/BusinessError'}
+    GetMyOrderResult:
+      description: 业务响应。code 为 0 时读取 data。
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - allOf:
+              - {$ref: '#/components/schemas/Envelope'}
+              - type: object
+                properties:
+                  code: {const: 0}
+                  data: {$ref: '#/components/schemas/ClaimedOrder'}
+                required:
+                - code
+                - data
+            - {$ref: '#/components/schemas/BusinessError'}
+    ListChangesResult:
+      description: 业务响应。code 为 0 时读取 data。
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - allOf:
+              - {$ref: '#/components/schemas/Envelope'}
+              - type: object
+                properties:
+                  code: {const: 0}
+                  data: {$ref: '#/components/schemas/ChangePage'}
+                required:
+                - code
+                - data
+            - {$ref: '#/components/schemas/BusinessError'}
+  schemas:
+    Envelope:
+      type: object
+      properties:
+        code: {type: integer}
+        msg: {type: string}
+        data: {}
+      required:
+      - code
+      - msg
+      - data
+    BusinessError:
+      allOf:
+      - {$ref: '#/components/schemas/Envelope'}
+      - type: object
+        properties:
+          code:
+            not: {const: 0}
+        required:
+        - code
+    Page:
+      type: object
+      properties:
+        count: {type: integer}
+        results:
+          type: array
+          items: {}
+        page: {type: integer}
+        page_size: {type: integer}
+      required:
+      - count
+      - results
+      - page
+      - page_size
+    OrderNumber: {type: string, pattern: '^[0-9]{20}$'}
+    OrderIdentifier:
+      type: object
+      properties:
+        order_no: {$ref: '#/components/schemas/OrderNumber'}
+      required:
+      - order_no
+    OrderState:
+      type: object
+      properties:
+        order_no: {$ref: '#/components/schemas/OrderNumber'}
+        status: {type: string}
+        status_text: {type: string}
+      required:
+      - order_no
+      - status
+      - status_text
+    OrderTiming:
+      type: object
+      properties:
+        status: {type: string}
+        status_text: {type: string}
+        created_at:
+          anyOf:
+          - {type: string, format: date-time}
+          - {type: 'null'}
+        claimed_at:
+          anyOf:
+          - {type: string, format: date-time}
+          - {type: 'null'}
+        submitted_at:
+          anyOf:
+          - {type: string, format: date-time}
+          - {type: 'null'}
+        completed_at:
+          anyOf:
+          - {type: string, format: date-time}
+          - {type: 'null'}
+      required:
+      - status
+      - status_text
+      - created_at
+      - claimed_at
+      - submitted_at
+      - completed_at
+    Order:
+      type: object
+      properties:
+        order_no: {$ref: '#/components/schemas/OrderNumber'}
+        source_order_no: {type: string}
+        status: {type: string}
+        status_text: {type: string}
+        game: {type: string}
+        project:
+          anyOf:
+          - {type: string}
+          - {type: 'null'}
+        game_id: {type: integer, minimum: 1}
+        server_id:
+          anyOf:
+          - {type: integer, minimum: 1}
+          - {type: 'null'}
+        project_id:
+          anyOf:
+          - {type: integer, minimum: 1}
+          - {type: 'null'}
+        total_price:
+          anyOf:
+          - {type: string, pattern: '^-?[0-9]+(?:\.[0-9]{1,2})?$', example: '125.00'}
+          - {type: 'null'}
+        created_at: {type: string, format: date-time}
+        updated_at: {type: string, format: date-time}
+        submitted_at:
+          anyOf:
+          - {type: string, format: date-time}
+          - {type: 'null'}
+        published_at:
+          anyOf:
+          - {type: string, format: date-time}
+          - {type: 'null'}
+        deleted_at:
+          anyOf:
+          - {type: string, format: date-time}
+          - {type: 'null'}
+        source: {type: string}
+        taker_id:
+          anyOf:
+          - {type: integer, minimum: 1}
+          - {type: 'null'}
+        taker_name:
+          anyOf:
+          - {type: string}
+          - {type: 'null'}
+        amounts:
+          type: object
+          properties:
+            total_price:
+              anyOf:
+              - {type: string, pattern: '^-?[0-9]+(?:\.[0-9]{1,2})?$', example: '125.00'}
+              - {type: 'null'}
+            hall_price:
+              anyOf:
+              - {type: string, pattern: '^-?[0-9]+(?:\.[0-9]{1,2})?$', example: '125.00'}
+              - {type: 'null'}
+          required:
+          - total_price
+          - hall_price
+        content:
+          type: object
+          properties:
+            content: {type: string}
+            demand: {type: string}
+            time_requirement: {type: string}
+          required:
+          - content
+          - demand
+          - time_requirement
+        order:
+          type: object
+          properties:
+            order_type: {type: string}
+            server:
+              anyOf:
+              - {type: string}
+              - {type: 'null'}
+            category:
+              anyOf:
+              - {type: string}
+              - {type: 'null'}
+            project_text: {type: string}
+            is_urgent: {type: boolean}
+            tag: {type: string}
+            completed_at:
+              anyOf:
+              - {type: string, format: date-time}
+              - {type: 'null'}
+          required:
+          - order_type
+          - server
+          - category
+          - project_text
+          - is_urgent
+          - tag
+          - completed_at
+        player:
+          type: object
+          properties:
+            game_account: {type: string}
+            game_sub_account: {type: string}
+            game_role_name: {type: string}
+            current_info_1: {type: string}
+            current_info_2: {type: string}
+          required:
+          - game_account
+          - game_sub_account
+          - game_role_name
+          - current_info_1
+          - current_info_2
+        customer:
+          type: object
+          properties:
+            customer_phone: {type: string}
+            customer_qq: {type: string}
+            customer_ww: {type: string}
+          required:
+          - customer_phone
+          - customer_qq
+          - customer_ww
+      required:
+      - order_no
+      - source_order_no
+      - status
+      - status_text
+      - game
+      - project
+      - game_id
+      - server_id
+      - project_id
+      - total_price
+      - created_at
+      - updated_at
+      - submitted_at
+      - published_at
+      - deleted_at
+      - source
+      - taker_id
+      - taker_name
+      - amounts
+      - content
+      - order
+      - player
+      - customer
+    OrderCreate:
+      type: object
+      properties:
+        game: {type: integer, minimum: 1}
+        server:
+          anyOf:
+          - {type: integer, minimum: 1}
+          - {type: 'null'}
+        category:
+          anyOf:
+          - {type: integer, minimum: 1}
+          - {type: 'null'}
+        project:
+          anyOf:
+          - {type: integer, minimum: 1}
+          - {type: 'null'}
+        source: {type: string}
+        source_order_no: {type: string}
+        project_text: {type: string}
+        total_price: {type: string, pattern: '^-?[0-9]+(?:\.[0-9]{1,2})?$', example: '125.00'}
+        content: {type: string}
+        remark: {type: string}
+        demand: {type: string}
+        time_requirement: {type: string}
+        game_account: {type: string}
+        game_sub_account: {type: string}
+        game_role_name: {type: string}
+        current_info_1: {type: string}
+        current_info_2: {type: string}
+        customer_phone: {type: string}
+        customer_qq: {type: string}
+        customer_ww: {type: string}
+        order_type: {type: string}
+        is_urgent: {type: boolean}
+        hall_price:
+          anyOf:
+          - {type: string, pattern: '^-?[0-9]+(?:\.[0-9]{1,2})?$', example: '125.00'}
+          - {type: 'null'}
+      required:
+      - game
+      - project_text
+      - total_price
+      - source_order_no
+      additionalProperties: false
+    OrderPatch:
+      type: object
+      properties:
+        game: {type: integer, minimum: 1}
+        server:
+          anyOf:
+          - {type: integer, minimum: 1}
+          - {type: 'null'}
+        category:
+          anyOf:
+          - {type: integer, minimum: 1}
+          - {type: 'null'}
+        project:
+          anyOf:
+          - {type: integer, minimum: 1}
+          - {type: 'null'}
+        source: {type: string}
+        source_order_no: {type: string}
+        project_text: {type: string}
+        total_price: {type: string, pattern: '^-?[0-9]+(?:\.[0-9]{1,2})?$', example: '125.00'}
+        content: {type: string}
+        remark: {type: string}
+        demand: {type: string}
+        time_requirement: {type: string}
+        game_account: {type: string}
+        game_sub_account: {type: string}
+        game_role_name: {type: string}
+        current_info_1: {type: string}
+        current_info_2: {type: string}
+        customer_phone: {type: string}
+        customer_qq: {type: string}
+        customer_ww: {type: string}
+        order_type: {type: string}
+        is_urgent: {type: boolean}
+        tag: {type: string}
+      additionalProperties: false
+    OrderAudit:
+      type: object
+      properties:
+        id: {type: integer, minimum: 1}
+        action: {type: string}
+        actor: {type: string}
+        created_at: {type: string, format: date-time}
+        reason:
+          anyOf:
+          - {type: string}
+          - {type: 'null'}
+      required:
+      - id
+      - action
+      - actor
+      - created_at
+      - reason
+    OrderImage:
+      type: object
+      properties:
+        img_type:
+          type: integer
+          enum:
+          - 0
+        url: {type: string, format: uri}
+        original_name: {type: string}
+        size_bytes: {type: integer}
+        remark: {type: string}
+        uploaded_by_name: {type: string}
+        created_at: {type: string, format: date-time}
+      required:
+      - img_type
+      - url
+      - original_name
+      - size_bytes
+      - remark
+      - uploaded_by_name
+      - created_at
+    ManagedOrderImage:
+      type: object
+      properties:
+        id: {type: integer, minimum: 1}
+        img_type:
+          type: integer
+          enum:
+          - 0
+        url: {type: string, format: uri}
+        original_name: {type: string}
+        size_bytes: {type: integer}
+        remark: {type: string}
+        uploaded_by_name: {type: string}
+        created_at: {type: string, format: date-time}
+      required:
+      - id
+      - img_type
+      - url
+      - original_name
+      - size_bytes
+      - remark
+      - uploaded_by_name
+      - created_at
+    SplitOrderResult:
+      type: object
+      properties:
+        order_no: {$ref: '#/components/schemas/OrderNumber'}
+        split_id: {$ref: '#/components/schemas/OrderNumber'}
+        created:
+          type: array
+          items:
+            type: object
+            properties:
+              order_no: {$ref: '#/components/schemas/OrderNumber'}
+              source_order_no: {type: string}
+            required:
+            - order_no
+            - source_order_no
+      required:
+      - order_no
+      - split_id
+      - created
+    PeerSplitNewOrder:
+      type: object
+      properties:
+        project_text: {type: string, minLength: 1, maxLength: 900}
+        total_price: {type: string, pattern: '^-?[0-9]+(?:\.[0-9]{1,2})?$', example: '125.00'}
+      required:
+      - project_text
+      - total_price
+      additionalProperties: false
+    PeerSplitExistingOrder:
+      type: object
+      properties:
+        order_no: {$ref: '#/components/schemas/OrderNumber'}
+        project_text: {type: string, minLength: 1, maxLength: 900}
+        total_price: {type: string, pattern: '^-?[0-9]+(?:\.[0-9]{1,2})?$', example: '125.00'}
+      required:
+      - order_no
+      additionalProperties: false
+      anyOf:
+      - required:
+        - project_text
+      - required:
+        - total_price
+    PeerSplitOrder:
+      type: object
+      properties:
+        remaining_project_text: {type: string, minLength: 1, maxLength: 900}
+        source_total_price: {type: string, pattern: '^-?[0-9]+(?:\.[0-9]{1,2})?$', example: '125.00'}
+        new_orders:
+          type: array
+          items: {$ref: '#/components/schemas/PeerSplitNewOrder'}
+        existing_orders:
+          type: array
+          items: {$ref: '#/components/schemas/PeerSplitExistingOrder'}
+      required:
+      - remaining_project_text
+      additionalProperties: false
+    PeerSplitResult:
+      allOf:
+      - {$ref: '#/components/schemas/SplitOrderResult'}
+      - type: object
+        properties:
+          split_kind:
+            type: string
+            enum:
+            - PEER
+            - LEGACY
+          source_total_price: {type: string, pattern: '^-?[0-9]+(?:\.[0-9]{1,2})?$', example: '125.00'}
+          updated:
+            type: array
+            items: {$ref: '#/components/schemas/OrderNumber'}
+          members:
+            type: array
+            items:
+              type: object
+              properties:
+                order_no: {$ref: '#/components/schemas/OrderNumber'}
+                project_text: {type: string, maxLength: 900}
+                total_price: {type: string, pattern: '^-?[0-9]+(?:\.[0-9]{1,2})?$', example: '125.00'}
+                split_is_balance_anchor: {type: boolean}
+              required:
+              - order_no
+              - project_text
+              - total_price
+              - split_is_balance_anchor
+        required:
+        - split_kind
+        - source_total_price
+        - updated
+        - members
+    ImageTicket:
+      type: object
+      properties:
+        key: {type: string}
+        upload_url: {type: string, format: uri}
+        expires_in: {type: integer, minimum: 1}
+      required:
+      - key
+      - upload_url
+      - expires_in
+    ImageTicketRequest:
+      type: object
+      properties:
+        ext:
+          type: string
+          enum:
+          - jpg
+          - jpeg
+          - png
+      required:
+      - ext
+      additionalProperties: false
+    ImageClaim:
+      type: object
+      properties:
+        key: {type: string}
+        original_name: {type: string, maxLength: 255}
+        remark: {type: string, maxLength: 50}
+      required:
+      - key
+      additionalProperties: false
+    Taker:
+      type: object
+      properties:
+        id: {type: integer, minimum: 1}
+        username: {type: string}
+        display_name: {type: string}
+        games:
+          type: array
+          items: {type: integer, minimum: 1}
+        is_active: {type: boolean}
+        deleted_at:
+          anyOf:
+          - {type: string, format: date-time}
+          - {type: 'null'}
+        grab_limit_dl:
+          anyOf:
+          - {type: integer}
+          - {type: 'null'}
+        grab_limit_pw:
+          anyOf:
+          - {type: integer}
+          - {type: 'null'}
+        grab_price_min:
+          anyOf:
+          - {type: string, pattern: '^-?[0-9]+(?:\.[0-9]{1,2})?$', example: '125.00'}
+          - {type: 'null'}
+        grab_price_max:
+          anyOf:
+          - {type: string, pattern: '^-?[0-9]+(?:\.[0-9]{1,2})?$', example: '125.00'}
+          - {type: 'null'}
+        is_studio:
+          anyOf:
+          - {type: boolean}
+          - {type: 'null'}
+        business_type:
+          anyOf:
+          - {type: string}
+          - {type: 'null'}
+        member_type:
+          anyOf:
+          - {type: string}
+          - {type: 'null'}
+        grab_forbid_self_service:
+          anyOf:
+          - {type: boolean}
+          - {type: 'null'}
+        live_url:
+          anyOf:
+          - {type: string}
+          - {type: 'null'}
+        qq:
+          anyOf:
+          - {type: string}
+          - {type: 'null'}
+        mobile:
+          anyOf:
+          - {type: string}
+          - {type: 'null'}
+        hired_on:
+          anyOf:
+          - {type: string, format: date}
+          - {type: 'null'}
+        tag:
+          anyOf:
+          - {type: string}
+          - {type: 'null'}
+        remark:
+          anyOf:
+          - {type: string}
+          - {type: 'null'}
+        order_by:
+          anyOf:
+          - {type: integer}
+          - {type: 'null'}
+      required:
+      - id
+      - username
+      - display_name
+      - games
+      - is_active
+      - deleted_at
+      - grab_limit_dl
+      - grab_limit_pw
+      - grab_price_min
+      - grab_price_max
+      - is_studio
+      - business_type
+      - member_type
+      - grab_forbid_self_service
+      - live_url
+      - qq
+      - mobile
+      - hired_on
+      - tag
+      - remark
+      - order_by
+    TakerCreate:
+      type: object
+      properties:
+        username: {type: string, maxLength: 150}
+        display_name: {type: string, maxLength: 150}
+        games:
+          type: array
+          minItems: 1
+          items: {type: integer, minimum: 1}
+        grab_limit_dl: {type: integer}
+        grab_limit_pw: {type: integer}
+        grab_price_min:
+          anyOf:
+          - {type: string, pattern: '^-?[0-9]+(?:\.[0-9]{1,2})?$', example: '125.00'}
+          - {type: 'null'}
+        grab_price_max:
+          anyOf:
+          - {type: string, pattern: '^-?[0-9]+(?:\.[0-9]{1,2})?$', example: '125.00'}
+          - {type: 'null'}
+        is_studio: {type: boolean}
+        business_type: {type: string}
+        member_type: {type: string}
+        grab_forbid_self_service: {type: boolean}
+        live_url: {type: string}
+        qq: {type: string}
+        mobile: {type: string}
+        hired_on:
+          anyOf:
+          - {type: string, format: date}
+          - {type: 'null'}
+        tag: {type: string}
+        remark: {type: string}
+        order_by: {type: integer}
+      required:
+      - username
+      - games
+      additionalProperties: false
+    TakerPatch:
+      type: object
+      properties:
+        username: {type: string, maxLength: 150}
+        display_name: {type: string, maxLength: 150}
+        games:
+          type: array
+          minItems: 1
+          items: {type: integer, minimum: 1}
+        grab_limit_dl: {type: integer}
+        grab_limit_pw: {type: integer}
+        grab_price_min:
+          anyOf:
+          - {type: string, pattern: '^-?[0-9]+(?:\.[0-9]{1,2})?$', example: '125.00'}
+          - {type: 'null'}
+        grab_price_max:
+          anyOf:
+          - {type: string, pattern: '^-?[0-9]+(?:\.[0-9]{1,2})?$', example: '125.00'}
+          - {type: 'null'}
+        is_studio: {type: boolean}
+        business_type: {type: string}
+        member_type: {type: string}
+        grab_forbid_self_service: {type: boolean}
+        live_url: {type: string}
+        qq: {type: string}
+        mobile: {type: string}
+        hired_on:
+          anyOf:
+          - {type: string, format: date}
+          - {type: 'null'}
+        tag: {type: string}
+        remark: {type: string}
+        order_by: {type: integer}
+      additionalProperties: false
+    Game:
+      type: object
+      properties:
+        id: {type: integer, minimum: 1}
+        name: {type: string}
+        is_active: {type: boolean}
+        sort_order: {type: integer}
+      required:
+      - id
+      - name
+      - is_active
+      - sort_order
+    GameServer:
+      type: object
+      properties:
+        id: {type: integer, minimum: 1}
+        name: {type: string}
+        is_active: {type: boolean}
+        sort_order: {type: integer}
+        game_id: {type: integer, minimum: 1}
+      required:
+      - id
+      - name
+      - is_active
+      - sort_order
+      - game_id
+    Project:
+      type: object
+      properties:
+        id: {type: integer, minimum: 1}
+        name: {type: string}
+        category: {type: string}
+        base_price:
+          anyOf:
+          - {type: string, pattern: '^-?[0-9]+(?:\.[0-9]{1,2})?$', example: '125.00'}
+          - {type: 'null'}
+        sort_order: {type: integer}
+      required:
+      - id
+      - name
+      - category
+      - base_price
+      - sort_order
+    OrderSource:
+      type: object
+      properties:
+        id: {type: integer, minimum: 1}
+        name: {type: string}
+        remark: {type: string}
+        order_by: {type: integer}
+      required:
+      - id
+      - name
+      - remark
+      - order_by
+    Token:
+      type: object
+      properties:
+        access_token: {type: string, minLength: 1}
+        token_type: {const: Bearer}
+        expires_in: {type: integer, minimum: 1}
+      required:
+      - access_token
+      - token_type
+      - expires_in
+    TakerToken:
+      type: object
+      properties:
+        access_token: {type: string, minLength: 1}
+        token_type: {const: bearer}
+        expires_in: {type: integer, minimum: 1}
+      required:
+      - access_token
+      - token_type
+      - expires_in
+    HallOrder:
+      type: object
+      properties:
+        order_no: {type: string}
+        source_order_no: {type: string}
+        game: {type: integer, minimum: 1}
+        game_name: {type: string}
+        server:
+          anyOf:
+          - {type: integer, minimum: 1}
+          - {type: 'null'}
+        project_text: {type: string}
+        content: {type: string}
+        time_requirement: {type: string}
+        is_urgent: {type: boolean}
+        hall_price:
+          anyOf:
+          - {type: string, pattern: '^-?[0-9]+(?:\.[0-9]{1,2})?$', example: '125.00'}
+          - {type: 'null'}
+        created_at: {type: string, format: date-time}
+      required:
+      - order_no
+      - source_order_no
+      - game
+      - game_name
+      - server
+      - project_text
+      - content
+      - time_requirement
+      - is_urgent
+      - hall_price
+      - created_at
+    ClaimedOrder:
+      allOf:
+      - {$ref: '#/components/schemas/HallOrder'}
+      - type: object
+        properties:
+          status: {type: string}
+          status_text: {type: string}
+          claimed_at:
+            anyOf:
+            - {type: string, format: date-time}
+            - {type: 'null'}
+          updated_at: {type: string, format: date-time}
+          customer_phone: {type: string}
+          customer_ww: {type: string}
+          total_price:
+            anyOf:
+            - {type: string, pattern: '^-?[0-9]+(?:\.[0-9]{1,2})?$', example: '125.00'}
+            - {type: 'null'}
+        required:
+        - status
+        - status_text
+        - claimed_at
+        - updated_at
+        - customer_phone
+        - customer_ww
+        - total_price
+    Change:
+      type: object
+      properties:
+        event_id: {type: string}
+        resource:
+          type: string
+          enum:
+          - order
+          - taker
+        resource_id: {type: string}
+        action:
+          type: string
+          enum:
+          - created
+          - updated
+          - deleted
+          - restored
+        occurred_at: {type: string, format: date-time}
+      required:
+      - event_id
+      - resource
+      - resource_id
+      - action
+      - occurred_at
+    ChangePage:
+      type: object
+      properties:
+        results:
+          type: array
+          items: {$ref: '#/components/schemas/Change'}
+        next_cursor: {type: string}
+        has_more: {type: boolean}
+      required:
+      - results
+      - next_cursor
+      - has_more
+    ChangeWebhook:
+      allOf:
+      - {$ref: '#/components/schemas/Change'}
+      - type: object
+        properties:
+          event: {const: integration.change}
+          delivery_id: {type: string, pattern: '^[0-9a-f]{32}$'}
+          timestamp: {type: integer}
+          sign: {type: string, pattern: '^[0-9a-f]{64}$'}
+        required:
+        - event
+        - delivery_id
+        - timestamp
+        - sign

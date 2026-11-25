@@ -1,0 +1,866 @@
+<!-- 复刻证据件：对标物 /Emp/emplist（绩效管理）的页内 <style> 段 + 处理过的 body 标记。
+     生成源：.tools/recon/<对标取数快照>/html/Emp__emplist.html + .tools/replica-draft/emp-emplist.json。
+     与对标原文的差异：
+       1. 非标记 <script> 已删（保留 2 个 `type="text/html"` 工具栏模板）；
+       2. laytpl：本页 HTML **无** `{{ }}`（中文硬编码在 emplist.js 里）；
+       3. PII/凭据（4 处，全部清空，注释里也不留原值）：
+          · 「模式1」说明里的**鸡蛋铺个人账号（手机号）** → `—`；
+          · 同一段里括号中的**租户名** → `—`；
+          · 隐藏域 `#jdp` 的 **Base64 凭据** → 空串；
+          · 隐藏域 `#sid` 的**本租户 id** → 空串；
+          · 「自己的付款支付宝」下拉 `selectPayAlipay` 的选项（本租户支付宝账号）→ 整个 `<option>` 删除（留空壳 select）；
+       4. `#popgameName`（对标用 layui 的 `xm-select` 模块渲染的多选人员树）：
+          **该库不在我们的 vendor 里、对标也是在运行时注入样式表**，无法用同一库渲染；
+          原先是按实测 DOM 快照做的**折叠态静态复刻**（死壳）。**P4FU-D 起改为真控件**：
+          一个 `select[xm-select="popgameName"]`，由本页既有的 formselects-v4 渲染
+          （与同页其余 5 个 xm-select 同一渲染器），候选 = 本租户用户名（运行时注入，
+          **不进本静态件**）。那条为死壳准备的 9 条 `xm-select` 规则随之删除。
+          ⚠️ **第四轮 C（2026-09-22）**：空选项文案从「选择或输入」改成**「请选择」**——
+          对标的占位由 xm-select 渲染，而 xm-select 的默认占位就是「请选择」；我们的
+          formselects 拿空选项文案当占位，所以按对标的**渲染值**对齐（见「已知会不同」第 31 条）。
+       5. `#toolbarDemo`：**P4FU-D 删掉 4 颗按钮**（刷新淘宝状态 / 批量改备注 / 修改订单状态 /
+          发送短信，业务方 2026-09-22 裁定）；`#orderSta` 的 option 换成我们自己的 8 个订单状态
+          （个数仍是 9）。两处都在原地的注释里写了理由。
+       6. 筛选栏：**2026-09-22 删掉 4 个控件**（`taobaoSta` 淘宝状态 / `isCert` 是否实名 /
+          `key2` 搜索2 / `key3` 搜索3），整条 `layui-inline` 连标签一起就地删除并留注释
+          ——同样属**有意裁剪**（不是藏起来、也不是「尚未开放」）。
+          被删的 4 个 `name` 在页面侧也不再产生任何请求参数（`project` 后端仍支持，
+          只是本页没有入口）。
+          ⚠️ **第四轮 C 更正**：上面这份清单原先还含 `selectSeach1`——那是**误删**（它装的
+          是对标的「代练/下家 ⇒ 批量搜用户」控件，不是「审核状态」语义本身）。该控件**已恢复**
+          到第二段 `layui-form-pane` 的同一位置，行为照对标 `emplist.js` L525-560。 -->
+<style>
+        body {
+            background-color: #fff
+        } 
+        .layadmin-pagetabs {
+            height: 40px;
+            line-height: 40px;
+            padding: 0 80px 0 40px;
+            background-color: #fafafa;
+            box-sizing: border-box;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+            border-bottom: 1px solid #1AA094;
+        }
+            .layadmin-pagetabs .layui-tab-title li.layui-this, .layadmin-pagetabs .layui-tab-title li:hover {
+                background-color: #009688;
+                color: #fff;
+            }
+    
+
+    .layui-table-cell {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 5px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        box-sizing: border-box;
+        font-size: 12px;
+    }
+
+    .lableb {
+        display: inline-block;
+        padding: 2px 4px;
+        font-size: 12px;
+        line-height: 14px;
+        color: #fff;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #999;
+        overflow: hidden;
+        border-radius: 3px;
+        margin-right: 2px;
+    }
+
+    .paySpan {
+        line-height: 40px;
+        color: #ff0000;
+        font-weight: 600
+    }
+
+    .layui-form .layui-form-item label.layui-form-label {
+        width: 120px;
+        font-family: "Microsoft YaHei";
+    }
+
+    .layui-form-pane .layui-form-label {
+        width: 110px;
+        padding: 8px 2px;
+        height: 38px;
+        line-height: 20px;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: 2px 0 0 2px;
+        text-align: center;
+        background-color: #FBFBFB;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+
+    .xm-form-checkbox > span {
+        display: block;
+        position: relative;
+        padding: 0 5px 0 30px;
+        height: 100%;
+        font-size: 12px;
+        border-radius: 2px 0 0 2px;
+        background-color: #d2d2d2;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        background: 0 0;
+        color: #666;
+        line-height: 36px;
+    }
+
+    .popTip {
+        color: #999;
+        margin: -10px 0 20px;
+        margin-left: 140px;
+    }
+
+    .LingyuefangzhouPop h1 {
+        margin-bottom10px
+    }
+</style>
+
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      
+      
+    <![endif]-->
+    
+
+
+<style type="text/css">
+    .layui-table-cell {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 5px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        box-sizing: border-box;
+        font-size: 12px;
+    }
+
+    .lableb {
+        display: inline-block;
+        padding: 2px 4px;
+        font-size: 12px;
+        line-height: 14px;
+        color: #fff;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #999;
+        overflow: hidden;
+        border-radius: 3px;
+        margin-right: 2px;
+    }
+
+    .paySpan {
+        line-height: 40px;
+        color: #ff0000;
+        font-weight: 600
+    }
+
+    .layui-form .layui-form-item label.layui-form-label {
+        width: 120px;
+        font-family: "Microsoft YaHei";
+    }
+
+    .layui-form-pane .layui-form-label {
+        width: 110px;
+        padding: 8px 2px;
+        height: 38px;
+        line-height: 20px;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: 2px 0 0 2px;
+        text-align: center;
+        background-color: #FBFBFB;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+
+    .xm-form-checkbox > span {
+        display: block;
+        position: relative;
+        padding: 0 5px 0 30px;
+        height: 100%;
+        font-size: 12px;
+        border-radius: 2px 0 0 2px;
+        background-color: #d2d2d2;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        background: 0 0;
+        color: #666;
+        line-height: 36px;
+    }
+
+    .popTip {
+        color: #999;
+        margin: -10px 0 20px;
+        margin-left: 140px;
+    }
+
+    .LingyuefangzhouPop h1 {
+        margin-bottom10px
+    }
+</style>
+<form class="layui-form" action="" lay-filter="eps">
+    <div class="layui-tab layui-tab-card" lay-filter="empTab">
+        <ul class="layui-tab-title">
+            <li class="layui-this" lay-id="10">代练员报酬账单</li>
+            <li lay-id="20">销售客服提成账单</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <div class="" style="padding-left: 5px;padding-top:10px">
+                    <div class="layui-form-pane">
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 80px">选择游戏</label>
+                            <div class="layui-input-inline" style="width:140px">
+                                <select id="gameName" name="gameName" lay-filter="selectGame">
+                                                <option value="21714" data-mobliegame="N" data-pw="N">全部游戏</option>
+                                                <option value="21708" data-mobliegame="N" data-pw="N">崩坏：星穹铁道</option>
+                                                <option value="21701" data-mobliegame="Y" data-pw="N">原神</option>
+                                                <option value="21703" data-mobliegame="Y" data-pw="N">三角洲行动</option>
+                                                <option value="21704" data-mobliegame="N" data-pw="N">鸣潮</option>
+                                                <option value="21706" data-mobliegame="Y" data-pw="N">绝区零</option>
+                                                <option value="21707" data-mobliegame="N" data-pw="N">无限暖暖</option>
+                                                <option value="21722" data-mobliegame="N" data-pw="N">遗忘之海</option>
+                                                <option value="21721" data-mobliegame="N" data-pw="N">异环</option>
+                                                <option value="21720" data-mobliegame="N" data-pw="N">王者荣耀世界</option>
+                                                <option value="21719" data-mobliegame="N" data-pw="N">洛克王国：世界</option>
+                                                <option value="21718" data-mobliegame="N" data-pw="N">逆战：未来</option>
+                                                <option value="21717" data-mobliegame="N" data-pw="N">明日方舟：终末地</option>
+                                                <option value="21716" data-mobliegame="N" data-pw="N">燕云十六声</option>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline" style="width:90px">
+                                <select id="dateType" name="dateType" lay-filter="">
+                                    <option value="10">发单时间</option>
+                                    <option value="20">交单时间</option>
+                                    <!-- 接后端：后端的时间区间判 `created_at__date`（= 录单时间），
+                                         故默认选它；`<option>` 顺序与文案一字未动，只改 selected。 -->
+                                    <option value="25" selected="selected">录单时间</option>
+                                    <option value="40">验收时间</option>
+                                    <option value="30">结账时间</option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline" style="width:130px">
+                                <input type="text" name="sDate" id="sDate" lay-verify="datetime" placeholder="" autocomplete="off" class="layui-input" value="2026-06-20 00:00:00">
+                            </div>
+                            <div class="layui-input-inline">-</div>
+                            <div class="layui-input-inline" style="width:130px">
+                                <input type="text" name="eDate" id="eDate" lay-verify="datetime" placeholder="" autocomplete="off" class="layui-input" value="2026-09-20 23:59:59">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 80px">订单来源</label>
+                            <div class="layui-input-inline" style="width:140px">
+                                <select name="orderSoures" id="orderSoures" xm-select-radio lay-search="" xm-select="orderSoures" xm-select-search="" xm-select-search-type="title" xm-select-skin="default" xm-select-height="36px" class="" title=""></select>
+                            </div>
+                        </div>
+                        <div class="layui-inline task" style="display:none">
+                            <label class="layui-form-label" style="width: 75px">排团团号</label>
+                            <div class="layui-input-inline" style="width:150px">
+                                <select name="taskSelect" id="taskSelect" xm-select-radio xm-select="taskSelect" xm-select-skin="default" xm-select-height="36px" xm-select-search="" xm-select-search-type="title">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline orderTypeDiv" style="">
+                            <label class="layui-form-label" style="width: 75px">订单类型</label>
+                            <div class="layui-input-inline" style="width:120px">
+                                <select id="orderType" name="orderType" lay-filter="">
+                                    <option value="-1">全部订单</option>
+                                    <option value="0">只搜代练单</option>
+                                    <option value="1">只搜陪玩单</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- 接后端（2026-09-22，绩效管理页补完）：业务方裁定**删掉 4 个筛选控件**
+                             —— `taobaoSta`（淘宝状态）/ `isCert`（是否实名）/ `key2`（搜索2/项目·旺旺）/
+                             `key3`（搜索3/机位）。整条 `layui-inline`（标签 + 容器 + 控件）
+                             **就地删除**，属**有意裁剪**（不是「尚未开放」、也不是藏起来）：
+                             留着点了没用的控件比删掉更糟。后端的 `project` 参数**仍然支持**，
+                             只是本页不再有发它的入口；页面侧的连带改动见 `emp-emplist.ts`
+                             的文件头与「已知会不同」表。
+                             ⚠️ **第四轮 C 更正（2026-09-22）**：上面这段原先还点名了
+                             `selectSeach1`——那是**上一轮的误删**：那条 `layui-inline` 里装的
+                             是对标的「代练/下家 ⇒ 批量搜用户」控件（曾被我们复用成「审核状态」），
+                             不是「审核状态」语义本身（那个语义已按 D-0071 删除，不会复活）。
+                             `selectSeach1` **已恢复**到下面第二段 `layui-form-pane` 的同一位置
+                             （见「已知会不同」第 30 条）。 -->
+                        <div class="layui-inline">
+                            <div class="layui-input-inline" style="width:80px">
+                                <select id="customerType" name="customerType" lay-filter="customerType">
+                                    <option value="0">销售人</option>
+                                    <option value="10">发单人</option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline" style="width:150px">
+                                <select name="inputOrderKefu" id="inputOrderKefu" lay-search="" xm-select="inputOrderKefu" xm-select-search="" xm-select-skin="default" xm-select-height="36px" class="" title="">
+                                    <option value="">选择或输入</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 75px">收款状态</label>
+                            <div class="layui-input-inline" style="width:100px">
+                                <select id="furlSta" name="furlSta" lay-filter="">
+                                    <option value="">全部</option>
+                                    <option value="未结算">未收款</option>
+                                    <option value="结算中">结算中</option>
+                                    <option value="已结算">已结款</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-pane">
+                        <div class="layui-inline">
+                            <!-- ⭐ 第四轮 C（2026-09-22）：恢复对标的 `selectSeach1`（**逐字**取自
+                                 `.tools/recon/suqing1/html/Emp__emplist.html` L246-252）。
+                                 上一轮按「删掉审核状态」把**整条 `layui-inline`** 删了，而那条里
+                                 装的其实是对标的「代练/下家 ⇒ 批量搜用户」——**那是误删**（纠错）。
+                                 行为照对标 `assets/JS2019/Emp/emplist.js` L525-560 实现，见
+                                 `emp-emplist.ts` 的「批量搜用户」一节与「已知会不同」第 30 条。
+                                 ⛔ 这与「审核状态」语义无关：那个语义已按 D-0071 删除，不复活。 -->
+                            <div class="layui-input-inline" style="width: 110px;">
+                                <select id="selectSeach1" name="selectSeach1" lay-filter="selectSeach1">
+                                    <option value="0">代练/下家</option>
+                                    <option value="10">批量搜用户</option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline" style="width: 160px">
+                                <!-- 接后端（P4FU-D）：对标这一格是 layui 的 `xm-select` 模块渲染的
+                                     「多选人员树」（库不在我们 vendor 里、样式也是对标运行时注入的），
+                                     证据件原先是照实测 DOM 快照做的**折叠态静态复刻**（死壳，点不动）。
+                                     本轮按「搜索筛选实装」把它换成**真的** `select[xm-select]`，
+                                     由本页既有的 formselects-v4（与同页其余 5 个 xm-select 同一个渲染器）
+                                     渲染；候选 = **本租户用户名列表**（`/api/accounts/`，只取用户名，
+                                     不取任何 PII），值送后端的 `username`（逗号串批量搜归属人）。
+                                     ⇒ 与对标的可见差异：折叠态由 formselects 画（不是 xm-select），
+                                        且候选是用户名而不是「按游戏分组的人员树」。已登记进
+                                        `emp-emplist.ts` 的「已知会不同」。 -->
+                                <select name="popgameName" id="popgameName" xm-select="popgameName" lay-search="" xm-select-search="" xm-select-search-type="title" xm-select-skin="default" xm-select-height="36px" class="" title="">
+                                    <option value="">请选择</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 70px">订单状态</label>
+                            <div class="layui-input-inline" style="width:120px">
+                                <!-- 接后端（P4FU-D）：option **文案与取值换成我们自己的 8 个订单状态**
+                                     （后端 `OrderStatus` 的 label；页面在提交时反查成枚举名送
+                                     `?order_status=`）。对标的 `待上号` / `异常中` 在我方状态机里
+                                     没有对应值，而我方的 `未分配` / `待抢单` 对标没有 ⇒ 这一次是
+                                     **有意替换**（不是漏做）。⚠️ option **个数仍是 9**（全部 + 8），
+                                     与对标一致 ⇒ `parity.mjs` 的筛选控件探针（只比 name/宽/x/个数）
+                                     不会因此报差异。 -->
+                                <select name="orderSta" xm-select="orderSta" xm-select-skin="default" xm-select-height="36px">
+                                    <option value="">全部</option>
+                                    <option value="未分配">未分配</option>
+                                    <option value="待抢单">待抢单</option>
+                                    <option value="代练中">代练中</option>
+                                    <option value="待验收">待验收</option>
+                                    <option value="已完成">已完成</option>
+                                    <option value="问题单">问题单</option>
+                                    <option value="已暂停">已暂停</option>
+                                    <option value="已退单">已退单</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 65px">结账状态</label>
+                            <div class="layui-input-inline" style="width: 114px">
+                                <select name="settingSta" xm-select="settingSta" xm-select-radio xm-select-skin="default" xm-select-height="36px">
+                                    <option value="N">未结账</option>
+                                    <option value="Y">已结账</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- 接后端（2026-09-22，绩效管理页补完）：`isCert`（是否实名）/
+                             `key2`（搜索2/项目·旺旺）/ `key3`（搜索3/机位）三格按业务方裁定
+                             **就地删除**（有意裁剪，见上一段的说明）。 -->
+
+                        <div class="layui-inline">
+                            <div class="layui-input-inline" style="width: 90px;">
+                                <select id="selectSeach2" name="selectSeach2" lay-filter="selectSeach2">
+                                    <option value="0">搜索1</option>
+                                    <option value="10">批量搜单号</option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline" style="width:165px">
+                                <input type="text" name="key1" id="key1" lay-verify="" placeholder="订单号/来源单号/角色名" autocomplete="off" class="layui-input" value="">
+                            </div>
+                        </div>
+                        <div class="layui-inline" style="">
+                            <input type="checkbox" name="applicationSetSta" lay-skin="primary" title="申请结算的" lay-filter="applicationSetSta">
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline" style="">
+                                <button class="layui-btn layui-btn-normal" lay-submit="" type="button" lay-filter="seachBtn" style="width: 80px">搜索</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="" style="">
+                    <table class="layui-hide" id="tableList" lay-filter="tableList"></table>
+                    <script type="text/html" id="toolbarDemo">
+                        <div class="layui-btn-container">
+                            <!-- 接后端（P4FU-D）：业务方 2026-09-22 裁定**删掉 4 颗按钮** ——
+                                 `refrshTaobaoBtn`（刷新淘宝状态）/ `changeRemarkBtn`（批量改备注）/
+                                 `changeStaBtn`（修改订单状态）/ `sendSmsBtn`（发送短信）。
+                                 它们属**有意裁剪**（不是「尚未开放」）：`changeStaBtn` 原本接的是绩效审核
+                                 `POST …/review/`，与 D-0071「取消审核闸门」正面冲突（对标没有审核）。
+                                 ⚠️ `parity.mjs` 的工具栏探针按**下标**比文案 ⇒ 删完必然报
+                                 bench 10 颗 vs ours 6 颗，属预期差异（登记在 `emp-emplist.ts` 的「已知会不同」）。 -->
+                            <button class="layui-btn layui-btn-xs" lay-event="refresh" type="button" title="刷新当前数据">刷新列表</button>
+                            <button class="layui-btn layui-btn-xs" lay-event="settBtn" type="button" lay-tips="仅对勾选的记录进行结算状态修改">仅修改结算状态</button>
+                            <button class="layui-btn layui-btn-xs" lay-event="checkIdenticalAlipayAccBtn" type="button" lay-tips="检测此系统内具有相同用于结算收款支付宝账号的子账号数量和明细">检测重复收款支付宝</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="payBtn" type="button" lay-tips="批量对勾选的账单进行结算并直接在线打款到打手的支付宝里去">结算并直接打款</button>
+                            <button class="layui-btn layui-btn-xs layui-btn-normal layui-hide" lay-event="payBalanceBtn" type="button" title="鸡蛋铺余额充值"><span class="jdpBalance2">鸡蛋铺余额充值</span></button>
+                            <button class="layui-btn layui-btn-xs" lay-event="exportBtn" type="button" title="导出查询的记录">导出记录</button>
+                            <button class="layui-btn layui-btn-xs" lay-event="delEmpBtn" type="button" title="删除指定的绩效记录">删除记录</button>
+                        </div>
+                        <div class="layui-inline">
+                            <span style="color:#ff6a00" id="total"></span>
+                            <span style="" class="selectTotal"></span>
+                        </div>
+
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pay" style="display:none;margin:10px 10px">
+        <div class="layui-tab layui-tab-brief" lay-filter="payTab">
+            <ul class="layui-tab-title">
+                <li lay-id="0" class="layui-hide">模式1(委托代结算不可开票)</li>
+                <li lay-id="1" class="layui-this">模式2-通道1(绑自己支付宝)</li>
+                <li lay-id="3" class="">模式2-通道2(绑自己支付宝)</li>
+                <li lay-id="2" class="layui-hide">模式3(委托代结算代报个税)</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-hide">
+                    <blockquote class="layui-elem-quote" style="color:#ff6a00">
+                        <p>
+                            说明：通过此功能，你可以将该系统绑定的鸡蛋铺个人账号(—)里的余额结算给对方支付宝，该付款是实时到账，确认付款前请仔细核对
+                            要结算的笔数和总金额，鸡蛋铺不对此核对结果负责，一旦转款，将无法撤销。若有失误，请与收款人协商处理。
+                        </p>
+                        <p class="layui-font-14 layui-font-red" style="font-weight:600">
+                            重要提示：此结算模式下武汉吉蛋铺网络技术有限公司不负责代报代缴人员个税，一切税务由你方(—)自行负责处理！
+                        </p>
+                        <p>
+                            <b>结算规则：</b><br />
+                            1、同一个结算主体(全鸡蛋铺)每个自然月<span style="font-weight:600;color:#ff0000">不超过6000元，全年不超过72000元，超过的可以采用模式二来结算</span>；<br />
+                            2、新开系统7天内不允许使用此模式结算；
+                        </p>
+                    </blockquote>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">结算账单条数：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan count">0</span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">结算人数：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan recCount">0</span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">结算总金额：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan setAmount">0</span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">需付款金额：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan payAmount">0</span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">服务费：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan serviceAmount11">0.8%(打手承担)</span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">打手实收款：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan recRealAmount">0</span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">打手名称：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan recManName"></span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">打手支付宝姓名：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan alipayUserName"></span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">打手支付宝账号：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan alipayAcc"></span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-hide">
+                        <label class="layui-form-label">可用结算余额：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan jdpBalance">0</span>
+                            <button type="button" class="layui-btn  layui-btn-primary layui-btn-xs " lay-submit="" lay-filter="payBtn">余额充值</button>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item layui-hide">
+                        <label class="layui-form-label"></label>
+                        <div class="layui-input-block">
+                            <button class="layui-btn layui-btn-danger w-lg" lay-submit="" type="button" lay-filter="payOkBtn">确认支付并改为已清算</button>
+                            <button class="layui-btn w-lg" lay-submit="" type="button" lay-filter="refBtn">刷新本界面</button>
+                        </div>
+                    </div>
+                    <div class="layui-form-item acceptAgreeMent" style="margin-top:28px"></div>
+
+                </div>
+                <div class="layui-tab-item layui-show">
+                    <blockquote class="layui-elem-quote" style="color: #1e9fff ">
+                        此模式下，您可以使用绑定授权的支付宝给系统用户批量结算，不需要充值。该结算模式是实时到账，确认付款前请仔细核对
+                        要清算的笔数和总金额，鸡蛋铺不对此核对结果负责，一旦付款，将无法撤销。若有失误，请自行与收款人协商处理。
+                        <br /><span style="font-size: 14px; font-weight: 600; color: #ffb800 ">重要提示：此模式下结算的总金额至少30元起步(每批总额达到30即可，本批总额在167元以下时技术服务费不足１元部分的将由商家承担)</span>
+                    </blockquote>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">结算账单条数：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan count">0</span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">结算人数：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan recCount">0</span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">结算总金额：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan setAmount">0</span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">需付款金额：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan payAmount">0</span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">服务费：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan">0.6%(打手承担)</span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">打手实收款：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan recRealAmount">0</span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">打手名称：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan recManName"></span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">打手支付宝姓名：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan alipayUserName"></span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">打手支付宝账号：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan alipayAcc"></span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">自己的付款支付宝：</label>
+                            <div class="layui-input-inline layui-input-wrap">
+                                <select id="selectPayAlipay" name="selectPayAlipay" lay-filter="">
+                                                
+
+                                </select>
+                            </div>
+                            <div class="layui-form-mid" style="padding:0 !important;font-size:14px;line-height:38px">
+                                <a lay-href="/Emp/BindAlipaySettAuth" lay-text="在线结算支付宝授权" class="goMangePayAlipay" style="color:#1e9fff">点击维护用于付款支付宝</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"></label>
+                        <div class="layui-input-block">
+                            <button class="layui-btn layui-btn-danger w-lg" lay-submit="" type="button" lay-filter="payOkBtn">确认转账并改为已清算</button>
+                            <button class="layui-btn w-lg" lay-submit="" type="button" lay-filter="refBtn">刷新本界面</button>
+                        </div>
+                    </div>
+                    <div class="layui-form-item acceptAgreeMent" style="margin-top:28px"></div>
+
+                </div>
+
+                <div class="layui-tab-item ">
+                    <blockquote class="layui-elem-quote" style="color: #1e9fff ">
+                        此模式下，您可以使用绑定授权的支付宝给系统用户批量结算，不需要充值。该结算模式是实时到账，确认付款前请仔细核对
+                        要清算的笔数和总金额，鸡蛋铺不对此核对结果负责，一旦付款，将无法撤销。若有失误，请自行与收款人协商处理。
+                        <br /><span style="font-size: 14px; font-weight: 600; color: #ffb800 ">重要提示：此模式下结算的总金额至少30元起步(每批总额达到30即可，本批总额在167元以下时技术服务费不足１元部分的将由商家承担)</span>
+                    </blockquote>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">结算账单条数：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan count">0</span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">结算人数：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan recCount">0</span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">结算总金额：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan setAmount">0</span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">需付款金额：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan payAmount">0</span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">服务费：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan">0.6%(打手承担)</span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">打手实收款：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan recRealAmount">0</span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">打手名称：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan recManName"></span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">打手支付宝姓名：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan alipayUserName"></span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">打手支付宝账号：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan alipayAcc"></span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">自己的付款支付宝：</label>
+                            <div class="layui-input-inline layui-input-wrap">
+                                <select id="selectPayAlipay2" name="selectPayAlipay2" lay-filter="">
+                                            <option value="0">无</option>
+
+                                </select>
+                            </div>
+                            <div class="layui-form-mid" style="padding:0 !important;font-size:14px;line-height:38px">
+                                <a lay-href="/Emp/BindAlipaySettAuth" lay-text="在线结算支付宝授权" class="goMangePayAlipay" style="color:#1e9fff">点击维护用于付款支付宝</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"></label>
+                        <div class="layui-input-block">
+                            <button class="layui-btn layui-btn-danger w-lg" lay-submit="" type="button" lay-filter="payOkBtn">确认转账并改为已清算</button>
+                            <button class="layui-btn w-lg" lay-submit="" type="button" lay-filter="refBtn">刷新本界面</button>
+                        </div>
+                    </div>
+                    <div class="layui-form-item acceptAgreeMent" style="margin-top:28px"></div>
+
+                </div>
+
+                <div class="layui-tab-item layui-hide">
+                    <blockquote class="layui-elem-quote" style="color:#ff6a00">
+                        <p>
+                            说明：此模式将需要先将要结算的款项提前充入指定结算账户，通过此面板给员工批量结算，结算后员工需要进入支付宝小程序上申请提现。
+                            请认真核实要结算的笔数和总金额，鸡蛋铺不对此核对结果负责，一旦划款，将无法撤销。若有失误，请与对方协商处理。
+                        </p>
+                        <p>
+                            <b>结算规则：</b><br />
+                            1、同一个结算对象(全鸡蛋铺)每个自然月<span style="font-weight:600;color:#ff0000">不超过10000元，全年不超过120000元，超过的可以采用模式2来结算</span>；<br />
+                            2、此模式将由鸡蛋铺委托武汉吉益星网络技术有限公司给结算对象代报代缴个人所得税，税款由结算对象承担；
+                            3、结算对象需要通过支付宝小程序自行申请提现；
+                        </p>
+                    </blockquote>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">结算账单条数：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan count">0</span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">结算人数：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan recCount">0</span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">结算总金额：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan setAmount">0</span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">需付款金额：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan payAmount">0</span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">技术服务费：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan serviceAmount11">0.8%(打手承担)</span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">对方实收款：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan recRealAmount">0</span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">对方名称：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan recManName"></span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">对方支付宝姓名：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan alipayUserName"></span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom:1px">
+                        <label class="layui-form-label">对方支付宝账号：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan alipayAcc"></span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-hide">
+                        <label class="layui-form-label">可用结算余额：</label>
+                        <div class="layui-input-block">
+                            <span class="paySpan lingyuefangzhouBalance">0</span>
+                            <button type="button" class="layui-btn  layui-btn-primary layui-btn-xs " lay-submit="" lay-filter="payBtn2">余额充值</button>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item layui-hide">
+                        <label class="layui-form-label"></label>
+                        <div class="layui-input-block">
+                            <button class="layui-btn layui-btn-danger w-lg" lay-submit="" type="button" lay-filter="payOkBtn">确认划款并改为已清算</button>
+                            <button class="layui-btn w-lg" lay-submit="" type="button" lay-filter="refBtn">刷新本界面</button>
+                        </div>
+                    </div>
+                    <div class="layui-form-item acceptAgreeMent" style="margin-top:28px"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="stadiv" style="display:none">
+        <div class="layui-form-item">
+            <label class="layui-form-label">要改成：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="chstatus" value="未分配" title="未分配" lay-filter="chstatus">
+                <input type="radio" name="chstatus" value="待上号" title="待上号" lay-filter="chstatus">
+                <input type="radio" name="chstatus" value="代练中" title="代练中" lay-filter="chstatus">
+                <input type="radio" name="chstatus" value="待验收" title="待验收" lay-filter="chstatus">
+                <input type="radio" name="chstatus" value="已完成" title="已完成" lay-filter="chstatus">
+                <input type="radio" name="chstatus" value="已暂停" title="已暂停" lay-filter="chstatus">
+                <input type="radio" name="chstatus" value="问题单" title="问题单" lay-filter="chstatus">
+                <input type="radio" name="chstatus" value="已退单" title="已退单" lay-filter="chstatus">
+            </div>
+        </div>
+        <div class="layui-form-item sremark" style="display:none">
+            <label class="layui-form-label">说明原因：</label>
+            <div class="layui-input-block">
+                <input type="text" name="sremark" id="sremark" autocomplete="off" placeholder="请输入原因" class="layui-input layui-input-shadow" maxlength="50">
+            </div>
+        </div>
+        <div class="layui-form-item asnyTb" style="display:none">
+            <label class="layui-form-label">同步淘宝发货</label>
+            <div class="layui-input-block">
+                <input type="radio" name="asnyTb" value="N" title="不需要" checked="checked">
+                <input type="radio" name="asnyTb" value="Y" title="同步发货">
+            </div>
+        </div>
+        <div class="layui-form-item" style="margin-top:20px">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" type="button" lay-submit="" lay-filter="ssavebtn"><i class="layui-icon">&#x1005;</i>确定</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-card checkAliPayAccDiv" style="display:none">
+        <div class="layui-card-body">
+            <div class="" style="">
+                <table class="layui-hide" id="tableList3" lay-filter="tableList3"></table>
+                <script type="text/html" id="toolbarDemo3">
+                    <div class="layui-btn-container">
+                        <button class="layui-btn layui-btn-xs" style="margin-right:5px" lay-event="refresh2" type="button" title="刷新当前数据">刷新列表</button>
+                    </div>
+                    <div style="color:#ff6a00" id="">这里包含了系统所有状态下的子账号</div>
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" name="jdp" id="jdp" value="" />
+    <input type="hidden" name="service" id="service" value="0.8" />
+    <input type="hidden" id="mustRemark" name="mustRemark" value="Y" />
+    <input type="hidden" name="serviceObject" id="serviceObject" value="0" />
+    <input type="hidden" name="defPayMode" id="defPayMode" value="1" />
+    <input type="hidden" name="sid" id="sid" value="" />
+</form>
+
+
+
+
+
+

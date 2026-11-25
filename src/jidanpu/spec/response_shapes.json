@@ -1,0 +1,4227 @@
+{
+ "meta": {
+  "source": "live-read-shape-sweep",
+  "swept_on": "2026-09-21",
+  "note": "只有键名与类型，没有任何值；只调用 risk == 'read' 的端点",
+  "endpoints": 122,
+  "with_item_fields": 39,
+  "not_read_skipped": 0,
+  "no_shape": 21,
+  "errors": {
+   "ApiError": 53
+  }
+ },
+ "shapes": {
+  "/CommonPermissionAjax/GetAliOssPolicy": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "js_params": [
+    "bk"
+   ],
+   "envelope_keys": [
+    "code",
+    "data",
+    "msg",
+    "success"
+   ],
+   "envelope_code": 0,
+   "kind": "dict",
+   "item_fields": {
+    "accessid": [
+     "str"
+    ],
+    "expire": [
+     "int"
+    ],
+    "host": [
+     "str"
+    ],
+    "policy": [
+     "str"
+    ],
+    "signature": [
+     "str"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/CustomerAjax/GetConseReport": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "last_error": "ApiError"
+  },
+  "/CustomerAjax/GetCustomerBackList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数"
+   ],
+   "method": "GET",
+   "js_params": [
+    "key"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数"
+  },
+  "/CustomerAjax/GetHyRaiseReporyYears": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "last_error": "ApiError"
+  },
+  "/CustomerAjax/GetIntervalLevel": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "data"
+   ],
+   "envelope_code": 1,
+   "kind": "list",
+   "item_count": 7,
+   "item_fields": {
+    "BusinessTypeId": [
+     "int"
+    ],
+    "EndValue": [
+     "float"
+    ],
+    "ExtensionStr": [
+     "str"
+    ],
+    "IntervalLevelID": [
+     "int"
+    ],
+    "IntervalName": [
+     "str"
+    ],
+    "LevelDiscount": [
+     "null"
+    ],
+    "LevelNote": [
+     "null"
+    ],
+    "StartValue": [
+     "float"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/CustomerAjax/GetMemberAddOrderSimpInfo": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "js_params": [
+    "moblie"
+   ],
+   "envelope_keys": [
+    "code",
+    "data",
+    "getType",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "dict",
+   "item_fields": {
+    "balance": [
+     "int"
+    ],
+    "blackCount": [
+     "int"
+    ],
+    "firstOrderTime": [
+     "null"
+    ],
+    "hid": [
+     "int"
+    ],
+    "lastOrderTime": [
+     "null"
+    ],
+    "membersLevelColorStr": [
+     "null"
+    ],
+    "membersLevelName": [
+     "null"
+    ],
+    "remark": [
+     "null"
+    ],
+    "totalConsuAmount": [
+     "int"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/CustomerAjax/GetMemberBalance": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "js_params": [
+    "bossName",
+    "moblie"
+   ],
+   "envelope_keys": [
+    "code",
+    "data",
+    "defDec"
+   ],
+   "envelope_code": 0,
+   "kind": "int",
+   "from_variant": "空参"
+  },
+  "/CustomerAjax/GetSourTypeReport": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "last_error": "ApiError"
+  },
+  "/EmpAjax/GetBalanceAndFreeAmount": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "last_error": "ApiError"
+  },
+  "/EmpAjax/GetBillSummaryList": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "page+limit"
+  },
+  "/EmpAjax/GetBindAlipaySettAuthList": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "js_params": [
+    "getSoure"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 1,
+   "item_fields": {
+    "company": [
+     "null"
+    ],
+    "d1": [
+     "float"
+    ],
+    "d2": [
+     "float"
+    ],
+    "d3": [
+     "float"
+    ],
+    "d4": [
+     "float"
+    ],
+    "id": [
+     "int"
+    ],
+    "id10": [
+     "int"
+    ],
+    "id2": [
+     "int"
+    ],
+    "id3": [
+     "int"
+    ],
+    "id4": [
+     "int"
+    ],
+    "id5": [
+     "int"
+    ],
+    "id6": [
+     "int"
+    ],
+    "id7": [
+     "int"
+    ],
+    "id8": [
+     "int"
+    ],
+    "id9": [
+     "int"
+    ],
+    "orderId": [
+     "null"
+    ],
+    "str1": [
+     "str"
+    ],
+    "str10": [
+     "str"
+    ],
+    "str11": [
+     "null"
+    ],
+    "str12": [
+     "str"
+    ],
+    "str13": [
+     "str"
+    ],
+    "str14": [
+     "null"
+    ],
+    "str15": [
+     "null"
+    ],
+    "str16": [
+     "null"
+    ],
+    "str17": [
+     "null"
+    ],
+    "str18": [
+     "null"
+    ],
+    "str19": [
+     "null"
+    ],
+    "str2": [
+     "str"
+    ],
+    "str20": [
+     "null"
+    ],
+    "str3": [
+     "str"
+    ],
+    "str4": [
+     "str"
+    ],
+    "str5": [
+     "str"
+    ],
+    "str6": [
+     "str"
+    ],
+    "str7": [
+     "str"
+    ],
+    "str8": [
+     "str"
+    ],
+    "str9": [
+     "str"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/EmpAjax/GetBookList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数(核心)",
+    "JS参数",
+    "JS参数(枚举-1)"
+   ],
+   "method": "GET",
+   "js_params": [
+    "stime",
+    "etime",
+    "addUserId",
+    "bookType",
+    "key"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "total"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数(枚举-1)"
+  },
+  "/EmpAjax/GetEmpList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数(核心)"
+   ],
+   "method": "GET",
+   "js_params": [
+    "gameName",
+    "stime",
+    "etime",
+    "empType",
+    "dateType",
+    "settingSta",
+    "orderSta",
+    "taobaoSta",
+    "recUser",
+    "kefu",
+    "applicationSetSta",
+    "key",
+    "key2",
+    "orderSoure",
+    "taskId",
+    "key3",
+    "orderType",
+    "customerType",
+    "isCert",
+    "furlSta",
+    "recUserName"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg",
+    "total"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 20,
+   "item_fields": {
+    "Add_Time": [
+     "str"
+    ],
+    "Js_Time": [
+     "null"
+    ],
+    "RefundTime": [
+     "null"
+    ],
+    "SDataTime": [
+     "null",
+     "str"
+    ],
+    "alipayAcc": [
+     "str"
+    ],
+    "aplipayAccName": [
+     "str"
+    ],
+    "applicationSett": [
+     "str"
+    ],
+    "bankCardNo": [
+     "null"
+    ],
+    "bankName": [
+     "null"
+    ],
+    "bonusAmount": [
+     "float"
+    ],
+    "completeTime": [
+     "str"
+    ],
+    "createOrderTime": [
+     "str"
+    ],
+    "createOrderTimeDate": [
+     "str"
+    ],
+    "createTime": [
+     "str"
+    ],
+    "deductFee": [
+     "float"
+    ],
+    "dlProject": [
+     "str"
+    ],
+    "empId": [
+     "int"
+    ],
+    "empPayId": [
+     "int"
+    ],
+    "empRemark": [
+     "null"
+    ],
+    "empType": [
+     "str"
+    ],
+    "exceedHours": [
+     "int"
+    ],
+    "expectEndTime": [
+     "str"
+    ],
+    "expectEndTimeDate": [
+     "null"
+    ],
+    "furlStatus": [
+     "str"
+    ],
+    "gameJob": [
+     "str"
+    ],
+    "gameName": [
+     "str"
+    ],
+    "gameRole": [
+     "str"
+    ],
+    "imgCount": [
+     "int"
+    ],
+    "issuePrice": [
+     "int"
+    ],
+    "jionOrder": [
+     "str"
+    ],
+    "kefu": [
+     "str"
+    ],
+    "logUserName": [
+     "str"
+    ],
+    "netReceipts": [
+     "int"
+    ],
+    "orderId": [
+     "str"
+    ],
+    "orderIsDel": [
+     "str"
+    ],
+    "orderSoure": [
+     "str"
+    ],
+    "orderSta": [
+     "str"
+    ],
+    "price": [
+     "float"
+    ],
+    "recipient": [
+     "null"
+    ],
+    "refundFee": [
+     "float"
+    ],
+    "refundModel": [
+     "str"
+    ],
+    "refundTimeStr": [
+     "str"
+    ],
+    "refundUserName": [
+     "str"
+    ],
+    "settingSta": [
+     "str"
+    ],
+    "settingTime": [
+     "str"
+    ],
+    "taobaoPrice": [
+     "float"
+    ],
+    "taobaoSta": [
+     "str"
+    ],
+    "taskId": [
+     "int"
+    ],
+    "tempAmount": [
+     "float"
+    ],
+    "timeLimitHours": [
+     "float"
+    ],
+    "userName": [
+     "str"
+    ],
+    "wangwang": [
+     "str"
+    ]
+   },
+   "from_variant": "JS参数(核心)"
+  },
+  "/EmpAjax/GetJdpBalance": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "last_error": "ApiError"
+  },
+  "/EmpAjax/GetKeFuOperationData": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "msg"
+   ],
+   "envelope_code": 1,
+   "kind": "dict",
+   "item_fields": {
+    "code": [
+     "int"
+    ],
+    "msg": [
+     "dict"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/EmpAjax/GetLearmInformationList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数"
+   ],
+   "method": "GET",
+   "js_params": [
+    "gameId",
+    "key"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数"
+  },
+  "/EmpAjax/GetLingyuefangzhouSystemSettleBalance": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code"
+   ],
+   "kind": "dict",
+   "item_fields": {
+    "code": [
+     "float"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/EmpAjax/GetMyEmp": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数(核心)",
+    "JS参数",
+    "JS参数(枚举-1)"
+   ],
+   "method": "GET",
+   "js_params": [
+    "gameName",
+    "stime",
+    "etime",
+    "dateType",
+    "settingSta",
+    "orderSta",
+    "key",
+    "key2"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "total"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数(枚举-1)"
+  },
+  "/EmpAjax/GetMyOnLineBillSummaryList": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg",
+    "total"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "page+limit"
+  },
+  "/EmpAjax/GetOnLineBillSummaryList": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg",
+    "total"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "page+limit"
+  },
+  "/EmpAjax/GetOperationData": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "msg"
+   ],
+   "envelope_code": 1,
+   "kind": "dict",
+   "item_fields": {
+    "code": [
+     "int"
+    ],
+    "msg": [
+     "dict"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/EmpAjax/GetOrderConseTypeByCondition": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "POST",
+   "envelope_keys": [
+    "code",
+    "data"
+   ],
+   "envelope_code": 1,
+   "kind": "str",
+   "from_variant": "空参"
+  },
+  "/EmpAjax/GetPrivatePhoneCallLogList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数(核心)",
+    "JS参数"
+   ],
+   "method": "GET",
+   "js_params": [
+    "stime",
+    "etime",
+    "addUserId",
+    "moblie",
+    "orderid"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "total"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数"
+  },
+  "/EmpAjax/GetSalesmanStatistics": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 59,
+   "item_fields": {
+    "AvgOrderPrice": [
+     "int"
+    ],
+    "DLZ": [
+     "int"
+    ],
+    "DLZAmount": [
+     "float"
+    ],
+    "DSH": [
+     "int"
+    ],
+    "DSHAmount": [
+     "float"
+    ],
+    "DYS": [
+     "int"
+    ],
+    "DYSAmount": [
+     "float"
+    ],
+    "Kefu": [
+     "str"
+    ],
+    "TotalCount": [
+     "int"
+    ],
+    "TotalPrice": [
+     "float"
+    ],
+    "WFP": [
+     "int"
+    ],
+    "WFPAmount": [
+     "float"
+    ],
+    "WTD": [
+     "int"
+    ],
+    "WTDAmount": [
+     "float"
+    ],
+    "YTD": [
+     "int"
+    ],
+    "YTDAmount": [
+     "float"
+    ],
+    "YWC": [
+     "int"
+    ],
+    "YWCAmount": [
+     "float"
+    ],
+    "YZT": [
+     "int"
+    ],
+    "YZTAmount": [
+     "float"
+    ],
+    "customerCount": [
+     "int"
+    ],
+    "customerPrice": [
+     "float"
+    ],
+    "effectivePerformance": [
+     "float"
+    ],
+    "recommendCount": [
+     "int"
+    ],
+    "userId": [
+     "int"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/EmpAjax/GetSystemBuessionOperationData": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 1,
+   "kind": "dict",
+   "item_fields": {
+    "totalEmpNotSettAmount": [
+     "float"
+    ],
+    "totalEmpNotSettCount": [
+     "int"
+    ],
+    "totalEmpSettAmount": [
+     "float"
+    ],
+    "totalEmpSettCount": [
+     "int"
+    ],
+    "totalOrderCount": [
+     "int"
+    ],
+    "totalPrice": [
+     "float"
+    ],
+    "totalProfit": [
+     "float"
+    ],
+    "totalReFundAmount": [
+     "float"
+    ],
+    "totalReturnOrderCount": [
+     "int"
+    ],
+    "totalReturnOrderPrice": [
+     "int"
+    ],
+    "totalThrowAmount": [
+     "float"
+    ],
+    "totalThrowCount": [
+     "int"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/EmpAjax/GetTotalPriceTrendReport": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "last_error": "ApiError"
+  },
+  "/GameAccountsAjax/GetAccTipsList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数"
+   ],
+   "method": "GET",
+   "js_params": [
+    "gameName"
+   ],
+   "last_error": "ApiError"
+  },
+  "/GameAccountsAjax/GetAllGameAccountUseTypeSelect": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数"
+   ],
+   "method": "GET",
+   "js_params": [
+    "selectValue"
+   ],
+   "envelope_keys": [
+    "code",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数"
+  },
+  "/GameAccountsAjax/GetGameAccList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数(核心)",
+    "JS参数",
+    "JS参数(枚举-1)"
+   ],
+   "method": "GET",
+   "js_params": [
+    "gameName",
+    "stime",
+    "etime",
+    "timeType",
+    "accType",
+    "sellNo",
+    "gameArea",
+    "gameServer",
+    "recUserId",
+    "groupName",
+    "key3",
+    "key2",
+    "info2key",
+    "accStatus",
+    "useType",
+    "proStatus",
+    "tipsSelect",
+    "sellUid",
+    "remark"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg",
+    "totalCostPrice",
+    "totalSellPrice"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数(枚举-1)"
+  },
+  "/GameAccountsAjax/GetMyGameAccList": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "page+limit"
+  },
+  "/GameAccountsAjax/GetSellAccListByPreview": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "last_error": "ApiError"
+  },
+  "/GameAccountsAjax/GetSellAccTipsList": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "last_error": "ApiError"
+  },
+  "/GameAjax/GetAllOrderTypeList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数(核心)",
+    "JS参数"
+   ],
+   "method": "GET",
+   "js_params": [
+    "gameId",
+    "gameName"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数"
+  },
+  "/GameAjax/GetCalculationPrice": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "last_error": "ApiError"
+  },
+  "/GameAjax/GetGameAttrInfoTitle": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "js_params": [
+    "game"
+   ],
+   "envelope_keys": [
+    "code",
+    "data"
+   ],
+   "envelope_code": 0,
+   "kind": "dict",
+   "item_fields": {
+    "company": [
+     "null"
+    ],
+    "d1": [
+     "int"
+    ],
+    "d2": [
+     "int"
+    ],
+    "d3": [
+     "int"
+    ],
+    "d4": [
+     "int"
+    ],
+    "id": [
+     "int"
+    ],
+    "id10": [
+     "int"
+    ],
+    "id2": [
+     "int"
+    ],
+    "id3": [
+     "int"
+    ],
+    "id4": [
+     "int"
+    ],
+    "id5": [
+     "int"
+    ],
+    "id6": [
+     "int"
+    ],
+    "id7": [
+     "int"
+    ],
+    "id8": [
+     "int"
+    ],
+    "id9": [
+     "int"
+    ],
+    "orderId": [
+     "null"
+    ],
+    "str1": [
+     "str"
+    ],
+    "str10": [
+     "null"
+    ],
+    "str11": [
+     "null"
+    ],
+    "str12": [
+     "null"
+    ],
+    "str13": [
+     "null"
+    ],
+    "str14": [
+     "null"
+    ],
+    "str15": [
+     "null"
+    ],
+    "str16": [
+     "null"
+    ],
+    "str17": [
+     "null"
+    ],
+    "str18": [
+     "null"
+    ],
+    "str19": [
+     "null"
+    ],
+    "str2": [
+     "str"
+    ],
+    "str20": [
+     "null"
+    ],
+    "str3": [
+     "null"
+    ],
+    "str4": [
+     "null"
+    ],
+    "str5": [
+     "null"
+    ],
+    "str6": [
+     "null"
+    ],
+    "str7": [
+     "null"
+    ],
+    "str8": [
+     "null"
+    ],
+    "str9": [
+     "null"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/GameAjax/GetGameServerMangeList": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 15,
+   "item_fields": {
+    "gameId": [
+     "int"
+    ],
+    "gameName": [
+     "str"
+    ],
+    "isDefulat": [
+     "str"
+    ],
+    "isDisbleSendSms": [
+     "int"
+    ],
+    "isMoblieGame": [
+     "str"
+    ],
+    "isNotAccPwd": [
+     "str"
+    ],
+    "isPw": [
+     "str"
+    ],
+    "orderNum": [
+     "int"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/GameAjax/GetLolJinjiDataList": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "last_error": "ApiError"
+  },
+  "/GameAjax/GetPriceCalculatorSettingPriceDW": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "POST",
+   "envelope_keys": [
+    "code",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "page+limit"
+  },
+  "/GameAjax/GetPriceSettPackgeName": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "POST",
+   "envelope_keys": [
+    "code",
+    "data"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "page+limit"
+  },
+  "/GameAjax/GetProjectList": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "js_params": [
+    "gameId"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 2,
+   "item_fields": {
+    "gameName": [
+     "null"
+    ],
+    "id": [
+     "int"
+    ],
+    "orderBy": [
+     "int"
+    ],
+    "projectName": [
+     "str"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/GameAjax/getGameData": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "js_params": [
+    "gameId",
+    "type",
+    "parentId"
+   ],
+   "envelope_keys": [
+    "code",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "dict",
+   "item_fields": {
+    "code": [
+     "int"
+    ],
+    "msg": [
+     "str"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/OrderAjax/DisGameNameByContent": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数"
+   ],
+   "method": "GET",
+   "js_params": [
+    "content"
+   ],
+   "last_error": "ApiError"
+  },
+  "/OrderAjax/GetBuiderGameScanQrCode": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "js_params": [
+    "orderId",
+    "class",
+    "target",
+    "title"
+   ],
+   "envelope_keys": [
+    "code",
+    "data",
+    "hour",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "str",
+   "from_variant": "空参"
+  },
+  "/OrderAjax/GetGeneRateCustomerOrderLogList": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "data"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "page+limit"
+  },
+  "/OrderAjax/GetInternalOrderGrabbingList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数(核心)",
+    "JS参数",
+    "JS参数(枚举-1)"
+   ],
+   "method": "GET",
+   "js_params": [
+    "gameName",
+    "gameArea",
+    "gameServer",
+    "dlProject",
+    "key",
+    "bussType",
+    "project"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg",
+    "total"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数(枚举-1)"
+  },
+  "/OrderAjax/GetMyOrderList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数(核心)",
+    "JS参数",
+    "JS参数(枚举-1)"
+   ],
+   "method": "GET",
+   "js_params": [
+    "gameName",
+    "sDate",
+    "eDate",
+    "stime",
+    "etime",
+    "gameArea",
+    "gameServer",
+    "gameJob",
+    "groupName",
+    "orderSta",
+    "key1",
+    "key2",
+    "key3",
+    "key4",
+    "viewIsNewOrder",
+    "isJiaji",
+    "bussType",
+    "idx"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg",
+    "total"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数(枚举-1)"
+  },
+  "/OrderAjax/GetOrderClientOrderUrlLink": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数"
+   ],
+   "method": "GET",
+   "js_params": [
+    "orderId"
+   ],
+   "last_error": "ApiError"
+  },
+  "/OrderAjax/GetOrderContentById": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "js_params": [
+    "orderId"
+   ],
+   "envelope_keys": [
+    "code",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "dict",
+   "item_fields": {
+    "code": [
+     "int"
+    ],
+    "msg": [
+     "str"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/OrderAjax/GetOrderList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数(核心)"
+   ],
+   "method": "POST",
+   "js_params": [
+    "gameName",
+    "stime",
+    "etime",
+    "minPrice",
+    "maxPrice",
+    "limit",
+    "page",
+    "taskId",
+    "gameArea",
+    "gameServer",
+    "gameJob",
+    "project",
+    "recUserId",
+    "customerServiceUserId",
+    "orderSoure",
+    "orderGroupUser",
+    "setSta",
+    "timeType",
+    "groupName",
+    "orderSta",
+    "isJiaji",
+    "isLeakOrder",
+    "showPriceType",
+    "operatorName",
+    "bussType",
+    "kefuType",
+    "projectTypeName",
+    "batchOrderId",
+    "keytid",
+    "orderLabel"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg",
+    "total"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 5,
+   "item_fields": {
+    "WangWang": [
+     "str"
+    ],
+    "accPwd": [
+     "null"
+    ],
+    "addOrderUserName": [
+     "str"
+    ],
+    "assTime": [
+     "str"
+    ],
+    "assUserName": [
+     "str"
+    ],
+    "autoAssignmentManName": [
+     "null"
+    ],
+    "backListId": [
+     "int"
+    ],
+    "bussType": [
+     "int"
+    ],
+    "completeTime": [
+     "null",
+     "str"
+    ],
+    "createTime": [
+     "str"
+    ],
+    "customerId": [
+     "int"
+    ],
+    "customizeTag": [
+     "str"
+    ],
+    "delTime": [
+     "null"
+    ],
+    "delUserName": [
+     "null"
+    ],
+    "discount": [
+     "float"
+    ],
+    "dynamicRemark": [
+     "null"
+    ],
+    "expectEndTime": [
+     "str"
+    ],
+    "fsid": [
+     "int"
+    ],
+    "gameAcc": [
+     "null"
+    ],
+    "gameArea": [
+     "str"
+    ],
+    "gameGroup": [
+     "str"
+    ],
+    "gameJob": [
+     "str"
+    ],
+    "gameName": [
+     "str"
+    ],
+    "gameServer": [
+     "str"
+    ],
+    "groupId": [
+     "null"
+    ],
+    "groupMangeUid": [
+     "int"
+    ],
+    "hours": [
+     "float"
+    ],
+    "imgCount": [
+     "int"
+    ],
+    "inputOrderManName": [
+     "str"
+    ],
+    "isAllowChangeOrderFee": [
+     "str"
+    ],
+    "isAutoAssignment": [
+     "str"
+    ],
+    "isJiaJi": [
+     "str"
+    ],
+    "isPushJdp": [
+     "str"
+    ],
+    "isRead": [
+     "str"
+    ],
+    "isSettStatus": [
+     "str"
+    ],
+    "isSplitOrder": [
+     "str"
+    ],
+    "isThrowOrder": [
+     "str"
+    ],
+    "itemRemark": [
+     "str"
+    ],
+    "jiwei": [
+     "null"
+    ],
+    "levelMark": [
+     "str"
+    ],
+    "moblie": [
+     "null"
+    ],
+    "netReceipts": [
+     "str"
+    ],
+    "oid": [
+     "int"
+    ],
+    "orderContent": [
+     "str"
+    ],
+    "orderFromOrderId": [
+     "null"
+    ],
+    "orderHoursDescStr": [
+     "str"
+    ],
+    "orderId": [
+     "str"
+    ],
+    "orderIdView": [
+     "str"
+    ],
+    "orderLabel": [
+     "str"
+    ],
+    "orderLabelColor": [
+     "null"
+    ],
+    "orderRemark": [
+     "str"
+    ],
+    "orderSoure": [
+     "str"
+    ],
+    "orderSta": [
+     "str"
+    ],
+    "originPrice": [
+     "float"
+    ],
+    "otherRemark": [
+     "str"
+    ],
+    "payMethod": [
+     "int"
+    ],
+    "price": [
+     "float"
+    ],
+    "project": [
+     "str"
+    ],
+    "projectTypeName": [
+     "str"
+    ],
+    "pushJdpOrderState": [
+     "null"
+    ],
+    "qq": [
+     "str"
+    ],
+    "recFee": [
+     "float"
+    ],
+    "recManName": [
+     "str"
+    ],
+    "recOrderInsureAmount": [
+     "int"
+    ],
+    "recOrderTime": [
+     "null"
+    ],
+    "recSettCount": [
+     "int"
+    ],
+    "refundFee": [
+     "float"
+    ],
+    "refundModel": [
+     "str"
+    ],
+    "refundTimeStr": [
+     "null"
+    ],
+    "refundUserName": [
+     "str"
+    ],
+    "roleName": [
+     "str"
+    ],
+    "serviceAmount": [
+     "int"
+    ],
+    "soureFromHost": [
+     "null"
+    ],
+    "sphone": [
+     "null"
+    ],
+    "splitId": [
+     "null"
+    ],
+    "startTime": [
+     "str"
+    ],
+    "taskId": [
+     "int"
+    ],
+    "taskName": [
+     "null"
+    ],
+    "throwCount": [
+     "int"
+    ],
+    "tid": [
+     "null"
+    ],
+    "transfType": [
+     "int"
+    ],
+    "zgameAcc": [
+     "null"
+    ]
+   },
+   "from_variant": "JS参数(核心)"
+  },
+  "/OrderAjax/GetOrderRecycleList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数(核心)"
+   ],
+   "method": "GET",
+   "js_params": [
+    "gameName",
+    "stime",
+    "etime",
+    "orderSta",
+    "key1",
+    "key2",
+    "orderSoure"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg",
+    "total"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 20,
+   "item_fields": {
+    "WangWang": [
+     "str"
+    ],
+    "accPwd": [
+     "null"
+    ],
+    "addOrderUserName": [
+     "null"
+    ],
+    "assTime": [
+     "null"
+    ],
+    "assUserName": [
+     "null"
+    ],
+    "autoAssignmentManName": [
+     "null"
+    ],
+    "backListId": [
+     "int"
+    ],
+    "bussType": [
+     "int"
+    ],
+    "completeTime": [
+     "null"
+    ],
+    "createTime": [
+     "str"
+    ],
+    "customerId": [
+     "int"
+    ],
+    "customizeTag": [
+     "str"
+    ],
+    "delTime": [
+     "str"
+    ],
+    "delUserName": [
+     "str"
+    ],
+    "discount": [
+     "int"
+    ],
+    "dynamicRemark": [
+     "null"
+    ],
+    "expectEndTime": [
+     "str"
+    ],
+    "fsid": [
+     "int"
+    ],
+    "gameAcc": [
+     "null"
+    ],
+    "gameArea": [
+     "str"
+    ],
+    "gameGroup": [
+     "str"
+    ],
+    "gameJob": [
+     "str"
+    ],
+    "gameName": [
+     "str"
+    ],
+    "gameServer": [
+     "str"
+    ],
+    "groupId": [
+     "null"
+    ],
+    "groupMangeUid": [
+     "int"
+    ],
+    "hours": [
+     "int"
+    ],
+    "imgCount": [
+     "int"
+    ],
+    "inputOrderManName": [
+     "null"
+    ],
+    "isAllowChangeOrderFee": [
+     "null"
+    ],
+    "isAutoAssignment": [
+     "null"
+    ],
+    "isJiaJi": [
+     "str"
+    ],
+    "isPushJdp": [
+     "null"
+    ],
+    "isRead": [
+     "null"
+    ],
+    "isSettStatus": [
+     "null"
+    ],
+    "isSplitOrder": [
+     "null"
+    ],
+    "isThrowOrder": [
+     "null"
+    ],
+    "itemRemark": [
+     "str"
+    ],
+    "jiwei": [
+     "null"
+    ],
+    "levelMark": [
+     "str"
+    ],
+    "moblie": [
+     "null"
+    ],
+    "netReceipts": [
+     "null"
+    ],
+    "oid": [
+     "int"
+    ],
+    "orderContent": [
+     "null"
+    ],
+    "orderFromOrderId": [
+     "null"
+    ],
+    "orderHoursDescStr": [
+     "null"
+    ],
+    "orderId": [
+     "str"
+    ],
+    "orderIdView": [
+     "str"
+    ],
+    "orderLabel": [
+     "null"
+    ],
+    "orderLabelColor": [
+     "null"
+    ],
+    "orderRemark": [
+     "str"
+    ],
+    "orderSoure": [
+     "str"
+    ],
+    "orderSta": [
+     "str"
+    ],
+    "originPrice": [
+     "int"
+    ],
+    "otherRemark": [
+     "str"
+    ],
+    "payMethod": [
+     "int"
+    ],
+    "price": [
+     "int"
+    ],
+    "project": [
+     "str"
+    ],
+    "projectTypeName": [
+     "null"
+    ],
+    "pushJdpOrderState": [
+     "null"
+    ],
+    "qq": [
+     "null"
+    ],
+    "recFee": [
+     "int"
+    ],
+    "recManName": [
+     "null"
+    ],
+    "recOrderInsureAmount": [
+     "int"
+    ],
+    "recOrderTime": [
+     "null"
+    ],
+    "recSettCount": [
+     "int"
+    ],
+    "refundFee": [
+     "int"
+    ],
+    "refundModel": [
+     "null"
+    ],
+    "refundTimeStr": [
+     "null"
+    ],
+    "refundUserName": [
+     "null"
+    ],
+    "roleName": [
+     "str"
+    ],
+    "serviceAmount": [
+     "int"
+    ],
+    "soureFromHost": [
+     "null"
+    ],
+    "sphone": [
+     "null"
+    ],
+    "splitId": [
+     "null"
+    ],
+    "startTime": [
+     "null"
+    ],
+    "taskId": [
+     "int"
+    ],
+    "taskName": [
+     "null"
+    ],
+    "throwCount": [
+     "int"
+    ],
+    "tid": [
+     "null"
+    ],
+    "transfType": [
+     "int"
+    ],
+    "zgameAcc": [
+     "null"
+    ]
+   },
+   "from_variant": "JS参数(核心)"
+  },
+  "/OrderAjax/GetPlatformOrderList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数(核心)",
+    "JS参数",
+    "JS参数(枚举-1)"
+   ],
+   "method": "GET",
+   "js_params": [
+    "gameName",
+    "stime",
+    "etime",
+    "minPrice",
+    "maxPrice",
+    "limit",
+    "page",
+    "operatorId",
+    "platStatus",
+    "dateType",
+    "orderSoure",
+    "pushPlatm",
+    "orderSta",
+    "seachType",
+    "orderLabel",
+    "orderBy",
+    "projectTypeName"
+   ],
+   "last_error": "ApiError"
+  },
+  "/OrderAjax/GetPlatmPushOperateReport": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数"
+   ],
+   "method": "GET",
+   "js_params": [
+    "selectMonth"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数"
+  },
+  "/OrderAjax/GetRecPlayerChatMsgDetailsList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数"
+   ],
+   "method": "GET",
+   "js_params": [
+    "key"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg",
+    "totalPage"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数"
+  },
+  "/OrderAjax/GetRecPlayerChatMsgFilterKey": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "last_error": "ApiError"
+  },
+  "/OrderAjax/GetRecPlayerChatMsgList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数(核心)",
+    "JS参数"
+   ],
+   "method": "GET",
+   "js_params": [
+    "sdate",
+    "edate",
+    "recUserId",
+    "key"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg",
+    "totalPage"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数"
+  },
+  "/OrderAjax/GetSendGroupNewOrderMsg": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "POST",
+   "js_params": [
+    "ids"
+   ],
+   "envelope_keys": [
+    "code",
+    "data",
+    "layer",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "str",
+   "from_variant": "空参"
+  },
+  "/OrderAjax/GetSoureOrderChangePriceLogList": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "page+limit"
+  },
+  "/OrderAjax/GetTransactionOrderByOrderIdFunc": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数"
+   ],
+   "method": "GET",
+   "js_params": [
+    "orderId",
+    "class",
+    "target",
+    "title"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数"
+  },
+  "/OrderAjax/GetUserQQByOrderId": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数"
+   ],
+   "method": "GET",
+   "js_params": [
+    "orderId"
+   ],
+   "last_error": "ApiError"
+  },
+  "/OrderAjax/ReadTaoBaoOrderData": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "js_params": [
+    "tid",
+    "orderSoure"
+   ],
+   "envelope_keys": [
+    "code",
+    "data",
+    "gameArea",
+    "gameServer",
+    "msg",
+    "orderSoure",
+    "payTime",
+    "pdd_phone",
+    "remark",
+    "rolName"
+   ],
+   "envelope_code": 0,
+   "kind": "str",
+   "from_variant": "空参"
+  },
+  "/PveTaskAjax/GetCurrentWeekDayTaskGrapNeedJob": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "last_error": "ApiError"
+  },
+  "/PveTaskAjax/GetJdpPublicTaskData": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "last_error": "ApiError"
+  },
+  "/PveTaskAjax/GetNewsGroupList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数(核心)",
+    "JS参数",
+    "JS参数(枚举-1)"
+   ],
+   "method": "POST",
+   "js_params": [
+    "gameId",
+    "leaderId",
+    "key",
+    "groupName",
+    "taskStatus",
+    "orderBy",
+    "date",
+    "page",
+    "limit"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数(枚举-1)"
+  },
+  "/PveTaskAjax/GetNewsGroupOrderList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数(核心)",
+    "JS参数",
+    "JS参数(枚举-1)"
+   ],
+   "method": "GET",
+   "js_params": [
+    "stime",
+    "etime",
+    "gameName",
+    "gameServer",
+    "gameJob",
+    "groupName",
+    "orderSta",
+    "key1",
+    "key2",
+    "info1",
+    "info2",
+    "taskId",
+    "orderSoure"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg",
+    "total"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数(枚举-1)"
+  },
+  "/PveTaskAjax/GetTaskNeedJobTemplate": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "last_error": "ApiError"
+  },
+  "/SmsAjax/GetSmsBulkHairMoblieCount": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数(核心)",
+    "JS参数",
+    "JS参数(枚举-1)"
+   ],
+   "method": "GET",
+   "js_params": [
+    "gameName",
+    "orderSta",
+    "customerServiceUserName",
+    "orderSoure",
+    "stime",
+    "etime"
+   ],
+   "last_error": "ApiError"
+  },
+  "/SmsAjax/GetSmsSendLogList": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "page+limit"
+  },
+  "/SmsAjax/GetSmsSettingMangeList": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "js_params": [
+    "gameName"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 15,
+   "item_fields": {
+    "GameName": [
+     "str"
+    ],
+    "SelectTbSwicth": [
+     "int"
+    ],
+    "SendOpport": [
+     "int"
+    ],
+    "SmsContent": [
+     "str"
+    ],
+    "SmsSetting_Id": [
+     "int"
+    ],
+    "SmsSwicth": [
+     "int"
+    ],
+    "SmsTitle": [
+     "str"
+    ],
+    "SmsType": [
+     "int"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/SmsAjax/GetSmsTemplateList": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "page+limit"
+  },
+  "/SystemAjax/GetAllLotteryAwardList": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "page+limit"
+  },
+  "/SystemAjax/GetAllRoleJobList": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 9,
+   "item_fields": {
+    "remark": [
+     "str"
+    ],
+    "roleId": [
+     "int"
+    ],
+    "roleName": [
+     "str"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/SystemAjax/GetAllRoleList": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 9,
+   "item_fields": {
+    "brokerageType": [
+     "int"
+    ],
+    "children": [
+     "list"
+    ],
+    "click": [
+     "null"
+    ],
+    "disabled": [
+     "str"
+    ],
+    "info1": [
+     "null"
+    ],
+    "info2": [
+     "null"
+    ],
+    "name": [
+     "str"
+    ],
+    "optgroup": [
+     "null"
+    ],
+    "selected": [
+     "str"
+    ],
+    "tichen": [
+     "int"
+    ],
+    "tips": [
+     "str"
+    ],
+    "type": [
+     "null"
+    ],
+    "value": [
+     "str"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/SystemAjax/GetAutoDiscernSetList": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 18,
+   "item_fields": {
+    "disId": [
+     "int"
+    ],
+    "disKey": [
+     "str"
+    ],
+    "typeName": [
+     "str"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/SystemAjax/GetAutomaticAdJustPriceSetList": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "page+limit"
+  },
+  "/SystemAjax/GetIntegralCommodityByTypeList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数",
+    "JS参数(枚举-1)"
+   ],
+   "method": "GET",
+   "js_params": [
+    "typeId"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数(枚举-1)"
+  },
+  "/SystemAjax/GetIntegralCommodityExchangeList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数",
+    "JS参数(枚举-1)"
+   ],
+   "method": "GET",
+   "js_params": [
+    "status"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数(枚举-1)"
+  },
+  "/SystemAjax/GetIntegralCommodityList": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "page+limit"
+  },
+  "/SystemAjax/GetLotteryAwardGrantList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数",
+    "JS参数(枚举-1)"
+   ],
+   "method": "GET",
+   "js_params": [
+    "grantStatus",
+    "key"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "total"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数(枚举-1)"
+  },
+  "/SystemAjax/GetMyBindHomeSystemList": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "page+limit"
+  },
+  "/SystemAjax/GetOnlineConsultationSetList": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "page+limit"
+  },
+  "/SystemAjax/GetOrderLabelList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数(核心)",
+    "JS参数",
+    "JS参数(枚举-1)"
+   ],
+   "method": "GET",
+   "js_params": [
+    "gameName",
+    "status",
+    "getCa"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数(枚举-1)"
+  },
+  "/SystemAjax/GetOrderSoureList": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "js_params": [
+    "selectValue"
+   ],
+   "envelope_keys": [
+    "code",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 14,
+   "item_fields": {
+    "brokerageType": [
+     "int"
+    ],
+    "children": [
+     "list"
+    ],
+    "click": [
+     "null"
+    ],
+    "disabled": [
+     "str"
+    ],
+    "info1": [
+     "null"
+    ],
+    "info2": [
+     "null"
+    ],
+    "name": [
+     "str"
+    ],
+    "optgroup": [
+     "null"
+    ],
+    "selected": [
+     "str"
+    ],
+    "tichen": [
+     "int"
+    ],
+    "tips": [
+     "str"
+    ],
+    "type": [
+     "null"
+    ],
+    "value": [
+     "str"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/SystemAjax/GetOrderSoureMangeList": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 14,
+   "item_fields": {
+    "doNotSendSms": [
+     "str"
+    ],
+    "id": [
+     "int"
+    ],
+    "orderBy": [
+     "int"
+    ],
+    "remark": [
+     "str"
+    ],
+    "shopType": [
+     "int"
+    ],
+    "smsSign": [
+     "str"
+    ],
+    "soureName": [
+     "str"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/SystemAjax/GetPlatformAutoReplySetList": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "page+limit"
+  },
+  "/SystemAjax/GetPlatformPushOrderConfig": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "js_params": [
+    "gameName"
+   ],
+   "envelope_keys": [
+    "code",
+    "data"
+   ],
+   "envelope_code": 0,
+   "kind": "null",
+   "from_variant": "空参"
+  },
+  "/SystemAjax/GetPlatformPushOrderConfigList": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 14,
+   "item_fields": {
+    "gameName": [
+     "str"
+    ],
+    "id": [
+     "int"
+    ],
+    "isAutoWritePhone": [
+     "int"
+    ],
+    "pushPlatformEffAmount": [
+     "float"
+    ],
+    "pushPlatformIds": [
+     "null"
+    ],
+    "pushPlatformNames": [
+     "str"
+    ],
+    "pushPlatformPhone": [
+     "str"
+    ],
+    "pushPlatformQQ": [
+     "str"
+    ],
+    "pushPlatformRequire": [
+     "str"
+    ],
+    "pushPlatformSafeAmount": [
+     "float"
+    ],
+    "pushPlatfromBuilderPrivePhone": [
+     "int"
+    ],
+    "pushPlatfromPriceScale": [
+     "int"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/SystemAjax/GetPublicNewsList": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "page+limit"
+  },
+  "/SystemAjax/GetPublicSeachOrderQuestionMList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数"
+   ],
+   "method": "GET",
+   "js_params": [
+    "qid"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数"
+  },
+  "/SystemAjax/GetPushJdp_TemplateList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数"
+   ],
+   "method": "GET",
+   "js_params": [
+    "gameName"
+   ],
+   "envelope_keys": [
+    "code",
+    "data"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数"
+  },
+  "/SystemAjax/GetPushOrderGroupMsgSetList": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 1,
+   "item_fields": {
+    "callAll": [
+     "int"
+    ],
+    "gameName": [
+     "str"
+    ],
+    "groupId": [
+     "null"
+    ],
+    "id": [
+     "int"
+    ],
+    "kurl": [
+     "int"
+    ],
+    "msgType": [
+     "int"
+    ],
+    "remark": [
+     "str"
+    ],
+    "replyOcc": [
+     "int"
+    ],
+    "switchStatus": [
+     "int"
+    ],
+    "webhookUrl": [
+     "str"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/SystemAjax/GetShopItemList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数"
+   ],
+   "method": "GET",
+   "js_params": [
+    "gameName"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数"
+  },
+  "/SystemAjax/GetSysmteLogList": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "page+limit"
+  },
+  "/SystemAjax/GetSystemNoticeList": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "page+limit"
+  },
+  "/SystemAjax/GetTaoBaoInterfaceList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数"
+   ],
+   "method": "GET",
+   "js_params": [
+    "platform"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数"
+  },
+  "/SystemAjax/GetTransfromInterfaceList": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "page+limit"
+  },
+  "/SystemAjax/GetUserGroupList": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 6,
+   "item_fields": {
+    "containJobName": [
+     "str"
+    ],
+    "groupId": [
+     "int"
+    ],
+    "groupName": [
+     "str"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/SystemAjax/GetUserListByOnlineConsultationSet": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "data1",
+    "data2",
+    "data3",
+    "data4"
+   ],
+   "envelope_code": 0,
+   "kind": "dict",
+   "item_fields": {
+    "code": [
+     "int"
+    ],
+    "data1": [
+     "list"
+    ],
+    "data2": [
+     "list"
+    ],
+    "data3": [
+     "list"
+    ],
+    "data4": [
+     "list"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/SystemAjax/GetVerifiAddOrderKeyStrByGameList": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "js_params": [
+    "gameName"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 25,
+   "item_fields": {
+    "gameName": [
+     "null"
+    ],
+    "id": [
+     "int"
+    ],
+    "key": [
+     "str"
+    ],
+    "resultStr": [
+     "str"
+    ],
+    "veriType": [
+     "int"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/SystemAjax/GetWeChatCustomerList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数"
+   ],
+   "method": "GET",
+   "js_params": [
+    "key"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数"
+  },
+  "/SystemAjax/GetWechatAppShopFulDecList": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "fullDecData",
+    "hyDisCData"
+   ],
+   "envelope_code": 0,
+   "kind": "dict",
+   "item_fields": {
+    "code": [
+     "int"
+    ],
+    "fullDecData": [
+     "list"
+    ],
+    "hyDisCData": [
+     "list"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/SystemAjax/GetWechatAppShopItemTypeList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数"
+   ],
+   "method": "GET",
+   "js_params": [
+    "gameName"
+   ],
+   "last_error": "ApiError"
+  },
+  "/SystemAjax/VeryJdpAcc": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "POST",
+   "js_params": [
+    "acc",
+    "pwd"
+   ],
+   "envelope_keys": [
+    "code",
+    "msg"
+   ],
+   "envelope_code": 1,
+   "kind": "dict",
+   "item_fields": {
+    "code": [
+     "int"
+    ],
+    "msg": [
+     "str"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/UserAjax/GetAllUserByGameName": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "js_params": [
+    "gameName",
+    "isFilteJdp"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "defAssRecMan",
+    "defAssRecManUid",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 104,
+   "item_fields": {
+    "brokerageType": [
+     "int"
+    ],
+    "children": [
+     "list"
+    ],
+    "click": [
+     "null"
+    ],
+    "disabled": [
+     "str"
+    ],
+    "info1": [
+     "null",
+     "str"
+    ],
+    "info2": [
+     "null",
+     "str"
+    ],
+    "name": [
+     "str"
+    ],
+    "optgroup": [
+     "null"
+    ],
+    "selected": [
+     "str"
+    ],
+    "tichen": [
+     "float",
+     "int"
+    ],
+    "tips": [
+     "str"
+    ],
+    "type": [
+     "null",
+     "str"
+    ],
+    "value": [
+     "str"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/UserAjax/GetAllUserTableByGameName": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "js_params": [
+    "gameName",
+    "userRoleId",
+    "key"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 102,
+   "item_fields": {
+    "brokerageType": [
+     "int"
+    ],
+    "games": [
+     "str"
+    ],
+    "id": [
+     "int"
+    ],
+    "inputJobDate": [
+     "str"
+    ],
+    "isAbsolveLoginVer": [
+     "str"
+    ],
+    "isValid": [
+     "str"
+    ],
+    "loginAcc": [
+     "str"
+    ],
+    "moblie": [
+     "str"
+    ],
+    "outJobDate": [
+     "str"
+    ],
+    "pic": [
+     "null"
+    ],
+    "qq": [
+     "str"
+    ],
+    "recOrderMaxCount": [
+     "int"
+    ],
+    "remark": [
+     "str"
+    ],
+    "roleName": [
+     "str"
+    ],
+    "taskIsHaveMe": [
+     "null"
+    ],
+    "tichen": [
+     "float"
+    ],
+    "tips": [
+     "str"
+    ],
+    "userName": [
+     "str"
+    ],
+    "userType": [
+     "int"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/UserAjax/GetCheckIdenticalAliPayAcc": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 17,
+   "item_fields": {
+    "company": [
+     "null"
+    ],
+    "d1": [
+     "int"
+    ],
+    "d2": [
+     "int"
+    ],
+    "d3": [
+     "int"
+    ],
+    "d4": [
+     "int"
+    ],
+    "id": [
+     "int"
+    ],
+    "id10": [
+     "int"
+    ],
+    "id2": [
+     "int"
+    ],
+    "id3": [
+     "int"
+    ],
+    "id4": [
+     "int"
+    ],
+    "id5": [
+     "int"
+    ],
+    "id6": [
+     "int"
+    ],
+    "id7": [
+     "int"
+    ],
+    "id8": [
+     "int"
+    ],
+    "id9": [
+     "int"
+    ],
+    "orderId": [
+     "null"
+    ],
+    "str1": [
+     "str"
+    ],
+    "str10": [
+     "null"
+    ],
+    "str11": [
+     "null"
+    ],
+    "str12": [
+     "null"
+    ],
+    "str13": [
+     "null"
+    ],
+    "str14": [
+     "null"
+    ],
+    "str15": [
+     "null"
+    ],
+    "str16": [
+     "null"
+    ],
+    "str17": [
+     "null"
+    ],
+    "str18": [
+     "null"
+    ],
+    "str19": [
+     "null"
+    ],
+    "str2": [
+     "str"
+    ],
+    "str20": [
+     "null"
+    ],
+    "str3": [
+     "str"
+    ],
+    "str4": [
+     "str"
+    ],
+    "str5": [
+     "null"
+    ],
+    "str6": [
+     "null"
+    ],
+    "str7": [
+     "null"
+    ],
+    "str8": [
+     "null"
+    ],
+    "str9": [
+     "null"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/UserAjax/GetContractWhitelist": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "data",
+    "ext",
+    "msg",
+    "success"
+   ],
+   "envelope_code": 200,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "page+limit"
+  },
+  "/UserAjax/GetDyplsOSSInfoForUploadFile": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 200,
+   "kind": "dict",
+   "item_fields": {
+    "AccessKeyId": [
+     "str"
+    ],
+    "ExpireTime": [
+     "str"
+    ],
+    "Host": [
+     "str"
+    ],
+    "Policy": [
+     "str"
+    ],
+    "Signature": [
+     "str"
+    ],
+    "StartPath": [
+     "str"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/UserAjax/GetGroupMangeList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数"
+   ],
+   "method": "POST",
+   "js_params": [
+    "gameName"
+   ],
+   "envelope_keys": [
+    "code",
+    "data"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数"
+  },
+  "/UserAjax/GetGroupUserSelect": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数"
+   ],
+   "method": "GET",
+   "js_params": [
+    "gameName"
+   ],
+   "envelope_keys": [
+    "code",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数"
+  },
+  "/UserAjax/GetJdpUidList": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "js_params": [
+    "game",
+    "userRole",
+    "sta",
+    "userType",
+    "key",
+    "bussType",
+    "isCert",
+    "isDisSett",
+    "key2",
+    "key3"
+   ],
+   "envelope_keys": [
+    "code",
+    "data"
+   ],
+   "envelope_code": 200,
+   "kind": "list",
+   "item_count": 2,
+   "item_fields": {},
+   "item_types": [
+    "int"
+   ],
+   "from_variant": "空参"
+  },
+  "/UserAjax/GetMyMessageList": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "js_params": [
+    "isRead",
+    "msgType"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "total"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 1,
+   "item_fields": {
+    "content": [
+     "str"
+    ],
+    "createTime": [
+     "str"
+    ],
+    "isAutoPaySound": [
+     "null"
+    ],
+    "isRead": [
+     "str"
+    ],
+    "isViewNotification": [
+     "null"
+    ],
+    "msgId": [
+     "int"
+    ],
+    "msgType": [
+     "int"
+    ],
+    "orderId": [
+     "str"
+    ],
+    "sendUserName": [
+     "str"
+    ],
+    "title": [
+     "str"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/UserAjax/GetOnboardingList": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "ext"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "page+limit"
+  },
+  "/UserAjax/GetRecOrderTotalList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数"
+   ],
+   "method": "GET",
+   "js_params": [
+    "stime"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数"
+  },
+  "/UserAjax/GetSystemUserBackList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数"
+   ],
+   "method": "GET",
+   "js_params": [
+    "key"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数"
+  },
+  "/UserAjax/GetUserCheckInList": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 20,
+   "item_fields": {
+    "checkType": [
+     "int"
+    ],
+    "checkinNumber": [
+     "int"
+    ],
+    "computer": [
+     "str"
+    ],
+    "createTime": [
+     "str"
+    ],
+    "ip": [
+     "str"
+    ],
+    "loginAcc": [
+     "str"
+    ],
+    "remark": [
+     "str"
+    ],
+    "roleName": [
+     "str"
+    ],
+    "userName": [
+     "str"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/UserAjax/GetUserCheckInStaticList": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 20,
+   "item_fields": {
+    "checkType": [
+     "int"
+    ],
+    "checkinNumber": [
+     "int"
+    ],
+    "computer": [
+     "null"
+    ],
+    "createTime": [
+     "null"
+    ],
+    "ip": [
+     "null"
+    ],
+    "loginAcc": [
+     "str"
+    ],
+    "remark": [
+     "null"
+    ],
+    "roleName": [
+     "str"
+    ],
+    "userName": [
+     "str"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/UserAjax/GetUserList": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "js_params": [
+    "game",
+    "userRole",
+    "sta",
+    "userType",
+    "key",
+    "bussType",
+    "isCert",
+    "isDisSett",
+    "key2",
+    "key3"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "disableCount",
+    "totalInsureAmount"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 20,
+   "item_fields": {
+    "balance": [
+     "float"
+    ],
+    "bussType": [
+     "int"
+    ],
+    "complateRate": [
+     "float"
+    ],
+    "createUserName": [
+     "str"
+    ],
+    "disableDate": [
+     "str"
+    ],
+    "entryDate": [
+     "str"
+    ],
+    "forbidViewOrderContent": [
+     "int"
+    ],
+    "games": [
+     "str"
+    ],
+    "insureAmount": [
+     "float"
+    ],
+    "isAutoSett": [
+     "str"
+    ],
+    "isExcuseLoginVer": [
+     "str"
+    ],
+    "isNeedPrivatePhone": [
+     "str"
+    ],
+    "isProhibitPublicRecOrder": [
+     "int"
+    ],
+    "isProhibitSettStatus": [
+     "str"
+    ],
+    "isRecEarlyWarningSms": [
+     "str"
+    ],
+    "jdpUid": [
+     "int"
+    ],
+    "jobName": [
+     "str"
+    ],
+    "lastLoginTime": [
+     "str"
+    ],
+    "loginAcc": [
+     "str"
+    ],
+    "mark": [
+     "str"
+    ],
+    "moblie": [
+     "str"
+    ],
+    "orderBy": [
+     "int"
+    ],
+    "pic": [
+     "str"
+    ],
+    "prohibitedViewOrderPwd": [
+     "str"
+    ],
+    "qq": [
+     "str"
+    ],
+    "recOrderMaxCount": [
+     "int"
+    ],
+    "recPriceMaxValue": [
+     "float"
+    ],
+    "recPriceMinValue": [
+     "float"
+    ],
+    "recommend": [
+     "str"
+    ],
+    "remark": [
+     "str"
+    ],
+    "rname": [
+     "str"
+    ],
+    "rnameCertification": [
+     "str"
+    ],
+    "roleId": [
+     "int"
+    ],
+    "signStatus": [
+     "int"
+    ],
+    "sta": [
+     "str"
+    ],
+    "uid": [
+     "int"
+    ],
+    "userName": [
+     "str"
+    ],
+    "userType": [
+     "int"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/UserAjax/GetUserLoginRestrictList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数"
+   ],
+   "method": "GET",
+   "js_params": [
+    "userList",
+    "ip"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "disableCount"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数"
+  },
+  "/UserAjax/GetUserPhoneReport": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 200,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "page+limit"
+  },
+  "/UserAjax/GetUserRnameCertLogList": {
+   "variants_tried": [
+    "空参",
+    "page+limit",
+    "JS参数(核心)",
+    "JS参数",
+    "JS参数(枚举-1)"
+   ],
+   "method": "GET",
+   "js_params": [
+    "sdate",
+    "edate",
+    "status",
+    "key1",
+    "key2",
+    "key3"
+   ],
+   "envelope_keys": [
+    "code",
+    "count",
+    "data"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "JS参数(枚举-1)"
+  },
+  "/UserAjax/GetZpRootUsers": {
+   "variants_tried": [
+    "空参"
+   ],
+   "method": "GET",
+   "js_params": [
+    "gameName",
+    "orderType"
+   ],
+   "envelope_keys": [
+    "code",
+    "data"
+   ],
+   "envelope_code": 1,
+   "kind": "list",
+   "item_count": 100,
+   "item_fields": {
+    "brokerageType": [
+     "int"
+    ],
+    "children": [
+     "list"
+    ],
+    "click": [
+     "null"
+    ],
+    "disabled": [
+     "null"
+    ],
+    "info1": [
+     "null"
+    ],
+    "info2": [
+     "str"
+    ],
+    "name": [
+     "str"
+    ],
+    "optgroup": [
+     "null"
+    ],
+    "selected": [
+     "null"
+    ],
+    "tichen": [
+     "int"
+    ],
+    "tips": [
+     "str"
+    ],
+    "type": [
+     "null"
+    ],
+    "value": [
+     "str"
+    ]
+   },
+   "from_variant": "空参"
+  },
+  "/systemAjax/getOrderGuideTemplateList": {
+   "variants_tried": [
+    "空参",
+    "page+limit"
+   ],
+   "method": "GET",
+   "envelope_keys": [
+    "code",
+    "count",
+    "data",
+    "msg"
+   ],
+   "envelope_code": 0,
+   "kind": "list",
+   "item_count": 0,
+   "item_fields": {},
+   "from_variant": "page+limit"
+  }
+ }
+}

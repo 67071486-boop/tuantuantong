@@ -1,0 +1,32 @@
+diff --git a/src/index.ts b/src/index.ts
+index d4e61ad..3f83778 100644
+--- a/src/index.ts
++++ b/src/index.ts
+@@ -146,6 +146,9 @@ function setManifest() {
+ function setViewportHeightListeners() {
+   // We listen to the resize event (https://css-tricks.com/the-trick-to-viewport-units-on-mobile/)
+   const w = window.visualViewport || window; // * handle iOS keyboard
++  // The mobile host fits the iframe to its own visual viewport.
++  const mobileHost = IS_LOCAL_CHAT_PREVIEW && window.parent !== window &&
++    new URLSearchParams(location.search).get('h5') === '1';
+   let setViewportVH = false/* , hasFocus = false */;
+   let lastVH: number;
+   const setVH = () => {
+@@ -153,7 +156,7 @@ function setViewportHeightListeners() {
+     vh = +vh.toFixed(2);
+     if(lastVH === vh) {
+       return;
+-    } else if(IS_TOUCH_SUPPORTED && lastVH < vh && (vh - lastVH) > 1) {
++    } else if(!mobileHost && IS_TOUCH_SUPPORTED && lastVH < vh && (vh - lastVH) > 1) {
+       blurActiveElement(); // (Android) fix blurring inputs when keyboard is being closed (e.g. closing keyboard by back arrow and touching a bubble)
+     }
+
+@@ -184,7 +187,7 @@ function setViewportHeightListeners() {
+   bindVH(getAppWindow());
+   onAppWindowChange((win) => bindVH(win));
+
+-  if(IS_STICKY_INPUT_BUGGED) {
++  if(!mobileHost && IS_STICKY_INPUT_BUGGED) {
+     const toggleResizeMode = () => {
+       setViewportVH = tabId === 1 && IS_STICKY_INPUT_BUGGED && !overlayCounter.isOverlayActive;
+       setVH();

@@ -1,0 +1,214 @@
+<!-- 复刻证据件：对标物 /GameAccounts/sellaccpreview 的页内 <style> 段 + 处理过的 body 标记。
+     生成源：.tools/replica-draft/gameaccounts-sellaccpreview.json（只读 .tools/recon/<对标取数快照>/ 的离线证据）。
+     与对标原文的差异：非标记 <script> 已删、laytpl 表达式已解；PII 处置：无（该页没有服务端渲染的租户数据值）。 -->
+<style>
+    .layui-form-pane .layui-form-label {
+        width: 110px;
+        padding: 8px 8px;
+        height: 38px;
+        line-height: 20px;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: 2px 0 0 2px;
+        text-align: center;
+        background-color: #FBFBFB;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+
+    .layui-btn {
+        margin-right: 8px;
+    }
+    .tips {
+        display: flex;
+        padding: 10px;
+        align-items: center;
+        padding-left:20px;
+       
+    }
+        .tips .selitems{
+            display:flex;
+        }
+        .tips .selitem {
+            margin: 2px;
+            padding: 6px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            border: 1px solid #DCDFE6;
+            cursor: pointer;
+        }
+            .tips .selitem.active {
+                color: #FFF;
+                background-color: #409EFF;
+                border: 1px solid #409EFF;
+            }
+    .tables{
+      /*  display: flex;
+        flex-wrap: wrap;
+        margin: 0 10px;
+        justify-content:flex-start;
+     */
+    }
+        .tables .tableitem {
+           /* width: 33%;*/
+            /*margin: 0 0.1%;*/
+        }
+    .nodata{
+        padding:20px 0;
+        text-align:center;
+        width:100%;
+        color:#aaa;
+    }
+   body,.layui-body,.layui-table-body{
+        overflow-x: hidden;
+    }
+    .layui-table-cell{
+        padding:0 5px;
+    }
+</style>
+<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      
+      
+    <![endif]-->
+    
+
+
+<style>
+    .layui-form-pane .layui-form-label {
+        width: 110px;
+        padding: 8px 8px;
+        height: 38px;
+        line-height: 20px;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: 2px 0 0 2px;
+        text-align: center;
+        background-color: #FBFBFB;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+
+    .layui-btn {
+        margin-right: 8px;
+    }
+    .tips {
+        display: flex;
+        padding: 10px;
+        align-items: center;
+        padding-left:20px;
+       
+    }
+        .tips .selitems{
+            display:flex;
+        }
+        .tips .selitem {
+            margin: 2px;
+            padding: 6px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            border: 1px solid #DCDFE6;
+            cursor: pointer;
+        }
+            .tips .selitem.active {
+                color: #FFF;
+                background-color: #409EFF;
+                border: 1px solid #409EFF;
+            }
+    .tables{
+      /*  display: flex;
+        flex-wrap: wrap;
+        margin: 0 10px;
+        justify-content:flex-start;
+     */
+    }
+        .tables .tableitem {
+           /* width: 33%;*/
+            /*margin: 0 0.1%;*/
+        }
+    .nodata{
+        padding:20px 0;
+        text-align:center;
+        width:100%;
+        color:#aaa;
+    }
+   body,.layui-body,.layui-table-body{
+        overflow-x: hidden;
+    }
+    .layui-table-cell{
+        padding:0 5px;
+    }
+</style>
+
+
+
+<form class="layui-form" action="">
+    <div class="layui-form-pane" style="padding-left: 5px; padding-top: 10px">
+        <div class="layui-inline">
+            <label class="layui-form-label" style="width: 80px">选择游戏</label>
+            <div class="layui-input-inline">
+                <select id="gameName" name="gameName" lay-filter="selectGame">
+                                <option value="21714" data-mobliegame="N" data-pw="N">全部游戏</option>
+                                <option value="21708" data-mobliegame="N" data-pw="N">崩坏：星穹铁道</option>
+                                <option value="21701" data-mobliegame="Y" data-pw="N">原神</option>
+                                <option value="21703" data-mobliegame="Y" data-pw="N">三角洲行动</option>
+                                <option value="21704" data-mobliegame="N" data-pw="N">鸣潮</option>
+                                <option value="21706" data-mobliegame="Y" data-pw="N">绝区零</option>
+                                <option value="21707" data-mobliegame="N" data-pw="N">无限暖暖</option>
+                                <option value="21722" data-mobliegame="N" data-pw="N">遗忘之海</option>
+                                <option value="21721" data-mobliegame="N" data-pw="N">异环</option>
+                                <option value="21720" data-mobliegame="N" data-pw="N">王者荣耀世界</option>
+                                <option value="21719" data-mobliegame="N" data-pw="N">洛克王国：世界</option>
+                                <option value="21718" data-mobliegame="N" data-pw="N">逆战：未来</option>
+                                <option value="21717" data-mobliegame="N" data-pw="N">明日方舟：终末地</option>
+                                <option value="21716" data-mobliegame="N" data-pw="N">燕云十六声</option>
+
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label" style="width: 80px">大区/平台</label>
+            <div class="layui-input-inline">
+                <select style="" name="gameArea" id="gameArea" xm-select-radio lay-search="" xm-select-create xm-select="gameArea" xm-select-skin="default" xm-select-height="36px" xm-select-search="" xm-select-search-type="title">
+                    <option value="">选择或输入大区/平台</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label" style="width: 80px">服务器</label>
+            <div class="layui-input-inline">
+                <select name="gameServer" id="gameServer" xm-select-radio lay-search="" xm-select-create xm-select="gameServer" xm-select-skin="default" xm-select-height="36px" xm-select-search="" xm-select-search-type="title">
+                    <option value="">选择或输入服务器</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label" style="width: 80px">排序方式</label>
+            <div class="layui-input-inline" style="width:160px">
+                <select id="ordertype" name="ordertype" lay-filter="otypechange">
+                    <option value="0">按售价低到高</option>
+                    <option value="10">按售价高到低</option>
+                    <option value="20">按录入时间倒序</option>
+                    <option value="30">按录入时间正序</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <div class="layui-input-inline" style="">
+                <button class="layui-btn layui-btn-normal seachBtn" lay-submit="" type="button" lay-filter="seachBtn" style="width: 80px">搜索</button>
+            </div>
+        </div>
+    </div>
+    <div class="tips" style="display:none;">
+        <label class="label">选择标签：</label>
+        <div class="selitems">
+           
+        </div>
+    </div>
+
+    <div class="tables layui-row layui-col-space10">
+       
+    </div>
+
+
+</form>

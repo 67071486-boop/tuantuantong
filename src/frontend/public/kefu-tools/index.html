@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#111317">
+<title>客服宝（客服工具）下载</title>
+<!-- 客服工具下载页（D-0345，2026-10-30）：纯静态页，随网页端发版上线（https://<租户域名>/kefu-tools/），
+     与打手 App 下载页（../download/index.html）同一承载方式与同族视觉——配色 / 卡片 / 按钮的值
+     逐项取自那份文件，不自创。安装包在 COS 公开桶 kefu-tools/ 前缀下、固定文件名
+     kefu-tool-setup.exe；文件由业务方提供后按 docs/RUNBOOK.md「客服工具安装包分发」§上传流程放置，
+     放置前按钮指向的地址不存在（404）——页面先上线不阻塞。 -->
+<style>
+  :root{
+    --ink:#16181d; --muted:#6b7280; --line:#e6e8ee; --bg:#f6f7f9;
+    --card:#fff; --brand:#111317; --brand-ink:#fff;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:16px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    -webkit-text-size-adjust:100%;
+    padding:24px 16px calc(40px + env(safe-area-inset-bottom));
+  }
+  main{max-width:560px;margin:0 auto}
+  header{margin:8px 0 20px}
+  .head{display:flex;align-items:center;gap:14px}
+  .mark{
+    width:60px;height:60px;border-radius:15px;flex:none;
+    background:var(--brand);color:var(--brand-ink);
+    display:flex;align-items:center;justify-content:center;
+    font-size:24px;font-weight:600;box-shadow:0 2px 6px rgba(16,24,40,.12);
+  }
+  h1{font-size:24px;line-height:1.3;margin:0 0 6px}
+  .sub{margin:0;color:var(--muted);font-size:14px}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:18px;margin:0 0 14px;box-shadow:0 1px 2px rgba(16,24,40,.04);
+  }
+  .ver{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;font-size:20px;font-weight:600}
+  .build{font-size:13px;font-weight:400;color:var(--muted)}
+  .desc{margin:12px 0 0;font-size:14px;color:#333}
+  .btn{
+    display:flex;align-items:center;justify-content:center;
+    width:100%;min-height:52px;margin-top:16px;border-radius:12px;
+    background:var(--brand);color:var(--brand-ink);text-decoration:none;
+    font-size:17px;font-weight:600;letter-spacing:.02em;
+  }
+  .btn:active{filter:brightness(.94)}
+  .tips{font-size:13px;color:var(--muted);line-height:1.8}
+  .tips strong{color:#333}
+  footer{color:var(--muted);font-size:12px;text-align:center;margin-top:22px}
+</style>
+</head>
+<body>
+<main>
+  <header class="head">
+    <div class="mark" aria-hidden="true">客</div>
+    <div>
+      <h1>客服宝（客服工具）</h1>
+      <p class="sub">内部客服 · Windows 桌面端</p>
+    </div>
+  </header>
+
+  <section class="card">
+    <!-- ⛔ 版本号手工维护：发新版 = ① 覆盖上传 kefu-tools/kefu-tool-setup.exe（固定文件名，URL 不变）
+         ② 改下面这一处版本号 ③ 随网页端发版。口径见 docs/RUNBOOK.md「客服工具安装包分发」。 -->
+    <div class="ver"><span data-test="kefu-version">v0.1.32</span><span class="build">Windows</span></div>
+    <p class="desc" data-test="kefu-desc">给内部客服用的 Windows 桌面工具。</p>
+    <a class="btn" data-test="kefu-download"
+       href="https://tt-app-1440679012.cos.ap-shanghai.myqcloud.com/kefu-tools/kefu-tool-setup.exe"
+       download>下载 Windows 版</a>
+  </section>
+
+  <section class="card tips">
+    <strong>装不上时先看这两条</strong><br>
+    1. 只支持 Windows 电脑；手机和 Mac 装不了这个包。<br>
+    2. 点下载没反应或报 404 → 安装包还没上传，联系管理员。
+  </section>
+
+  <footer>客服宝（客服工具） · 团团通工作室出单系统</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>团团通</title>
+    <!--
+      【唯一】的 layui island 入口：`?page=<key>` 决定加载哪个页面模块（注册表在 `src/layui-island/page.ts`）。
+      一个入口而不是每页一个 html：Vite 多页构建只需登记这一条，新增页面 = 注册表加一行 + 写页面模块。
+
+      为什么整页跑在 iframe 里：layui.css 带全局 reset（body 字体/行高、元素 margin/padding），
+      在 SPA 里直接引会改掉整站；iframe 让它与 Element Plus 主题**物理隔离**。
+      对标物自己也是「每页签一个 iframe」——见 docs/FRONTEND-REPLICA-STANDARD.md §2。
+    -->
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/layui-island/page.ts"></script>
+  </body>
+</html>

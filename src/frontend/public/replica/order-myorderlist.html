@@ -1,0 +1,223 @@
+<!-- 复刻证据件：对标物 /Order/myorderlist（我的订单）的页内 <style> 段 + 处理过的 body 标记。
+     生成源：.tools/replica-draft/order-myorderlist.json（只读 .tools/recon/<对标取数快照>/ 的离线证据，绝不联网取）。
+     与对标原文的差异：非标记 <script> 已删（含 IE 条件注释里的 2 个 CDN 引用）；
+     已解 1 处 laytpl 逻辑块（const i18n = layui.i18n;）与全部 i18n.$t(…) 表达式
+     （中文取自 assets/JS2019/Order/myorderlist.js 的 i18nData.messages['zh-CN']）；
+     保留了 2 个 type="text/html" 标记模板 #toolbarDemo / #baroperating；
+     去掉了对标自己的 <div id="root"> / <template id="template"> 外壳（对标是 laytpl 渲染后替换 #root，
+     浏览器不渲染 <template> 内容，照抄会得到空页）。
+     PII/凭据：<input id="company"> 的租户名置空（多租户数据，绝不入库）；无其他 PII。
+     未解析：无（i18nDataList.property 只出现在页面 JS 的列 title 里，body 里没有）。
+     ⭐ 2026-09-28（业务方裁定的**有意删减**，逐条见 order-myorderlist.ts 文件头「已知差异」）：
+     删了 8 个筛选控件（gameArea 大区/平台、gameServer 服务器、gameJob 职业、gameGroup 阵营门派、
+     bussType 订单类型、key4 搜索3、gameAcc 游戏账号、viewIsNewOrder 只看新订单）
+     与 2 颗工具栏按钮（setRecMan 指派订单给打手、setJiWei 设定机位）——这些在本仓没有后端支撑，
+     业务方裁定不做。另把 key1 的 placeholder 从「订单号/角色名/手机号」收窄成「订单号」
+     （我们只能按单号搜，留着原名会承诺一个搜不出来的东西）。 -->
+<style>
+        body {
+            background-color: #fff
+        } 
+        .layadmin-pagetabs {
+            height: 40px;
+            line-height: 40px;
+            padding: 0 80px 0 40px;
+            background-color: #fafafa;
+            box-sizing: border-box;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+            border-bottom: 1px solid #1AA094;
+        }
+            .layadmin-pagetabs .layui-tab-title li.layui-this, .layadmin-pagetabs .layui-tab-title li:hover {
+                background-color: #009688;
+                color: #fff;
+            }
+    
+
+    .layui-table-cell {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 4px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        box-sizing: border-box;
+        font-size: 12px;
+    }
+
+    .layui-table td, .layui-table th {
+        padding: 6px 6px;
+        min-height: 20px;
+        line-height: 20px;
+        border: 1px solid #e2e2e2;
+    }
+
+    .lableb {
+        display: inline-block;
+        padding: 2px 4px;
+        font-size: 12px;
+        line-height: 14px;
+        color: #fff;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #999;
+        overflow: hidden;
+        border-radius: 3px;
+        margin-right: 2px;
+    }
+    /*单元格宽度不够时不需要显示下拉*/
+    .layui-table-grid-down {
+        display: none;
+    }
+</style>
+<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      
+      
+    <![endif]-->
+    
+
+
+
+<style type="text/css">
+    .layui-table-cell {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 4px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        box-sizing: border-box;
+        font-size: 12px;
+    }
+
+    .layui-table td, .layui-table th {
+        padding: 6px 6px;
+        min-height: 20px;
+        line-height: 20px;
+        border: 1px solid #e2e2e2;
+    }
+
+    .lableb {
+        display: inline-block;
+        padding: 2px 4px;
+        font-size: 12px;
+        line-height: 14px;
+        color: #fff;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #999;
+        overflow: hidden;
+        border-radius: 3px;
+        margin-right: 2px;
+    }
+    /*单元格宽度不够时不需要显示下拉*/
+    .layui-table-grid-down {
+        display: none;
+    }
+</style>
+
+
+        
+        <div id="LAY_app">
+            <form class="layui-form" action="" lay-filter="fm">
+                <div class="" style="padding-left: 5px;padding-top:10px">
+                    <div class="layui-form-pane">
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 80px">游戏区服</label>
+                            <div class="layui-input-inline" style="width: 120px">
+                                <select id="gameName" name="gameName" lay-filter="selectGame">
+                                    <option value="0" data-mobliegame="N" data-pw="N">全部游戏</option>
+                                                <option value="21714" data-mobliegame="N" data-pw="N">全部游戏</option>
+                                                <option value="21708" data-mobliegame="N" data-pw="N">崩坏：星穹铁道</option>
+                                                <option value="21701" data-mobliegame="Y" data-pw="N">原神</option>
+                                                <option value="21703" data-mobliegame="Y" data-pw="N">三角洲行动</option>
+                                                <option value="21704" data-mobliegame="N" data-pw="N">鸣潮</option>
+                                                <option value="21706" data-mobliegame="Y" data-pw="N">绝区零</option>
+                                                <option value="21707" data-mobliegame="N" data-pw="N">无限暖暖</option>
+                                                <option value="21722" data-mobliegame="N" data-pw="N">遗忘之海</option>
+                                                <option value="21721" data-mobliegame="N" data-pw="N">异环</option>
+                                                <option value="21720" data-mobliegame="N" data-pw="N">王者荣耀世界</option>
+                                                <option value="21719" data-mobliegame="N" data-pw="N">洛克王国：世界</option>
+                                                <option value="21718" data-mobliegame="N" data-pw="N">逆战：未来</option>
+                                                <option value="21717" data-mobliegame="N" data-pw="N">明日方舟：终末地</option>
+                                                <option value="21716" data-mobliegame="N" data-pw="N">燕云十六声</option>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 80px">订单状态</label>
+                            <div class="layui-input-inline" style="width:220px">
+                                <select name="orderSta" xm-select="orderSta" xm-select-skin="default" xm-select-height="36px">
+                                    <option value="">全部</option>
+                                    <option value="待抢单">待抢单</option>
+                                    <option value="代练中">代练中</option>
+                                    <option value="待验收">待验收</option>
+                                    <option value="已完成">已完成</option>
+                                    <option value="问题单">问题单</option>
+                                    <option value="已退单">已退单</option>
+                                    <option value="已暂停">已暂停</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 80px">接单日期</label>
+                            <div class="layui-input-inline" style="width: 120px;">
+                                <input type="text" name="sDate" id="sDate" lay-verify="date" placeholder="" autocomplete="off" class="layui-input" value="2026-03-20">
+                            </div>
+                            <div class="layui-input-inline">-</div>
+                            <div class="layui-input-inline" style="width: 120px;">
+                                <input type="text" name="eDate" id="eDate" lay-verify="date" placeholder="" autocomplete="off" class="layui-input" value="2026-09-20">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 80px">搜索1</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="key1" id="key1" lay-verify="" placeholder="订单号/来源单号" autocomplete="off" class="layui-input" value="">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 80px">搜索2</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="key2" id="key2" lay-verify="" placeholder="代练项目" autocomplete="off" class="layui-input" value="">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <span id="isJiajiCheck"></span>
+                            <input type="checkbox" name="isJiajiCheck" lay-skin="primary" title="加急单" lay-filter="viewIsJiaJi" lay-tips="勾选后将筛选出加急的订单">
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline" style="">
+                                <button class="layui-btn layui-btn-normal" lay-submit="" type="button" lay-filter="seachBtn" style="width: 80px">搜索</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="" style="">
+                    <table class="layui-hide" id="tableList" lay-filter="tableList"></table>
+                    <script type="text/html" id="toolbarDemo">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="refresh" type="button" title="刷新当前数据"><i class="layui-icon">&#xe669;</i>刷新列表</button>
+                        <button class="layui-btn layui-btn-xs" lay-event="changeStaBtn" type="button" title="批量或单笔更改订单状态"><i class="larry-icon larry-jibenxinxishezhi"></i>更改状态</button>
+                        <button class="layui-btn layui-btn-xs" lay-event="exportBtn" type="button" title="批量或单笔导出订单"><i class="larry-icon larry-daochubiaoge"></i>导出订单</button>
+                        <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="sendToMySystem" type="button" title="如果你也有鸡蛋铺管理系统，可以将勾选的订单发送到你自己的管理系统里">发到我的管理系统</button>
+                        <button class="layui-btn layui-btn-xs layui-btn-warm" lay-event="checkOrderByLocal" type="button" title="找出最近30天发送到我自己系统失败的订单">检查发送失败订单</button>
+                        </div>
+                        <div style="color:#ff6a00" id="total"></div>
+                    </script>
+
+                    <script type="text/html" id="baroperating">
+                        <a class="layui-btn layui-btn-xs layui-btn-danger" style="" lay-event="submtEnd"><i class="icon larry-icon larry-toast"></i>提交完成</a>
+                    </script>
+                </div>
+
+                <input type="hidden" id="remarkLocation" name="remarkLocation" value="N" />
+                <input type="hidden" id="isViewWW" name="isViewWW" value="N" />
+                <input type="hidden" id="company" name="company" value="" />
+                <input type="hidden" id="isAllowAssRec" name="isAllowAssRec" value="Y" />
+            </form>
+
+        </div>

@@ -1,0 +1,129 @@
+<!-- 复刻证据件：对标物 /Order/SoureOrderChangePriceLog（上家订单改价记录）的页内 <style> 段 + 处理过的 body 标记。
+     生成源：.tools/replica-draft/order-soureorderchangepricelog.json（只读 .tools/recon/<对标取数快照>/ 的离线证据，未联网取）。
+     对标原始模板：.tools/recon/<对标取数快照>/html/Order__SoureOrderChangePriceLog.html
+     与对标原文的差异：非标记 <script> 已删（含 IE 条件注释里的 2 个 CDN 引用）；
+     顶部 <style> 里 .layui-table-cell 等规则与下方页内 <style type="text/css"> 重复且逐字相同——
+     那是草稿把「head 样式 + 页内样式」并成一段的结果，与已交付页（如 customer-customerlist）同形，规则幂等。
+     PII 清空 / laytpl 未解析项的处置见 src/layui-island/pages/order-soureorderchangepricelog.ts 顶部注释。 -->
+<style>
+        body {
+            background-color: #fff
+        } 
+        .layadmin-pagetabs {
+            height: 40px;
+            line-height: 40px;
+            padding: 0 80px 0 40px;
+            background-color: #fafafa;
+            box-sizing: border-box;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+            border-bottom: 1px solid #1AA094;
+        }
+            .layadmin-pagetabs .layui-tab-title li.layui-this, .layadmin-pagetabs .layui-tab-title li:hover {
+                background-color: #009688;
+                color: #fff;
+            }
+    
+
+    .layui-table-cell {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 5px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        box-sizing: border-box;
+        font-size: 12px;
+    }
+
+    .lableb {
+        display: inline-block;
+        padding: 2px 4px;
+        font-size: 12px;
+        line-height: 14px;
+        color: #fff;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #999;
+        overflow: hidden;
+        border-radius: 3px;
+        margin-right: 2px;
+    }
+</style>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      
+      
+    <![endif]-->
+    
+
+
+<style type="text/css">
+    .layui-table-cell {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 5px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        box-sizing: border-box;
+        font-size: 12px;
+    }
+
+    .lableb {
+        display: inline-block;
+        padding: 2px 4px;
+        font-size: 12px;
+        line-height: 14px;
+        color: #fff;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #999;
+        overflow: hidden;
+        border-radius: 3px;
+        margin-right: 2px;
+    }
+</style>
+<form class="layui-form" action="">
+    <div class="" style="padding-left: 5px;padding-top:10px"> 
+        <div class="layui-form-pane">
+            <div class="layui-inline">
+                <label class="layui-form-label">记录日期</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="sDate" id="sDate" lay-verify="date" placeholder="" autocomplete="off" class="layui-input" value="2026-03-20">
+                </div>
+                <div class="layui-input-inline">-</div>
+                <div class="layui-input-inline">
+                    <input type="text" name="eDate" id="eDate" lay-verify="date" placeholder="" autocomplete="off" class="layui-input" value="2026-09-20">
+                </div>
+            </div>           
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 80px">搜索</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="key1" id="key1" lay-verify="" placeholder="订单号/来源单号" autocomplete="off" class="layui-input" value="">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="">
+                    <button class="layui-btn layui-btn-normal" lay-submit="" type="button" lay-filter="seachBtn" style="width: 80px">搜索</button>
+                </div>
+            </div>
+        </div> 
+    </div>
+     
+    <div class="" style="">
+        <table class="layui-hide" id="tableList" lay-filter="tableList"></table>
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-xs" lay-event="refresh" type="button" title="刷新当前数据"><i class="layui-icon">&#xe669;</i>刷新列表</button>
+            </div> 
+            <div id="total" style="color:#ff6a00"></div>
+        </script>
+    </div>
+
+</form>  
+
+
+
+

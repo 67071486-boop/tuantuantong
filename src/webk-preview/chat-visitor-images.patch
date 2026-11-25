@@ -1,0 +1,68 @@
+diff --git a/src/components/chat/input.ts b/src/components/chat/input.ts
+index 4489574..0302e80 100644
+--- a/src/components/chat/input.ts
++++ b/src/components/chat/input.ts
+@@ -27,7 +27,6 @@ import type Chat from '@components/chat/chat';
+ import type {AppImManager} from '@lib/appImManager';
+ import IS_TOUCH_SUPPORTED from '@environment/touchSupport';
+ import Modes from '@config/modes';
+-import {IS_LOCAL_VISITOR_CHAT} from '@config/debug';
+ import ChatRecording from '@components/chat/recording/chatRecording';
+ import {ButtonMenuItemOptions, ButtonMenuItemOptionsVerifiable, ButtonMenuSync} from '@components/buttonMenu';
+ import emoticonsDropdown, {EmoticonsDropdown} from '@components/emoticonsDropdown';
+@@ -1758,7 +1757,7 @@ export default class ChatInput {
+     this.fileInput.multiple = true;
+     this.fileInput.style.display = 'none';
+
+-    this.richMessageInput.mountAccessories([this.botCommandsToggle, IS_LOCAL_VISITOR_CHAT ? undefined : this.attachMenu].filter(Boolean), [
++    this.richMessageInput.mountAccessories([this.botCommandsToggle, this.attachMenu].filter(Boolean), [
+       this.btnScheduled,
+       this.btnToggleReplyMarkup,
+       this.btnSuggestPost,
+diff --git a/src/pages/localChatPreview/composerImages.ts b/src/pages/localChatPreview/composerImages.ts
+index 4950856..7f1dfe0 100644
+--- a/src/pages/localChatPreview/composerImages.ts
++++ b/src/pages/localChatPreview/composerImages.ts
+@@ -173,7 +173,7 @@ export function chatPhotoDownloads(
+   };
+ }
+
+-export function installImageOnlyComposer(report: (error: string) => void, allowImages = true) {
++export function installImageOnlyComposer(report: (error: string) => void) {
+   function updateRecordingButton(button: HTMLButtonElement) {
+     if(button.matches(recordingButtonSelector)) {
+       button.dataset.previewRecordingDisabled = '';
+@@ -215,8 +215,7 @@ export function installImageOnlyComposer(report: (error: string) => void, allowI
+
+   function validateFiles(event: Event, files: FileList | undefined) {
+     if(!files?.length) return false;
+-    const error = !allowImages ? '访客会话仅支持发送文字和表情' :
+-      files.length > ALBUM_MAX_FILES ? '每组最多发送 10 张图片' :
++    const error = files.length > ALBUM_MAX_FILES ? '每组最多发送 10 张图片' :
+       Array.from(files, imageValidationError).find(Boolean);
+     if(!error) return false;
+     stop(event);
+diff --git a/src/pages/localChatPreview/liveChat.ts b/src/pages/localChatPreview/liveChat.ts
+index 9f1508f..3c92ec3 100644
+--- a/src/pages/localChatPreview/liveChat.ts
++++ b/src/pages/localChatPreview/liveChat.ts
+@@ -945,10 +945,6 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+
+   let imageSends = Promise.resolve();
+   function sendGrouped(options: SendMessage & {caption?: string; sendFileDetails: {file: unknown; width?: number; height?: number}[]}) {
+-    if(IS_LOCAL_VISITOR_CHAT) {
+-      toast('访客会话仅支持发送文字和表情');
+-      return Promise.resolve();
+-    }
+     imageSends = imageSends.then(async() => {
+       const files = options.sendFileDetails;
+       if(!files.length || conversations.get(options.peerId)?.kind === 'system') return;
+@@ -1232,7 +1228,7 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+     api.reportOrderHistory(true);
+     return;
+   }
+-  installImageOnlyComposer(toast, !IS_LOCAL_VISITOR_CHAT);
++  installImageOnlyComposer(toast);
+   if(!isH5) {
+     const style = document.createElement('style');
+     style.textContent = `

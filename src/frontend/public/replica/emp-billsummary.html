@@ -1,0 +1,156 @@
+<!-- 复刻证据件：对标物 `/Emp/billsummary`（结算记录）的页内 `<style>` 原文 + 处理过的 body 标记。
+     来源：`.tools/recon/<对标取数快照>/html/Emp__billsummary.html`（离线勘察产物，只读）
+     —— head `<style>` L24-41、body `<style type="text/css">` L52-89、`<form>` L94-181，**逐字**。
+     与对标原文的差异：删掉 2 段 IE 条件注释（html5shiv / respond.js 的 CDN `<script>`，L45-48 与 L90-93）
+     与页尾非标记 `<script src="/JS2019/Emp/billsummary.js">`；`<script type="text/html">` 的
+     `#toolbarDemo` / `#toolbarDemo2` 标记模板**原样保留**（空表下不渲染）。
+     ⚠️ 对标本页**少一个 `</div>`**（24 开 23 闭，三重验证见
+     `.tools/recon/emp-pages/sections/billsummary.md` §8.1）：DOM 上「订单号搜索」与「搜索」
+     被嵌进「结账对象人员」的 `.layui-inline` 内。本文件**逐字照抄这个缺陷**，不修（任务要求 1:1）。
+     ⚠️ `#popgameName` 保持对标原文的**空 div**：对标由未镜像的 `/layuiadmin/lib/xm-select`
+     在运行期渲染出控件，本仓无该资产 —— 运行期替身由 `pages/emp-billsummary.ts` 注入并说明。
+     PII：无（服务端 HTML 不含任何数据行；`#gameName` 的 option 是静态配置枚举）。 -->
+    <style>
+        body {
+            background-color: #fff
+        } 
+        .layadmin-pagetabs {
+            height: 40px;
+            line-height: 40px;
+            padding: 0 80px 0 40px;
+            background-color: #fafafa;
+            box-sizing: border-box;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+            border-bottom: 1px solid #1AA094;
+        }
+            .layadmin-pagetabs .layui-tab-title li.layui-this, .layadmin-pagetabs .layui-tab-title li:hover {
+                background-color: #009688;
+                color: #fff;
+            }
+    </style>
+<style type="text/css">
+    .layui-table-cell {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 5px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        box-sizing: border-box;
+        font-size: 12px;
+    }
+
+    .lableb {
+        display: inline-block;
+        padding: 2px 4px;
+        font-size: 12px;
+        line-height: 14px;
+        color: #fff;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #999;
+        overflow: hidden;
+        border-radius: 3px;
+        margin-right: 2px;
+    }
+
+    .paySpan {
+        line-height: 40px;
+        color: #ff0000;
+        font-weight: 600
+    }
+
+    .layui-form .layui-form-item label.layui-form-label {
+        width: 120px;
+        font-family: "Microsoft YaHei";
+    }
+</style>
+<form class="layui-form" action="">
+    <div class="" style="padding-left: 5px;padding-top:10px">
+        <div class="layui-form-pane">
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 100px">选择游戏</label>
+                <div class="layui-input-inline">
+                    <select id="gameName" name="gameName" lay-filter="selectGame">
+                                    <option value="21714" data-mobliegame="N" data-pw="N">全部游戏</option>
+                                    <option value="21708" data-mobliegame="N" data-pw="N">崩坏：星穹铁道</option>
+                                    <option value="21701" data-mobliegame="Y" data-pw="N">原神</option>
+                                    <option value="21703" data-mobliegame="Y" data-pw="N">三角洲行动</option>
+                                    <option value="21704" data-mobliegame="N" data-pw="N">鸣潮</option>
+                                    <option value="21706" data-mobliegame="Y" data-pw="N">绝区零</option>
+                                    <option value="21707" data-mobliegame="N" data-pw="N">无限暖暖</option>
+                                    <option value="21722" data-mobliegame="N" data-pw="N">遗忘之海</option>
+                                    <option value="21721" data-mobliegame="N" data-pw="N">异环</option>
+                                    <option value="21720" data-mobliegame="N" data-pw="N">王者荣耀世界</option>
+                                    <option value="21719" data-mobliegame="N" data-pw="N">洛克王国：世界</option>
+                                    <option value="21718" data-mobliegame="N" data-pw="N">逆战：未来</option>
+                                    <option value="21717" data-mobliegame="N" data-pw="N">明日方舟：终末地</option>
+                                    <option value="21716" data-mobliegame="N" data-pw="N">燕云十六声</option>
+
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 100px">结账时间</label>
+                <div class="layui-input-inline" style="width:140px">
+                    <input type="text" name="sDate" id="sDate" lay-verify="datetime" placeholder="" autocomplete="off" class="layui-input" value="2026-06-20 00:00:00">
+                </div>
+                <div class="layui-input-inline">-</div>
+                <div class="layui-input-inline" style="width:140px">
+                    <input type="text" name="eDate" id="eDate" lay-verify="datetime" placeholder="" autocomplete="off" class="layui-input" value="2026-09-20 23:59:59">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 100px;padding:8px 8px">结账对象人员</label>
+                <div class="layui-input-inline" style="width: 160px">
+                    
+                    <div id="popgameName" name="popgameName" class="xm-select-demo"></div>
+                </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 100px">订单号搜索</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="key1" id="key1" lay-verify="" placeholder="单号/来源单号" autocomplete="off" class="layui-input" value="">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="">
+                    <button class="layui-btn layui-btn-normal" lay-submit="" type="button" lay-filter="seachBtn" style="width: 100px">搜索</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-row layui-col-space10">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md3 layui-col-lg3">
+            <section class="layui-card">
+                <div class="layui-card-header total1">
+                    结算记录汇总
+                </div>
+                <div class="layui-card-body">
+                    <table class="layui-hide" id="tableList" lay-filter="tableList"></table>
+                    <script type="text/html" id="toolbarDemo">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-xs" lay-event="refresh" type="button" title="刷新当前数据"><i class="layui-icon">&#xe669;</i>刷新数据</button>
+                        </div>
+                    </script>
+                </div>
+            </section>
+        </div>
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md9 layui-col-lg9">
+            <section class="layui-card">
+                <div class="layui-card-header total2" style="color:#ff6a00">
+                    
+                </div>
+                <div class="layui-card-body">
+                    <table class="layui-hide" id="tableList2" lay-filter="tableList2"></table>
+                    <script type="text/html" id="toolbarDemo2">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-xs" lay-event="exportBtn" type="button" title="导出以下明细记录"><i class="layui-icon layui-tuichu4"></i>导出记录</button>
+                        </div>
+                    </script>
+                </div>
+            </section>
+        </div>
+    </div>
+</form>

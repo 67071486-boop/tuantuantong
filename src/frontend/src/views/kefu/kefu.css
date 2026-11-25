@@ -1,0 +1,135 @@
+#framework7-root {
+  --kefu-muted: var(--tt2-dim);
+  --kefu-divider: var(--tt2-line);
+  --kefu-error: var(--tt2-st-error-fg);
+  --f7-text-color: var(--tt2-ink);
+  --f7-list-strong-bg-color: var(--tt2-panel);
+  --f7-navbar-height: 46px;
+  --f7-list-margin-vertical: 8px;
+  --f7-list-inset-side-margin: 8px;
+  --f7-list-inset-border-radius: 14px;
+  --f7-list-font-size: 14px;
+  --f7-list-item-min-height: 36px;
+  --f7-list-item-padding-horizontal: 10px;
+  --f7-input-height: 32px;
+  --f7-input-font-size: 14px;
+  --f7-searchbar-height: 38px;
+  --f7-searchbar-input-height: 32px;
+  --f7-searchbar-input-font-size: 13px;
+  --f7-searchbar-input-border-radius: 11px;
+  --f7-button-font-size: 13px;
+  --f7-button-small-height: 26px;
+  --f7-button-small-font-size: 12px;
+  --f7-button-small-padding-horizontal: 7px;
+  height: 100%;
+}
+
+#framework7-root .kefu-page {
+  background-color: color-mix(in srgb, var(--tt2-primary) 4%, var(--tt2-page));
+  color: var(--tt2-ink);
+}
+
+#framework7-root :is(button, a, input, textarea, select):focus-visible {
+  outline: 2px solid var(--f7-theme-color);
+  outline-offset: -2px;
+}
+
+.kefu-page .kefu-hint { margin: 4px 0; color: var(--kefu-muted); font-size: 12px; overflow-wrap: anywhere; }
+.kefu-page .kefu-field {
+  display: grid;
+  grid-template-columns: 66px minmax(0, 1fr);
+  align-items: center;
+  gap: 5px;
+  min-height: 38px;
+}
+.kefu-page .kefu-field > :nth-child(2) { min-width: 0; }
+.kefu-page .kefu-field > :is(label:first-child, .kefu-label) { overflow-wrap: anywhere; }
+.kefu-page .kefu-field > .checkbox { display: inline-flex; align-items: center; gap: 6px; width: fit-content; }
+.kefu-page .kefu-field .kefu-hint { margin: 0; }
+.kefu-page .kefu-picker-button {
+  justify-content: space-between;
+  width: 100%;
+  gap: 4px;
+  padding-inline: 4px;
+  text-align: left;
+}
+.kefu-page .kefu-picker-button span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.kefu-page .kefu-picker-button::after { content: '›'; flex: none; color: var(--kefu-muted); }
+.kefu-page .kefu-picker-button:disabled { color: var(--kefu-muted); }
+
+.md #framework7-root {
+  --f7-navbar-bg-color: var(--f7-md-surface);
+  --f7-navbar-bg-color-rgb: var(--f7-md-surface-rgb);
+  --f7-navbar-title-font-size: 18px;
+  --f7-navbar-title-font-weight: 600;
+  --f7-searchbar-input-border-radius: 24px;
+  --f7-list-inset-border-radius: 16px;
+  --f7-input-item-bg-color: transparent;
+  --f7-input-bg-color: transparent;
+  --f7-input-placeholder-color: var(--kefu-muted);
+}
+
+.md #framework7-root .kefu-page {
+  background: var(--f7-md-surface);
+}
+
+.md #framework7-root .kefu-searchbar {
+  --f7-searchbar-input-bg-color: transparent;
+  --f7-searchbar-input-border-width: 1px;
+  --f7-searchbar-input-border-color: var(--f7-md-outline-variant);
+  --f7-searchbar-placeholder-color: var(--kefu-muted);
+  --f7-searchbar-input-padding-horizontal: 38px;
+}
+
+.md #framework7-root .kefu-searchbar:focus-within {
+  --f7-searchbar-input-border-color: var(--f7-theme-color);
+}
+
+.md #framework7-root .kefu-searchbar input:focus-visible {
+  outline: none;
+}
+
+.md #framework7-root .kefu-searchbar .searchbar-icon {
+  top: 0;
+  width: 38px;
+  height: 100%;
+}
+
+.md #framework7-root .kefu-searchbar .searchbar-icon::after {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.md #framework7-root :is(.kefu-input, .kefu-peer-input).item-input {
+  margin-inline: 0;
+}
+
+.md #framework7-root :is(.kefu-input, .kefu-peer-input).item-input::after {
+  display: none;
+}
+
+.md #framework7-root :is(.kefu-input, .kefu-peer-input) :is(input, textarea, select):focus-visible {
+  outline: 1px solid var(--f7-theme-color);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+.md #framework7-root .kefu-shot-control {
+  background: transparent;
+  border: 1px solid var(--f7-md-outline-variant);
+}
+
+.md #framework7-root .kefu-seg {
+  --f7-segmented-strong-bg-color: color-mix(in srgb, var(--f7-theme-color) 6%, var(--f7-md-surface));
+}
+
+.md #framework7-root .kefu-topbar .kefu-user {
+  background: var(--f7-md-secondary-container);
+  border-radius: 20px;
+  color: var(--f7-md-on-secondary-container);
+  padding-inline: 6px;
+}

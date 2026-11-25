@@ -1,0 +1,333 @@
+<!-- 复刻证据件：对标物 /Order/OrderView（订单详情，layer 弹层内嵌页）的页内 <style> 段 + 裁剪过的 body 标记。
+     生成源：.tools/recon/order-view/html/Order__OrderView.html（不进 git）
+             + .tools/recon/order-view/sections/order-view.md（结构文档，§4 左列 17/18 个按钮、§5-§8 日志区）
+     与对标原文的差异（逐条，含理由）：
+
+       1. 非标记 <script>（layui.js / common.js / orderview.js / IE8-9 条件注释里的两个 CDN shim）已删
+          —— 本仓证据件的既有体例（同 public/replica/emp-emplist.html 第 1 条）。layui 由 island 的
+          bootstrapIsland() **运行期**加载。页内两段 <style> 与对标的 CSS 引用顺序
+          （layui.css → admin.css → formselects-v4.css → zdy.css）**逐字保留**：引用本身由 island 外壳与
+          vendor 注入，本件只留页内 <style>（含 .platfromOrderImgList / .myscale / .chatPop 三条
+          对标自己也没用到的死样式——「逐字保留页内 <style>」优先于「顺手清理」）。
+
+       2. 左列按钮：**只留 3 个**（刷新本界面 / 复制订单内容 / 继续拆分订单），其余 **15 个全部删除**
+          （业务方原话「左侧的按钮都不需要」）。逐条：
+            · 复制（游戏账号，a.copyacc）            · 取扫码链接（a.copysmurl）
+            · 复制（登录密码，a.copypwd）            · 更改密码（a.setpwd）
+            · 更改订单状态（a.setdlsta）             · 指派代练员（a.jsr）
+            · 提取虚拟电话（a.getphone）             · 解绑虚拟号（a.unbindPrphone）
+            · 修改（指定电话，a.setSphone）          · 开始上号通知（a.sendCustomerSH，对标本就 layui-hide）
+            · 已下号通知（a.sendCustomerXH，同上）   · 上传登号验证二维码（a.upGameVerImg#upverimg，对标本就是死按钮）
+            · 通知玩家提供上号验证码（a.sendCustomerLoginVerCode）
+            · 打手进客户群聊码（a#groupCode）        · 客户群聊（a#groupChat）
+          后三个（客户群聊 / 打手进客服群聊码 / 通知玩家）业务方另行点名过。
+          ⚠️ 计数口径（如实）：sections/order-view.md §4.1 写「共 17 个 <a>」（表里列了 18 行），
+          计划 §3 写「其余 14 个按钮」；**对标的原始抓件**按**逐条清单**核过，其左列 `订单详情`
+          fieldset 里实有 **19 个 <a>，其中 18 颗是按钮**（第 19 个是 `当前接手` 那一行的值锚点），
+          减保留的 3 颗按钮 = **删 15 颗**。两处计数与逐条清单对不上，按清单执行并记在这里。
+          （措辞更正 2026-09-22 评审修复轮 M-2：原文写「左列实有 18 个 <a>」，按字面漏掉了那个值锚点。）
+          ⚠️ **主语更正（2026-09-22 复评收口）**：上面 19 这个数说的是**对标抓件**；**本证据件**裁剪后
+          那个 fieldset 只剩 **4 个 <a>**（保留的 3 颗按钮 + `当前接手` 的值锚点）⇒ 与第 2 条
+          「其余 15 个全部删除」并不矛盾（原句保留，只把主语改准）。
+          游戏账号 / 登录密码两个值 span 与四个「值」列**保留**（业务方要的是「直接展示」，不是删字段）。
+
+       3. 整块删除（业务方点名「不需要」）：
+            · `平台单接手预览` + `发单操作记录`：整条 div.layui-tab.interfaceDiv（含 #tableList3 / #tableList4）
+            · `订单进度图` 页签：对标的 DOM 是 JS `element.tabAdd('logFilter', {…, id:102})` 注入的
+              （HTML 里本来就没有这四个字），本件**不注入** ⇒ 页签栏**恰好只剩**「订单日志」「操作日志」两个
+            · 页头「交易平台页签」：对标服务端只渲染 1 个页签（`本系统订单`），平台页签由
+              `GetPlatfromOrderIdList` 的结果 `tabAdd('tab1', …)` 追加 —— 本件不注入
+              （所以下面那组页签标题里就是**那 1 个**服务端页签，逐字照对标）
+            · `#mytips`（平台单提示气泡，只在 GetPlatfromOrderIdList 有数据时展示）
+            · `.upVerImgDiv`（上传登号验证二维码的页内弹层模板，属于已删的死按钮）
+
+       4. 值一律留空，由 `layui-island/pages/order-orderview.ts` 运行期从
+          `GET /api/business/orders/<单号>/` 填。对标抓件里的**真实业务值**已全部清空，包括
+          19 位平台单号（页头单号与 <title> 用的那个）/ 20 位系统单号（#orderId、data-id、data-orderid）/
+          游戏名 / 角色 / 徽章文案 / 状态 / 时间。两条理由：① 那是被复刻对象的真实数据，写进仓库等于
+          拿别人的数据当默认值（且 19 位数字串会撞 `src/config/__tests__/pii-guard.spec.ts` 的内建模式）；
+          ② 我们的页面每一处都能从自己的接口算出来。
+
+       5. PII / 凭据自查（源件已由 `.tools/recon/order-view/_REDACTION-NOTES.md` 脱敏，本件再自查一遍）：
+            · 手机号 / 身份证 / 邮箱 —— 0 命中（本页本来就没有这两类字段）
+            · 租户名（示例工作室 / 另一工作室）/ 记录人（打手A）—— 已随「值留空」一起清掉
+            · 隐藏域只有 `#orderId` / `#viewType` / `#tid` 三个；`jdp` / `sid` / token /
+              RequestVerificationToken **本页一个都没有**（源件 `grep -E 'jdp|token|sid|secret'` 零命中）
+            · `data-clipboard-text` 三处对标实测**本来就是空串**（不是我们清空的）
+
+       6. 保留未动（逐字）：`<form class="layui-form" action="" style="height: 100%">` 外层、
+          外层 tab（`lay-filter="tab1"`）、左列 `fieldset.legend=订单详情` 的**行顺序与标签**、
+          右列 `fieldset.legend=订单日志` 的输入条 + 「添加」按钮 + `lay-filter="logFilter"` 的
+          两个页签与两个面板、`#desc` 的 `readonly`/`height:155px`、`#remark` 的 `maxlength=50`
+          等属性，全部逐字照对标。
+-->
+<style>
+        body {
+            background-color: #fff
+        } 
+        .layadmin-pagetabs {
+            height: 40px;
+            line-height: 40px;
+            padding: 0 80px 0 40px;
+            background-color: #fafafa;
+            box-sizing: border-box;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+            border-bottom: 1px solid #1AA094;
+        }
+            .layadmin-pagetabs .layui-tab-title li.layui-this, .layadmin-pagetabs .layui-tab-title li:hover {
+                background-color: #009688;
+                color: #fff;
+            }
+    </style>
+
+<style>
+    body, html {
+        height: 100%;
+        background: #fff;
+    }
+
+    .itemTitle {
+        float: left;
+        width: 75px;
+        text-align: right;
+    }
+
+    .linespan {
+        color: #808080
+    }
+
+    .layui-form-item span {
+        line-height: 18px
+    }
+
+    .lableb {
+        display: inline-block;
+        padding: 2px 4px;
+        font-size: 12px;
+        line-height: 14px;
+        color: #fff;
+        white-space: nowrap;
+        vertical-align: middle;
+        overflow: hidden;
+        border-radius: 3px;
+        margin-right: 2px;
+    }
+
+    .layui-table-cell {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 5px;
+        position: relative;
+        box-sizing: border-box;
+        font-size: 12px
+    }
+
+    .layui-form-item {
+        margin-bottom: 12px;
+        clear: both;
+        *zoom: 1;
+    }
+
+    .layui-tab-item {
+        height: 100%;
+        background: #fff;
+    }
+
+    .platfromOrderImgList li {
+        height: 255px;
+        float: left;
+        display: inline-block;
+        margin-left: 10px;
+        padding: 2px 2px;
+        margin-top: 20px;
+        border-color: #e2dede;
+        border-width: 1px;
+        border-style: solid
+    }
+
+        .platfromOrderImgList li img {
+            width: 220px;
+            height: 200px
+        }
+
+        .platfromOrderImgList li div {
+            text-align: center;
+            margin-top: 2px;
+            width: 220px;
+            height: auto;
+        }
+
+    .myscale {
+        transform: scale(0.2)
+    }
+
+    .chatPop {
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%,-50%) !important
+    }
+</style>
+
+<form class="layui-form" action="" style="height: 100%">
+    <div class="layui-tab layui-tab-brief" lay-filter="tab1" style="height:100%;">
+        <ul class="layui-tab-title">
+            <!-- 对标服务端只渲染这 1 个页签；「交易平台页签」是对标 JS 按 GetPlatfromOrderIdList 的结果
+                 tabAdd('tab1', …) 注入的 —— 本件不注入（业务方点名不要）。 -->
+            <li class="layui-this" data-fid="0" lay-id="0">本系统订单</li>
+        </ul>
+        <div class="layui-tab-content" style="height:calc(100% - 51px);box-sizing:border-box;">
+            <div class="layui-tab-item layui-show">
+                <div class="layui-row">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md7 layui-col-lg7">
+                        <fieldset class="layui-elem-field">
+                            <legend>订单详情</legend>
+                            <div class="layui-field-box">
+                                <!-- 行顺序 / 标签 / class / 内联样式逐字照对标；「值」一律留空，运行期填（见文件头第 4 条）。 -->
+                                        <div class="layui-form-item">
+                                            <label class="itemTitle">订单号：</label>
+                                            <span class="left" style="font-size:14px;color:#ff6a00;"></span>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="itemTitle">游戏区服：</label>
+                                            <span class="left" style="color:#ff0000;"></span>
+                                            <span class="left" style="color:#666"></span>
+                                            <span class="left" style="color:#666"></span>
+                                            <span class="left" style="color:#666"></span>
+                                            <span class="left" style="color:#666"></span>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="itemTitle">角色信息：</label>
+                                            <span class="left" style="color:#5BB75B;"></span>
+                                            <span class="left" style="color:#666"></span>
+                                            <span class="left" style="color:#666"></span>
+                                            <span class="left" style="color:#666"></span>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="itemTitle">游戏账号：</label>
+                                            <span class="left" style="color:#ff0000; line-height:18px"></span>
+                                            <!-- 对标此处两颗按钮（复制 / 取扫码链接）已删：业务方「游戏账号密码那里的复制、扫码链接等按钮不要」。 -->
+                                        </div>
+                                            <div class="layui-form-item">
+                                                <label class="itemTitle">子账号：</label>
+                                                <span class="left" style="color:#666;"></span>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="itemTitle">登录密码：</label>
+                                                <span class="left pwd" style="color:#ff0000;"></span>
+                                                <!-- 对标此处两颗按钮（复制 / 更改密码）已删；我方订单表**没有密码列**（apps/business/models.py 的 Order 无 pwd/password 字段），本行恒空 —— 见「已知会不同」。 -->
+                                            </div>
+                                        <div class="layui-form-item layui-hide">
+                                            <label class="itemTitle">暗号/口令：</label>
+                                            <span class="left" style="color:#5BB75B;"></span>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="itemTitle">项目分类：</label>
+                                            <span class="left" style="color: #31BDEC; "></span>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="itemTitle">代练项目：</label>
+                                            <span class="left" style="color:#666;font-weight:600"></span>
+                                                    <span class="layui-badge layui-bg-green"></span>
+
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <div class="layui-inline">
+                                                <label class="itemTitle">订单状态：</label>
+                                                <span class="left" style="color:#289f16;"></span>
+                                                <!-- 对标此处「更改订单状态」按钮已删（左列按钮全不要；改状态在订单管理页做）。 -->
+                                            </div>
+
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="itemTitle">订单计时：</label>
+                                            <span class="left" style="color:#5BB75B;"></span>
+                                            <span class="left" style="color:#666;margin-left:10px">还剩<span style="color: #289f16"></span></span>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="itemTitle">当前接手：</label>
+                                            <a class="" href="javascript:void(0)" style=""></a>
+                                            <!-- 对标此处「指派代练员」按钮已删。 -->
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="itemTitle">联系电话：</label>
+                                            <span class="left" style="color:#666;"></span>
+                                            <!-- 对标此处两颗按钮（提取虚拟电话 / 解绑虚拟号）已删：不自建电信能力，我方无虚拟号。 -->
+
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="itemTitle" style="font-weight:600;color:#ff0000">指定电话：</label>
+                                            <span class="" style=""></span>
+                                            <!-- 对标此处「修改」按钮已删。 -->
+                                        </div>
+                                        <div class="layui-form-item layui-hide">
+                                            <!-- 对标这两颗（开始上号通知 / 已下号通知）本来就整行 layui-hide，且我方不做短信通知 ⇒ 一并删除。 -->
+                                        </div>
+                                        <div class="layui-form-pane">
+                                            <div class="layui-form-item layui-form-text" style="margin-bottom:5px">
+                                                <label class="layui-form-label" style="width:auto">订单内容</label>
+                                                <div class="layui-input-block">
+                                                    <textarea placeholder="" style="height:155px" class="layui-textarea" readonly="readonly" name="desc" id="desc"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- 左列 18 颗按钮里，只保留下面这 3 颗（业务方点名要实装的）：
+                                             刷新本界面 / 复制订单内容 / 继续拆分订单。其余 15 颗见文件头第 2 条。 -->
+                                        <div class="layui-form-item" style="margin-bottom:0px">
+                                            <a class="layui-btn layui-bg-orange layui-btn-xs" style="" href="javascript:location.reload(true);">刷新本界面</a>
+                                            <a class="layui-btn layui-btn-xs copybtn" id="copybtn" style="" href="javascript:void(0)" data-id="" data-clipboard-text=''>复制订单内容</a>
+
+                                            <a class="layui-btn layui-btn-xs layui-btn-normal layui-bg-purple spliteorder " style="" href="javascript:void(0)" lay-tips="将这笔订单继续拆分">继续拆分订单</a>
+                                            <!-- 对标此行另有 4 颗（上传登号验证二维码 layui-hide / 通知玩家提供上号验证码 /
+                                                 打手进客户群聊码 / 客户群聊）——全部删除，见文件头第 2 条。 -->
+                                        </div>
+
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md5 layui-col-lg5">
+                        <fieldset class="layui-elem-field">
+                            <legend>订单日志</legend>
+                            <div class="layui-field-box" style="padding:5px 10px">
+                                <div class="">
+                                    <input type="text" name="remark" id="remark" lay-verify="remark" autocomplete="off" placeholder="你可以在这里输入订单日志内容" class="layui-input layui-input-shadow" maxlength="50">
+                                </div>
+                                <button class="layui-btn layui-btn-sm layui-btn-normal" style="margin-top:3px;" lay-submit="" lay-filter="addpbtn">添加</button>
+                                <div class="layui-tab" lay-filter="logFilter">
+                                    <ul class="layui-tab-title">
+                                        <!-- 恰好两个页签：对标的第 3 个「订单进度图」是 JS tabAdd(id:102) 注入的，本件不注入。 -->
+                                        <li class="layui-this" lay-id="100">订单日志</li>
+                                        <li lay-id="101">操作日志</li>
+                                    </ul>
+                                    <div class="layui-tab-content">
+                                        <div class="layui-tab-item layui-show">
+                                            <fieldset class="layui-elem-field" style="">
+                                                <legend>详细记录</legend>
+                                                <div class="layui-field-box logdiv" style="padding: 7px 0px; overflow: hidden; overflow-y: auto; max-height:280px" id="logdiv">
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                        <div class="layui-tab-item">
+                                            <table class="layui-hide" id="tableList_actionlog" lay-filter="tableList_actionlog"></table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </fieldset>
+                                <!-- 对标此处还有一条 div.layui-tab.interfaceDiv（「平台单接手预览」/「发单操作记录」
+                                     两张表 #tableList3 / #tableList4）——整块删除，见文件头第 3 条。 -->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 对标此处还有 #mytips（平台单提示气泡）与 .upVerImgDiv（上传二维码弹层模板）——都属已删的平台 / 死按钮区块。 -->
+
+    <!-- 三个隐藏域照对标保留（对标也**只有**这三个：无 jdp / sid / token）。#orderId 的值由运行期填；
+         #viewType 照对标原文 `20`（对标实测 10/20/30/40/50 五取值渲染逐字节相同 ⇒ 本页忽略它，见「已知会不同」）。 -->
+    <input type="hidden" id="orderId" name="orderId" value="" />
+    <input type="hidden" id="viewType" name="viewType" value="20" />
+    <input type="hidden" id="tid" name="tid" />
+</form>

@@ -1,0 +1,183 @@
+<style>
+    body {
+        background-color: #fff
+    }
+    .layadmin-pagetabs {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 80px 0 40px;
+        background-color: #fafafa;
+        box-sizing: border-box;
+        box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+        border-bottom: 1px solid #1AA094;
+    }
+        .layadmin-pagetabs .layui-tab-title li.layui-this, .layadmin-pagetabs .layui-tab-title li:hover {
+            background-color: #009688;
+            color: #fff;
+        }
+
+    .layui-tab.sidetab {
+        display: flex;
+        align-items: flex-start;
+    }
+
+    .layui-tab-title li {
+        font-weight: bold;
+    }
+
+    .layui-table thead tr, .layui-table-tool {
+        background: #FCFCFC;
+    }
+
+    .layui-tab-title.sidetitle {
+        width: 145px;
+        display: flex;
+        flex-direction: column;
+        margin-right: 10px;
+        background: #fff;
+        position: static;
+        height: auto;
+        border-bottom: none;
+    }
+
+    .news10, .news20, .news0 {
+        color: #fff;
+        display: inline-block;
+        text-align: center;
+        background: red;
+        border-radius: 50%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 12px;
+        /* width: 30px;
+        height: 30px;
+        line-height: 30px;*/
+        width: 30px;
+        height: 20px;
+        line-height: 20px;
+        border-radius: 2px;
+    }
+
+    .sidetab.layui-tab-brief > .layui-tab-more li, .sidetab.layui-tab-brief > .layui-tab-title li {
+        border-right: 4px solid transparent;
+        position: relative;
+        border-bottom: 1px solid #f2f2f2;
+        line-height: 60px;
+    }
+
+        .sidetab.layui-tab-brief > .layui-tab-more li.layui-this, .sidetab.layui-tab-brief > .layui-tab-title .layui-this {
+            border-right: 4px solid #5FB878;
+        }
+
+            .sidetab.layui-tab-brief > .layui-tab-more li.layui-this:after, .sidetab.layui-tab-brief > .layui-tab-title .layui-this:after {
+                border-bottom: 0px solid #5FB878;
+            }
+
+    /* 下面的规则**不是对标页内的**，是本页的人工定值，理由是「按实测对标渲染结果对齐」：
+       对标 /User/mymessage 的内联 <style> 首条规则 `.layui-table-cell{height:40px;line-height:40px;
+       padding:0 5px;…}` **在运行时不存在于 CSSOM**（实测 `document.styleSheets` 里查不到这条规则，
+       `.layui-table-cell` 计算样式 = 对标全局 layui.css 的 `height:38px;line-height:28px;padding:6px 15px`）。
+       而 island 的全局覆盖（layui/island.ts 的 ISLAND_OVERRIDES）把它钉成 40/40/0 5px（为人员管理页而设），
+       两侧因此会差表头高 41 vs 39。故本页显式搬对标**实测值**回来，本页专属。 */
+    .layui-table-cell {
+        height: 38px;
+        line-height: 28px;
+        padding: 6px 15px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        box-sizing: border-box;
+    }
+</style>
+<div id="root">
+    <!-- 对标把整页标记放在 <template id="template"> 里，由 mymessage.js 第 432-434 行
+         `$('#template').html()` → laytpl → `$('#root').html(...)` 渲染后再插入——所以**运行时的 DOM 里没有
+         `<template>`**（实测对标 `#unReadTableList` 的 offsetParent 是真实 div）。我们这里是静态证据件，
+         没有 laytpl 那一步，故直接放渲染后的标记（去掉 `<template>` 与 #root 两层，不影响任何可见值）。 -->
+    <div id="LAY_app">
+    <form class="layui-form" action="" lay-filter="form">
+        <div class="layui-tab layui-tab-brief" lay-filter="tab">
+            <ul class="layui-tab-title">
+                <li class="layui-this" lay-id="10">消息列表</li>
+                <li lay-id="20">消息设置</li>
+            </ul>
+            <div class="layui-tab-content" style="background:#f0f0f0;">
+                <div class="layui-tab-item layui-show">
+
+                    <div class="layui-tab layui-tab-brief sidetab" lay-filter="newstab">
+                        <ul class="layui-tab-title sidetitle">
+                            <li lay-id="20" class="layui-this">急需处理<span class="news20"></span></li>
+                            <li lay-id="10">重要消息<span class="news10"></span></li>
+                            <li lay-id="0">一般消息<span class="news0"></span></li>
+
+
+                        </ul>
+
+                        <div class="layui-tab-content" style="background:#fff;padding-top:0px;flex:1;">
+                            <div class="layui-tab-item layui-show">
+                                <div class="layui-tab layui-tab-brief" lay-filter="threetab">
+                                    <ul class="layui-tab-title">
+                                        <li class="layui-this" lay-id="N">未读消息</li>
+                                        <li lay-id="Y">已读消息</li>
+                                    </ul>
+                                    <div class="layui-tab-content">
+                                        <div class="layui-tab-item layui-show" style="margin-top:20px">
+                                            <table class="" id="unReadTableList" lay-filter="unReadTableList"></table>
+                                            <script type="text/html" id="unReadtoolbarDemo">
+                                                <div class="layui-btn-container">
+                                                    <button class="layui-btn layui-btn-xs" lay-event="refresh" type="button" title="刷新当前数据"><i class="layui-icon">&#xe669;</i>刷新数据</button>
+                                                    <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="readBtn" type="button" title="将勾选的消息标记为已读"><i class="larry-icon larry-jia"></i>标记为已读</button>
+                                                    <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="readAll" type="button" title="将所有的消息标记为已读"><i class="larry-icon larry-jia"></i>全部标记为已读</button>
+                                                </div>
+                                            </script>
+                                        </div>
+
+                                        <div class="layui-tab-item" style="margin-top:20px">
+                                            <table class="" id="readTableList" lay-filter="readTableList"></table>
+                                            <script type="text/html" id="readToolbarDemo">
+                                                <div class="layui-btn-container">
+                                                    <button class="layui-btn layui-btn-xs" lay-event="refresh" type="button" title="刷新当前数据"><i class="layui-icon">&#xe669;</i>刷新数据</button>
+                                                </div>
+                                            </script>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-tab-item" style="background:#fff;">
+                    <div class="layui-form-item" style="margin-top:20px">
+                        <label class="layui-form-label" style="width:100px">系统新消息提醒</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="msgsound" lay-filter="msgsound" value="Y" title="开启" checked='checked'>
+                            <input type="radio" name="msgsound" lay-filter="msgsound" value="N" title="关闭" >
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="">
+                        <label class="layui-form-label" style="width:100px">新消息提示音</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="selectsound" lay-filter="selectsound" value="0" title="提示音1" checked='checked'>
+                            <input type="radio" name="selectsound" lay-filter="selectsound" value="2" title="提示音2" >
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item" style="">
+                        <label class="layui-form-label" style="width:100px">内部抢单微信消息</label>
+                        <div class="layui-input-block">
+                            <div class="layui-btn layui-btn-sm layui-btn-normal resetPushWechatMsgOrder" lay-tips="如果您在内部抢单新单消息做了消息定制，可以点击此处一键重置">一键重置消息设置</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    </div>
+</div>

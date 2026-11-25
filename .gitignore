@@ -1,0 +1,82 @@
+# ──────────────────────────────── 通用 ────────────────────────────────
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.swp
+*~
+.idea/
+.vscode/
+dist/
+build/
+out/
+coverage/
+.cache/
+
+# 并行会话的隔离工作区（git worktree 检出，不属于本检出的内容）
+.worktrees/
+
+# 车队清单：真实清单是各环境自己的运维库存，仓库只提交 fleet.example.json
+fleet.json
+
+# ──────────────────────── 密钥与本地配置（重要） ────────────────────────
+# 永远不要把私钥、真实凭据提交进仓库
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+!**/public/*.pub
+credentials.json
+secrets/
+*.local.yml
+
+# ──────────────────────── agent 工具链（本地个人文件） ────────────────────────
+# DSH 会读取这些文件，但它们只应存在于本机、不进仓库。
+# 判断标准：凡 DSH 会读取、但内容因人而异的文件，都加在这一段。
+AGENTS.local.md
+CLAUDE.local.md
+
+# superpowers 技能的临时工作区（ledger / brief / review package，不进仓库）
+.superpowers/
+
+# ──────────────────── 本地工具链缓存（下载的运行时、二进制） ────────────────────
+# 例如 .tools/python、.tools/pg、.tools/*.dmg。体积可达数百 MB，
+# 只为本机跑环境用，不进仓库。
+.tools/
+
+# ────────────────────────────── Node / 前端 ──────────────────────────────
+node_modules/
+.pnpm-store/
+.npm/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.next/
+.nuxt/
+.turbo/
+*.tsbuildinfo
+
+# ──────────────────────────────── Python ────────────────────────────────
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.uv/
+# collectstatic 的产物（src/staticfiles）
+staticfiles/
+
+# ────────────────────────────────── Go ──────────────────────────────────
+# 按需启用：
+# vendor/
+# *.test
+# *.out
+
+# ───────────────────────────────── Java ─────────────────────────────────
+# 按需启用：
+# target/
+# *.class
+# .gradle/

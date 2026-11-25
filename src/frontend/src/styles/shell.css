@@ -1,0 +1,810 @@
+/* 尺寸来源：docs/FRONTEND-LAYOUT.md §5.1（顶栏 50 / 侧栏 220 / 收起 60 / 页签条 40）。
+ * §5.1 冻结的「内容区 top: 90px」= 50 顶栏 + 40 页签条：两项都已落地
+ * （`--shell-tabs-h` 由 0 改成 40px，页签条规则见本文件下方的 `.shell-tabs`），
+ * 所以 `--shell-content-top` 现在算出的是 90px，不再是页签条落地前的 50px。 */
+:root {
+  --shell-topbar-h: 50px;
+  --shell-sidebar-w: 220px;
+  --shell-sidebar-collapsed-w: 60px;
+  /* 这个槽位是**骨架 spec** 预留的（`docs/specs/2026-09-20-frontend-skeleton-design.md` §5.2 与 D2 行），
+   * **不是** `FRONTEND-THEME.md`：`grep -c shell-tabs-h docs/FRONTEND-THEME.md` = 0。
+   * 40px 的取值出处见 FRONTEND-LAYOUT.md §5.1 与设计 spec 第 3 节。 */
+  --shell-tabs-h: 40px;
+  /* 「清空标签页」按钮的宽（业务方 2026-09-23 新增，A8）。取值来自开发计划，**不是本机实测**：
+   * 13px 下 5 个汉字约 65px + 左右各约 15px 余量，取整 96px。按钮内部用 flex 居中，所以那 15px
+   * 是**名义余量**、不是 `padding`（规则里 `padding: 0`），改这一个变量即可整体调整。 */
+  --shell-tabs-clear-w: 96px;
+  --shell-content-top: calc(var(--shell-topbar-h) + var(--shell-tabs-h));
+}
+
+/* 壳的配色见 docs/FRONTEND-THEME.md §4；语义色值一律取 --tt-* token（唯一出处 styles/theme.css）。
+ * 本文件里的**字面量**只剩这些，每一类都有出处：
+ *   1) 纯白，**共 4 处**，逐处点名。前三处的出处见契约 §4——注意**第三处**（侧栏选中项）
+ *      在契约里的证据等级是**读码**而不是实测值，别把它一并说成实测：
+ *      侧栏容器 `.shell-sidebar` 的 `color`、
+ *      `--el-menu-active-color`（**复用点**：侧栏 hover 文字与**展开态**组标题都取它）、
+ *      选中项规则 `.shell-sidebar .el-menu-item.is-active` 的 `color`（后者**不**从该变量派生；
+ *      该规则**只管条目、不管父级分组标题**——父级不参与主色底，见那条规则上方的注释）；
+ *      第 4 处是页签条「选中 / hover」共用那一条规则的 `color`（`.shell-tabs__item--active, .shell-tabs__item:hover`）。
+ *      ⚠️ 它的出处**不在 §4**——§4 现在没有页签条这一行（§4 的页签条追加还欠在文档任务上），
+ *      它出自对标物页内联样式
+ *      `.layadmin-pagetabs .layui-tab-title li.layui-this, .layadmin-pagetabs .layui-tab-title li:hover{background-color:#009688;color:#fff}`，
+ *      即设计 spec 第 3 节「页签选中/悬停：底 #009688、白字」那一行；两态合成一条逗号选择器也是照抄它。
+ *      第 5 处是页签关闭按钮 hover 的 `color`（`.shell-tabs__close:hover`），出处 layui 本体
+ *      `.layui-tab-title li .layui-tab-close:hover{border-radius:2px;background-color:#ff5722;color:#fff}`；
+ *      同一条里的 `#ff5722` 取 `--tt-color-danger`（同值 token），不另写字面量。
+ *   2) 契约 §4 实测的 `rgb()` 写法（Logo 阴影、侧栏阴影、条目文字色 70% 白），
+ *      以及壳复刻 spec §3 实测+读码的**子菜单半透明底色** `rgba(0,0,0,.3)`（本文件写作 `rgb(0 0 0 / 30%)`）；
+ *   3) F10 的 `transparent`（对标物 hover 不加底色——「没有颜色」不需要颜色 token）；
+ *   4) **页签条内部**的一个值（2026-09-20 页签机制落地时新增）。它是 layui 本体 `layui.css` 的原值，
+ *      本仓 `theme.css` 里**没有同值 token**，所以留字面量并在此点名：
+ *        - `#c2c2c2`：关闭按钮 `×` 的字色（`.layui-tab-title li .layui-tab-close{…;color:#c2c2c2}`）。
+ *      （同一条 layui 规则里 hover 的 `#ff5722` 有同值 token，**走 `--tt-color-danger`**，不在此列——
+ *       见上面第 1 条第 5 处；页签条其余用到的 `#f6f6f6` 一律写 `var(--tt-border-lighter)`。）
+ * 除此以外不写字面色值。 */
+.shell-topbar {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: var(--shell-topbar-h);
+  /* 50px 是冻结值（docs/FRONTEND-LAYOUT.md §5.1），直接由上面这行 `height` 给出。
+   * 原注释按「50px = 49 内容 + 1 下边框」解释，而那条 `border-bottom: 1px solid …` 已在本轮删除：
+   * 顶栏底色换成深色后，那条**浅色**下边框没有实测值，按「不发明值」删掉而不是猜一个。
+   * `box-sizing: border-box` 保留：本元素没有内边距，删掉边框后 content-box 与 border-box
+   * 算出的高都是 50px；留着它是给将来加内边距/边框时「高度仍被 50px 收住」留前提。
+   * 交接已完成：`.shell-logo` 的高度已由 `calc(var(--shell-topbar-h) - 1px)` 改成
+   * `var(--shell-topbar-h)`——它减掉的那 1px 原本就是给这条已在 Task 2 删除的下边框留的，
+   * 留着会在 logo（fixed、49 高）下沿露出 1px 顶栏底色。推导见下面 `.shell-logo` 那一段。 */
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  background: var(--tt-shell-topbar-bg);
+  /* 顶栏文字色取 `--tt-shell-topbar-text`（`theme.css` 里声明为纯白），
+   * 出处见规范 §2.1 该行：官方 `layui.css` 的 `.layui-nav{…color:…}` 把导航文字定为纯白。
+   * 本行此前取 `--tt-text-strong`（`#333`）——那是 `admin.css` 里**白皮肤**顶栏的链接色
+   * （`.layui-layout-admin .layui-header a,…a cite{color:#333}`，规则清单见规范 §2.3(b)），
+   * 底色改成业务方指定的深色（`--tt-shell-topbar-bg`）后不再适用。
+   * 两个值都是真数据，只是皮肤不同——与规范 §2.1「顶栏底色」更正块同一口径。 */
+  color: var(--tt-shell-topbar-text);
+  /* z-index 保持 1000：这里不是胜负手——侧栏一侧取的是对标物实测的 1001/1002（见 `.shell-sidebar`
+   * 与 `.shell-logo` 两段），所以侧栏与 logo 排在顶栏之上。对标物那边的 header 在本仓有两处不同记录
+   * （契约 §2.4 记「`1000`，读码 `layui.css`」，本次裁定的复核记「无 `z-index`＝auto」）；两种记法下
+   * 对标物的 1001/1002 都在它之上，我们照这个相对次序落地——两种记法的原始抓取 CSS 都不在版本库内，
+   * 无法从仓库复核。 */
+  z-index: 1000;
+}
+
+/* 顶栏原有内容右移一个侧栏宽，给左上角的 Logo 区让位（那个块 >991px 是 `position: fixed` 的，
+ * Task 3 起它的 DOM 归属在侧栏里；≤991px 它在抽屉里参与流、本偏移在那一档归零，
+ * 两件事都见文件末 @media 段）。
+ * `transition: all .3s` 是对标物实测值：它的左区与 Logo、侧栏在同一条过渡规则里
+ *   `.layadmin-pagetabs,…,.layui-layout-admin .layui-layout-left,.layui-layout-admin .layui-logo,.layui-layout-admin .layui-side{transition:all .3s}`
+ * ——值照抄，不是自造。（按钮那条 Element Plus 自己写着 `transition:all .1s`，但本选择器权重相同且**在产物里更靠后**，
+ *  所以**未聚焦时**生效的是这里这条；构建产物里的字节顺序已核对。EP 在 `:focus-visible` 下有更高权重的
+ *  `transition:outline-offset,outline`（只影响按钮、且只在键盘聚焦期间），见 Task 2 报告的 F7 一节。） */
+.shell-topbar__toggle,
+.shell-topbar__title {
+  position: relative;
+  left: var(--shell-sidebar-w);
+  transition: all 0.3s;
+}
+
+/* 顶栏右侧的账号名(职位)。对标物在同一位置显示「账号名(职位)」形态（业务方截图；具体租户名不入库）。
+ * 只显示、不可点：账号菜单还没有（对标物这一排的其它入口是它的功能，我们没做）。
+ * `margin-left: auto` 在 flex 行里把它推到最右，不引入新的尺寸值。
+ * `font-size: 14px` 取规范 §2.2 的字号基线（读码 layui `body`，与 EP `--el-font-size-base` 同值）。 */
+.shell-topbar__account {
+  margin-left: auto;
+  font-size: 14px;
+  color: var(--tt-shell-topbar-text);
+}
+
+/* Logo 区：槽位里放**工作室名**的文字标识（裁定 R-s），不引用对标物的 Logo 图形
+ * （docs/FRONTEND-THEME.md §1.3 的商标边界）。对标物同一槽位里就是工作室名：
+ * `<div class="layui-logo" style="color:#ffffff;font-weight:600"><span class="btn">工作室名</span></div>`
+ * （`home.html:224-226`；抓取页的侧栏壳标记里只有这一处工作室名）。
+ * 尺寸取冻结变量算出（宽 = 侧栏宽 220、高 = 顶栏高），不新增数字。
+ * ⚠️ 高度不带 `- 1px`：那个 1px 原本是给顶栏的 1px 下边框留的余量，而那条边框已在 Task 2 删掉
+ * （深色皮肤没有它的实测值），Task 3 据此把高度改成 `var(--shell-topbar-h)`——不减它，
+ * >991px 那个 fixed 的 logo（高 49）与高 50 的顶栏之间会空出 1px、露出顶栏底色成一条细缝。
+ * 代价：对标物 `.layui-logo` 的实测高是 49px（§4 Logo 行引 `admin.css` 的 `…height:49px`），
+ * 我们取 50px，比对标物高 1px——这是「不留缝」的取舍，值本身仍只由冻结变量给出。
+ * `box-sizing: border-box` 是「宽 220、左右各 15 内边距仍等于 220」成立的前提（否则 220 + 15 + 15 = 250）；
+ * 对标物同一条规则也带 border-box：`.layui-layout-admin .layui-logo{…width:220px;height:49px;padding:0 15px;box-sizing:border-box;…}` */
+.shell-logo {
+  position: fixed;
+  inset: 0 auto auto 0;
+  width: var(--shell-sidebar-w);
+  height: var(--shell-topbar-h);
+  display: flex;
+  align-items: center;
+  padding: 0 15px;
+  box-sizing: border-box;
+  background: var(--tt-shell-logo-bg);
+  /* 文字色与字重取抓取页**内联**的生效值（`<div class="layui-logo" style="color:#ffffff;font-weight:600">`，
+   * `home.html:224`）——契约 §4 Logo 行的追加更正块记了它上面的两层（`layui.css` 的 `#16baaa`、
+   * `admin.css` 的 `rgba(255,255,255,.8)` + `font-weight:300`），内联是最后一层。
+   * 本仓此前取的是第二层的 `--tt-text-on-dark` + `300`；本轮设计 spec §3 的行按**页面上生效的值**取
+   * 纯白与 600，所以这里换掉。契约正文那句「实现取 `--tt-text-on-dark` 与 `font-weight:300`」因此失效，
+   * 已上报给文档任务（本任务不写 `docs/`）。 */
+  color: var(--tt-shell-topbar-text);
+  font-weight: 600;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 15%);
+  /* 过渡值同 `.shell-topbar__toggle`：对标物那条 `transition:all .3s` 里就有 `.layui-layout-admin .layui-logo`。 */
+  transition: all 0.3s;
+  /* 槽位里的工作室名居中是**我们的选择**（实现细节），不声称有对标物出处：`home.html:224` 那条内联
+   * style 里只有 `color` 与 `font-weight`，没有居中属性；对标物的 `layui.css` / `admin.css` 也不在
+   * 版本库内（抓取物不入库），无法从仓库复核它们是否另有居中规则。设计 spec §3 那行把「居中」也记成
+   * 内联出处，已上报给文档任务更正（本任务不写 `docs/`）。
+   * 我们这一块原来只靠 `padding: 0 15px` 左对齐，这里补上居中。 */
+  justify-content: center;
+  /* z-index 取对标物**实测**的 `1002`（`admin.css` 的 `.layui-layout-admin .layui-logo{…z-index:1002}`）。
+   * 它只在**侧栏自己的层叠上下文内**排序（`.shell-sidebar` 是定位元素、`z-index:1001` 非 auto，自成上下文），
+   * 与顶栏的胜负由 `.shell-sidebar` 那一行决定，不是这一行。 */
+  z-index: 1002;
+}
+
+/* 隐藏 WebKit（Chrome/Safari）里侧栏的纵向滚动条——Firefox 那条在上面的 `scrollbar-width: none`。
+ * 只隐藏滚动条本身，**不改滚动能力**：菜单高过视口时仍可用滚轮/触控板滚动，
+ * 且 `.shell-sidebar` 上那条 `overflow-x: hidden` 已经消掉了底部那条横向的。 */
+.shell-sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+.shell-sidebar {
+  position: fixed;
+  top: var(--shell-topbar-h);
+  bottom: 0;
+  left: 0;
+  width: var(--shell-sidebar-w);
+  /* 滚动：纵向仍可滚（展开长分组后菜单会高过视口），但**两条滚动条都不显示**。
+   * 为什么必须显式写 `overflow-x`：CSS 规定只要有一条轴不是 `visible`，另一条就会**计算成 `auto`**
+   * ——只写 `overflow-y: auto` 时，任何横向溢出都会变成侧栏**底部**的一条横向滚动条
+   *（展开长分组、或条目里带「即将开放」标签时就会出现）。
+   * 横向裁掉而不是让它滚，有对标物的实测依据：它的滚动区故意做成 240px 宽
+   *（`admin.css`：`.layui-side-scroll{width:240px}`，比可见的 220px 宽）再在容器上裁
+   *（`layui.css`：`.layui-side-scroll{…overflow-x:hidden}` 与 `.layui-side{…overflow-x:hidden}`）。 */
+  overflow-x: hidden;
+  overflow-y: auto;
+  /* 纵向滚动条：Firefox 用标准属性，WebKit 用下面那条 `::-webkit-scrollbar` 规则。 */
+  scrollbar-width: none;
+  background: var(--tt-shell-side-bg);
+  /* 容器白字是规范 §4 侧栏行的**实测值**（对标物 `.layadmin-setTheme-side,.layui-side-menu{…;color:…}`），
+   * 规范没有为「深底上的纯白」立 token（--tt-text-on-dark 是 80% 白、--tt-bg-card 语义是底色），
+   * 所以这里保留字面量纯白。 */
+  color: #fff;
+  /* **不画边框**：规范 §4 侧栏行只给「底 + box-shadow」，对标物的 `.layui-side-menu` 规则集里也没有
+   * border-right（只有 background-color 与 box-shadow，见 §4 行的取数来源）。
+   * 首版曾保留本元素的 `border-right: 1px solid var(--el-border-color-light)`，
+   * 而 Element Plus 自己还会在 `.el-menu` 上画一条（见下面 `.shell-sidebar .el-menu`），
+   * 结果深底右缘叠了两条浅色细线——两条都不是对标物的形状，所以**两条都去掉**：分隔只留 box-shadow。 */
+  box-shadow: 1px 0 2px 0 rgb(0 0 0 / 5%);
+  /* z-index 取对标物**实测**的 `1001`（`admin.css` 的 `.layui-layout-admin .layui-side{…z-index:1001}`）。
+   * 与它并列的那半句「它盖掉了 `layui.css` 基础规则里的 `999`」**引自裁定复核、我没有独立复核**：
+   * 对标物的 `layui.css` 不在版本库内，这条引用无法从仓库复现。
+   * **这一行才是侧栏与顶栏争层叠的胜负手**：本元素是定位
+   * 元素且 `z-index` 非 auto → 它自成一个层叠上下文，后代的 `z-index` 只能在这个上下文**内部**排序、
+   * 逃不出来（所以 logo 那个 1002 管不了跟顶栏的关系）。顶栏在本文件里写的是 `z-index: 1000`；
+   * 对标物那个 header 在本仓有两处不同记录（契约 §2.4 记「`1000`，读码 `layui.css`」，本次裁定的复核记
+   * 「无 `z-index`＝auto」）——**两种记法下它的侧栏/logo（1001/1002）都在 header 之上**，我们照这个
+   * 相对次序、从侧栏一侧站上去（不去动顶栏那个值）。
+   * ⚠️ 这里原来是 `999`：logo 挪进侧栏之后，整个侧栏子树只按 `999` 参与竞争，≥992px 时
+   * 被顶栏（`1000`、不透明）盖住，工作室名看不见——把这一行与 logo 那行改回对标物的实测值即修复。 */
+  z-index: 1001;
+  /* 收起态（992–1199）的宽度变化要跟着动：对标物那条实测过渡规则里就有 `.layui-layout-admin .layui-side`，值同 `.3s`。
+   * **只写 `width`，不照抄它的 `all`**：本元素的 `transform` 在 **991px 及以下**那个 `@media` 块里承担抽屉状态，
+   * 用 `all` 的话，跨 991px 断点时 `transform` 会从 translateX(-100%) 过渡到 none（原本是瞬变）——
+   * 那就顺手改了抽屉行为，违背「抽屉保持原样」。属性收窄到真正会变的那一个；时长/曲线仍是它的 `.3s`（默认 ease）。
+   * 在 991px 及以下，那个 `@media` 块里的 `transition: transform 0.2s` 与本条**权重相同且更靠后**，
+   * 所以抽屉仍是 0.2s、不受影响。 */
+  transition: width 0.3s;
+
+  /* 侧栏里的 Element Plus 菜单跟着换皮。变量名**逐条读自**
+   * node_modules/element-plus/theme-chalk/el-menu.css 的 `:root` 块（该文件压缩成单行，
+   * 括号内是字节偏移）：--el-menu-active-color(2555)、--el-menu-text-color(2602)、
+   * --el-menu-hover-text-color(2652)、--el-menu-bg-color(2703)、--el-menu-hover-bg-color(2749)、
+   * --el-menu-item-height(2806)。
+   * 作用域限定在侧栏内，不污染全局。 */
+  --el-menu-bg-color: var(--tt-shell-side-bg);
+  --el-menu-text-color: rgb(255 255 255 / 70%); /* 规范 §4：条目文字色 rgba(255,255,255,.7) */
+  /* hover 反馈：对标物侧栏是「文字转纯白 + 不加底色」，三条规则都在（读码，本轮实测复核）：
+   *   底色（对标物）：layuiAdmin `admin.css` 的 `.layui-side-menu .layui-nav .layui-nav-item a:hover{background:0 0}`
+   *   文字（对标物）：layui 本体 `layui.css` 的 `.layui-nav .layui-nav-item a:hover,.layui-nav .layui-this a{color:…}`（不分层级）
+   *                   与 `.layui-nav-tree .layui-nav-child a:hover{background:0 0;color:…}`（二级链接）
+   * 取数来源与文件字节数见 docs/FRONTEND-THEME.md §1.2。
+   * **这个变量真正的消费者**是 EP 垂直菜单的两条规则（`el-menu.css`，同一文件里 `:hover` 规则已逐条 grep）：
+   *   `.el-menu-item:hover{background-color:var(--el-menu-hover-bg-color)}` 与
+   *   `.el-sub-menu__title:hover{background-color:var(--el-menu-hover-bg-color)}`。
+   * 写 `transparent` 而不是删掉这一行：删掉会回落到 EP 的近白默认（`--el-color-primary-light-9`），
+   * 在深底上就是一层浅色块。 */
+  --el-menu-hover-bg-color: transparent;
+  --el-menu-hover-text-color: var(--el-menu-active-color); /* = 规范 §4 的纯白，见下一行 */
+  /* 规范 §4 的纯白在本文件里写死 3 次（清单见文件头）：本行是其中**被复用**的那处——
+   * hover 文字（上一行）与**展开态**组标题（见下面的
+   * `.shell-sidebar .el-sub-menu.is-opened > .el-sub-menu__title`）都取它；
+   * 选中项规则 `.shell-sidebar .el-menu-item.is-active` 里的 `color` 是另一处，**不**从本变量派生。 */
+  --el-menu-active-color: #fff;
+  /* 契约 §2.1 的 --tt-shell-menu-item-h = 44px（业务方指定；对标物实测 40px，属有意偏离）。 */
+  --el-menu-item-height: var(--tt-shell-menu-item-h);
+  /* ⚠️ 子条目高度**必须在本作用域内重新派生**，不能指望它跟着上面那行自动变——这里最容易想反：
+   * 本仓 `src/` 下声明它的地方只有本行——该结论**只在 cwd = `src/frontend` 时成立**
+   * （从仓库根跑同一条 `grep -rn el-menu-sub-item-height src/` 还会命中 `node_modules/` 与 `dist/`）；
+   * EP 那处声明在 node_modules 的 `:root` 里，与 `--el-menu-item-height:56px` 同处。依据是规范原文
+   * （CSS Custom Properties L1 §2.3）：
+   *   "custom properties resolve any var() functions in their values at computed-value time,
+   *    which occurs **before** the value is inherited."
+   * 即 var() 在**声明它的那个元素**上代入（依赖图按元素建），被继承下去的是代入后的结果。
+   * EP 那条 `--el-menu-sub-item-height: calc(var(--el-menu-item-height) - 6px)`（`el-menu.css` 字节 2833）
+   * 声明在 `:root` 上，于是它按 `:root` 自己的 `--el-menu-item-height: 56px` 代入成 `calc(56px - 6px)`，
+   * 继承下来的就是这个式子；我们在 `.shell-sidebar` 里覆盖 `--el-menu-item-height` **不会**回流进它。
+   * 不重派生的后果：子条目 56 − 6 = **50px**，比一级条目 44px 还高——「条目拉开」的意图在二级落空。
+   * （50px 是按上面规范语义推出的值，不是浏览器实测值：本机无浏览器。）
+   * 本行的 44px 与它在**同一个元素**上，所以这里照抄同一个 calc 就代入成 `calc(44px - 6px)` = 38px。
+   * 这一点与 CSSWG 对「惰性/晚解析」的讨论（#11543）无关：两种语义下本元素上的
+   * `--el-menu-item-height` 都是 44px，结果都是 38px。
+   * 消费方 `.el-sub-menu .el-menu-item{height:var(--el-menu-sub-item-height);…}` 见同文件字节 9414。 */
+  --el-menu-sub-item-height: calc(var(--el-menu-item-height) - 6px);
+}
+
+/* 去掉 Element Plus 默认画在菜单右缘的那条 1px 边线。
+ * 依据（读码）：node_modules/element-plus/theme-chalk/el-menu.css 字节偏移 3216 的
+ *   `.el-menu{border-right:solid 1px var(--el-menu-border-color);background-color:var(--el-menu-bg-color);…}`
+ * （`--el-menu-border-color` 在同文件 `:root` 里默认指向 `--el-border-color`）。
+ * 用 `border-right: none` 而不是把 `--el-menu-border-color` 设成透明色——**不引入规范里没有的颜色值**。
+ * 本选择器权重 (0,2,0) 高于 EP 的 (0,1,0)，与运行时注入顺序无关（构建产物里已核对）。 */
+.shell-sidebar .el-menu {
+  border-right: none;
+}
+
+/* 图标字号：对标物是 16px（官方 `layui.css`：`.layui-icon{font-size:16px}`；壳复刻 spec §3 标为实测），
+ * 而 EP 在 `el-menu.css` 字节 8119 把**条目**图标写死 18px
+ *   `.el-menu-item [class^=el-icon]{…;font-size:18px}`。
+ * **组标题**图标没有自己的字号规则：`.el-sub-menu__title` 自身取 `font-size:var(--el-menu-item-font-size)`
+ * （同文件，`--el-menu-item-font-size` 在 `:root` 里指向 `--el-font-size-base` = 本仓 `theme.css` 映射的
+ * 14px），所以组标题图标继承 14px——与条目的 18px 本来就不一致，两条选择器一并归到 16px。
+ * 权重：下面两条各 (0,3,0)（两个类 + 一个属性选择器），高于 EP 那条 (0,2,0)，与运行时注入顺序无关
+ * （同文件其它覆盖同一套写法）。 */
+.shell-sidebar .el-menu-item [class^=el-icon],
+.shell-sidebar .el-sub-menu__title [class^=el-icon] {
+  font-size: 16px;
+}
+
+/* 子菜单底色：对标物的机制是**半透明黑叠在侧栏底色上**——官方 `layui.css`：
+ *   `.layui-nav-tree .layui-nav-child{…background-color:rgba(0,0,0,.3)}`
+ * 叠在 `--tt-shell-side-bg`（#20222A）上渲染出来正是业务方给的 #16181D
+ * （0.7×(32,34,42) 取整 = (22,24,29)；算式与壳复刻 spec §3 该行一致）。用机制而不是硬编码合成值：
+ * 侧栏底色若变，它跟着变。选择器用 EP 实际渲染出的行内子菜单类 `.el-menu--inline`
+ * （读码 `element-plus/es/components/menu/src/sub-menu.mjs:267` 的
+ * `class: [nsMenu.b(), nsMenu.m("inline")]`；`theme-chalk/` 全目录 grep `.el-menu--inline` 无匹配，
+ * 所以这条声明没有 EP 的对手规则），不是自造类名。那个 `<ul>` 同时带 `.el-menu` 类，EP 的
+ * `.el-menu{…background-color:var(--el-menu-bg-color)}`（`el-menu.css` 字节 3216）权重 (0,1,0)，
+ * 低于本选择器 (0,2,0)。 */
+.shell-sidebar .el-menu--inline {
+  background-color: rgb(0 0 0 / 30%);
+}
+
+/* 选中项：规范 §4「侧栏选中项：底 --tt-color-primary（实测主色）、文字纯白」。EP 的 `el-menu.css` 里
+ * `.el-menu-item.is-active{color:var(--el-menu-active-color)}` 只给文字色、不设底色（垂直菜单所有
+ * is-active 规则已逐条 grep 过），所以底色由我们补；文字色与上面那个变量同值（纯白为规范实测值）。
+ *
+ * ⚠️ **只给条目，不给父级分组标题**（业务方 2026-09-20 指出的问题：父级菜单不该跟着变青绿）。
+ * 原先这条选择器里还有 `.el-sub-menu.is-active > .el-sub-menu__title`，那会让**展开的父级标题**
+ * 在「它下面有子项被选中」时也铺上主色底——依据在依赖源码里：`sub-menu.mjs:142` 的
+ *   `const active = computed(() => [...Object.values(items.value), ...Object.values(subMenus.value)].some(({ active }) => active))`
+ * 即**只要子项里有一个 active，父级自己就成了 `is-active`**（`sub-menu.mjs:165` 把它交给 `nsSubMenu.b({active})`）。
+ * 业务方的口径是「只有真正选中的那个菜单页才展示主色底」，所以父级那一半删掉；
+ * 子项本身就是 `.el-menu-item`，选中时由本规则第一条命中，无需另写。
+ * 父级的分组标题**在展开时**仍会变文字色（见下面 `.el-sub-menu.is-opened` 那条，纯白、无底色），
+ * 那一条是对标物实测行为，与本次改动无关。 */
+.shell-sidebar .el-menu-item.is-active {
+  background-color: var(--tt-color-primary);
+  color: #fff;
+}
+
+/* hover：文字转白、不加底色（对标物实测，规则与出处见上面 `--el-menu-hover-bg-color` 的注释）。
+ * EP 确实声明了 `--el-menu-hover-text-color`（`el-menu.css` 字节 2652），但**垂直菜单不消费它**：
+ * 全文件里读这个变量的只有横向菜单的两条规则（`.el-menu--horizontal …:hover{color:var(--el-menu-hover-text-color)}`）。
+ * 所以光改变量在垂直菜单里没有效果，必须自己写这条规则；值仍取那个变量（= 规范 §4 的纯白，本文件里不新增字面量）。
+ * 权重：第一条选择器 (0,4,0)（`:not(...)` 按其参数计一个类）、第二条 (0,5,0)；
+ * EP 垂直菜单里那两条 `:hover`（`.el-menu-item:hover` / `.el-sub-menu__title:hover`）只设底色与 outline、不设颜色，
+ * 且权重更低，与运行时注入顺序无关（构建产物里已核对）。
+ *
+ * `:not(.is-disabled)` 必须留着，但**两条要各按 EP 挂类的位置写**（读 `element-plus/es/components/menu/src/`）：
+ *   - 条目：`is-disabled` 挂在条目根上——`menu-item.vue_vue_type_script_setup_true_lang.mjs:63`
+ *     `unref(nsMenuItem).is("disabled", __props.disabled)` → `.el-menu-item:not(.is-disabled)` 有效；
+ *   - 子菜单：`is-disabled` 挂在**子菜单根 `li.el-sub-menu`** 上——`sub-menu.mjs:275`
+ *     `nsSubMenu.is("disabled", props.disabled)`；标题元素拿到的类只有 `el-sub-menu__title`
+ *     （`sub-menu.mjs:258/262` 的 `class: nsSubMenu.e("title")`），**永远不会**有 `is-disabled`。
+ *     所以标题这一侧只能写成 `.el-sub-menu:not(.is-disabled) > .el-sub-menu__title:hover`；
+ *     写成 `.el-sub-menu__title:not(.is-disabled)` 是**惰性**的（`el-menu.css` 里那条
+ *     `.el-sub-menu__title.is-disabled{…}` 在 2.14.6 的 DOM 里根本不会命中），看着像防护、实际不防。
+ * 为什么要防：EP 对置灰项**只降不透明度、不改颜色**（`.el-menu-item.is-disabled{opacity:.25;cursor:not-allowed;background:0 0!important}`
+ * 与 `.el-sub-menu.is-disabled .el-sub-menu__title{…同形…}`），一旦 hover 把文字提亮到纯白，
+ * 置灰项悬停就从「70% × .25」变成「100% × .25」——看起来可点，
+ * 而冻结 IA 的「置灰＝不可点」正是靠这个视觉差表达的。EP 自己的横向 hover 也是这个写法
+ * （`.el-menu--horizontal .el-menu-item:not(.is-disabled):hover,…`）。 */
+.shell-sidebar .el-menu-item:not(.is-disabled):hover,
+.shell-sidebar .el-sub-menu:not(.is-disabled) > .el-sub-menu__title:hover {
+  color: var(--el-menu-hover-text-color);
+}
+
+/* 展开着的分组，标题才是**纯白**（条目始终 70% 白，hover 转白）。
+ * 机制（本轮核实，**不是**只看声明）：layui 那条规则是一张逗号选择器表
+ *   `.layui-nav-itemed>a,.layui-nav-tree .layui-nav-title a,.layui-nav-tree .layui-nav-title a:hover{color:…!important}`（layui 本体 `layui.css`）
+ * 其中**真正命中他们 DOM 的是第一个成员** `.layui-nav-itemed>a`——`layui-nav-itemed` 就是 layui 给「已展开」的导航项
+ * 加在 `li` 上的类（同一份 CSS 里 `.layui-nav-itemed>.layui-nav-child{display:block}` 也印证这一点）。
+ * 后两个成员引用的 `layui-nav-title` 在**他们真实菜单标记里一次都没出现**
+ * （仓库内 137,031 B 的抓取件 `.tools/recon/home.html`：`grep -c layui-nav-title` = 0，而 `layui-nav-itemed` 出现 2 次）；
+ * layui 的 JS 只是**读**这个类，从不添加它。所以「分组标题一直是纯白」是错的，
+ * 正确行为是：**展开时标题纯白、收起时 70% 白、hover 时转白**（hover 由上面那条规则负责）。
+ *
+ * 对应到 EP：`is-opened` 挂在**子菜单根** `.el-sub-menu` 上（`sub-menu.mjs:274` 的
+ * `nsSubMenu.is("opened", opened.value)`），所以选择器用 `.el-sub-menu.is-opened > .el-sub-menu__title`。
+ * 另外：`el-menu.css` 里**没有任何**含 `is-opened` 的规则（`grep` 无匹配），不存在与 EP 的竞争。
+ * 颜色仍取本作用域唯一的纯白声明（`--el-menu-active-color`），**不新增字面量**。 */
+.shell-sidebar .el-sub-menu.is-opened > .el-sub-menu__title {
+  color: var(--el-menu-active-color);
+}
+
+/* 页签条（内容区上方，对标物的机制：自动新增 / 点击切换 / 关闭 / ▾ 三个批量关闭）。
+ * 位置与尺寸照对标物实测（设计 spec 第 3 节）：
+ * fixed、top = 顶栏高、左边界随侧栏、高 40px、底 `#fafafa`、下边框 1px `#1AA094`、
+ * 阴影 `0 1px 2px rgba(0,0,0,.1)`。z-index 999 出自 `admin.css` 的 `.layadmin-pagetabs{…z-index:999}`，
+ * 它低于侧栏的 1001 与 logo 的 1002——那是对标物自己的次序，照抄不改。
+ * `box-sizing: border-box` 让「40px」是**连下边框在内的总高**：页签条下沿于是正好落在
+ * `--shell-content-top`（50 + 40 = 90px）上；换成 content-box 会变成 41px、与冻结的 90px 差 1px。
+ * （这句是本文件原注释；壳几何仍是冻结值，本轮只往条内加东西，没动这四个数。） */
+.shell-tabs {
+  position: fixed;
+  top: var(--shell-topbar-h);
+  left: var(--shell-sidebar-w);
+  right: 0;
+  z-index: 999;
+  height: var(--shell-tabs-h);
+  box-sizing: border-box;
+  /* `padding: 0 80px 0 40px` **（A8 之前）**逐字取对标页内联样式（`.tools/recon/home.html:31`）：
+   * 左 40 给左侧的刷新控件、右 80 给它右侧的**两个**控件（`admin.css`：
+   *   `.layadmin-pagetabs .layui-icon-refresh-3{right:40px}` 与 `.layadmin-pagetabs .layui-icon-down{right:0}`，
+   *   各 40 宽）。
+   * ⚠️ 我们右侧只有一个 ▾（`.shell-tabs__more`，40 宽）→ 照抄这个值会在页签条右侧多留 40px 空白。
+   *   仍写对标值（本轮要求逐个值按对标取值），代价登记在交付报告；要收紧只改这一个数，
+   *   不牵动任何冻结几何。 */
+  /* ⚠️ **偏离对标**（业务方 2026-09-23 新增，A8）：对标这里是 `0 80px 0 40px`
+   * （左 40 只给刷新控件）。我们在最左侧多插了一颗 96px 的「清空标签页」按钮，
+   * 所以左侧留白 = 清空按钮宽 + 刷新控件宽。右侧 80px 保持对标值不变。 */
+  padding: 0 80px 0 calc(var(--shell-tabs-clear-w) + var(--shell-tabs-h));
+  background: var(--tt-shell-tabbar-bg);
+  border-bottom: 1px solid var(--tt-shell-tabbar-border);
+  box-shadow: var(--tt-shell-tabbar-shadow);
+
+  /* 左边界跟随收起态：时长取对标物那条实测的 `transition:all .3s`——原文与出处逐字抄在上面
+   * `.shell-topbar__toggle, .shell-topbar__title` 那一段（那条规则的选择器表里也有对标物的
+   * `.layadmin-pagetabs`，即页签条本身）。
+   * ⚠️ 本文件**没有**一条把顶栏/内容区/页签条并起来的群组过渡规则：这里按属性各写各的——
+   * `.shell-topbar__toggle, .shell-topbar__title` 是两两成组的 `all .3s`、`.shell-content` 写
+   * `margin-left .3s`、`.shell-sidebar` 写 `width .3s`、`.shell-logo` 写 `all .3s`。
+   * 与它们一致的只是时长；同样只写会变的 `left`，不照抄 `all`。 */
+  transition: left 0.3s;
+}
+
+/* 刷新按钮：位姿取对标 `.layadmin-pagetabs .layadmin-tabs-control`
+ *   `{position:absolute;top:0;width:40px;height:100%;text-align:center;cursor:pointer;box-sizing:border-box;border-left:1px solid #f6f6f6}`
+ * 与 `.layadmin-pagetabs .layadmin-tabs-control:hover{background-color:#f6f6f6}`。
+ * 宽度取冻结变量 `--shell-tabs-h`（= 40px，同一个数）。
+ * ⚠️ **2026-09-23（A8）后这条注释的两处理由已变**：
+ *   ① 它的左邻居**不再是页签条外沿**，而是新增的 `.shell-tabs__clear`（本行的 `left` 已改成
+ *      `var(--shell-tabs-clear-w)`）；
+ *   ② 所以「左边框不画」的真正理由是：那条分隔线已经由 `.shell-tabs__clear` 的 `border-right`
+ *      画出来了（同一条 `--tt-border-lighter`），这里再画一条就是**双线**。⛔ 不要因为看到对标有
+ *      `border-left` 就补上。
+ *   ③ 本文件对页签条的尺寸源现在有**两个**（`--shell-tabs-h` 与 `--shell-tabs-clear-w`），不是「只留一个」。
+ * 语义未变：点一下只发 `refresh` 事件。 */
+.shell-tabs__refresh {
+  position: absolute;
+  top: 0;
+  left: var(--shell-tabs-clear-w);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--shell-tabs-h);
+  height: 100%;
+  padding: 0;
+  border: none;
+  border-right: 1px solid var(--tt-border-lighter);
+  background: transparent;
+  color: var(--tt-text-primary);
+  cursor: pointer;
+}
+.shell-tabs__refresh:hover {
+  background-color: var(--tt-border-lighter);
+}
+
+/* 「清空标签页」按钮（业务方 2026-09-23 新增，A8）。**对标物没有这一颗**，所以这里没有
+ * 「取自对标哪个值」可写——它是新增控件，样式按页签条自身的既有点法取值：
+ * 高 = 冻结的 --shell-tabs-h、分隔线 = --tt-border-lighter（与刷新控件同一条）、
+ * hover 背景 = --tt-border-lighter（与 .shell-tabs__refresh:hover 同值）。
+ * 字号 13px / 600 是「放大点」的落点：比右侧 ▾ 的 12px 大一号、字重更实（底色是页签条自己的
+ * 浅底，不是彩色底）。 */
+.shell-tabs__clear {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--shell-tabs-clear-w);
+  height: 100%;
+  padding: 0;
+  border: none;
+  border-right: 1px solid var(--tt-border-lighter);
+  background: transparent;
+  color: var(--tt-text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.shell-tabs__clear:hover {
+  background-color: var(--tt-border-lighter);
+}
+
+/* 页签列表。对标 `.layui-tab-title`（layui 本体）
+ *   `{position:relative;left:0;height:40px;white-space:nowrap;font-size:0;transition:all .2s}`：
+ * `font-size:0` 是消掉 inline-block 子项之间的空白间隙（子项自己写回 14px）。
+ * 横向滚动：对标物靠 JS 改 `left` 偏移（`admin.js` 的 `events.rollPage`，切页签时调 `'auto'`），
+ * 我们用原生横向滚动 + 组件里对激活页签调 `scrollIntoView`——**这是实现方式的偏离**，
+ * 外观（不显示滚动条）与对标一致（对标物根本不产生原生滚动条，因为它改的是偏移）。
+ * ⚠️ 滚动条隐藏只做 WebKit 与 Firefox 两路（同 `.shell-sidebar` 的处置）。 */
+.shell-tabs__list {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  font-size: 0;
+}
+.shell-tabs__list::-webkit-scrollbar {
+  display: none;
+}
+
+/* **基类管布局**（配色一律交给下面 `--active` / `:hover` 那条逗号选择器）。
+ * 值取 `admin.css` 的
+ *   `.layadmin-pagetabs .layui-tab-title li{min-width:0;line-height:40px;max-width:160px;
+ *    text-overflow:ellipsis;padding-right:40px;overflow:hidden;border-right:1px solid #f6f6f6;vertical-align:top}`
+ * 以及 layui 本体的 `.layui-tab-title li{position:relative;…;padding:0 15px;text-align:center;cursor:pointer}`。
+ * `padding-right:40px` 是给绝对定位的 × 留位（它 `right:8px`）；不可关的页签由下面的
+ * `--closable` 缺席把它收回 15px，对应对标 `li:first-child{padding-right:15px}` 那一条
+ * （对标物把「第一条（首页）」与「有关闭按钮的条目」当成同一类，我们的判据是后者）。 */
+.shell-tabs__item {
+  position: relative;
+  display: inline-block;
+  height: 100%;
+  line-height: var(--shell-tabs-h);
+  font-size: 14px;
+  text-align: center;
+  vertical-align: top;
+  max-width: 160px;
+  padding: 0 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-right: 1px solid var(--tt-border-lighter);
+  white-space: nowrap;
+  cursor: pointer;
+  color: var(--tt-text-primary);
+}
+/* 「有关闭按钮」这一态多留 25px（对标的 40 − 15）。 */
+.shell-tabs__item--closable {
+  padding-right: 40px;
+}
+
+/* 选中与 hover：**一条逗号选择器**，逐字取对标页内联样式（`.tools/recon/home.html:37-40`）：
+ *   `.layadmin-pagetabs .layui-tab-title li.layui-this, .layadmin-pagetabs .layui-tab-title li:hover{
+ *      background-color:#009688;color:#fff}`
+ * 两态同色是对标物自己的写法，所以这里也合成一条——不是我们把两个状态混为一谈。
+ * ⚠️ 这条 `color:#fff` 是文件头清单里记的**第 4 处纯白**（落地前 3 处）。 */
+.shell-tabs__item--active,
+.shell-tabs__item:hover {
+  background: var(--tt-shell-tabbar-active);
+  color: #fff;
+}
+
+/* 关闭按钮（×）。对标物是字体图标 + 两条位姿规则：
+ *   `admin.css`：`.layadmin-pagetabs .layui-tab-title li .layui-tab-close{position:absolute;right:8px;
+ *     top:50%;margin:-7px 0 0;width:16px;height:16px;line-height:16px;border-radius:50%;font-size:12px}`
+ *   `layui.css`：`.layui-tab-title li .layui-tab-close{…;font-size:14px;color:#c2c2c2}`
+ *     `.layui-tab-title li .layui-tab-close:hover{border-radius:2px;background-color:#ff5722;color:#fff}`
+ * 位姿与字号取 `admin.css` 那一层（更具体，且那是对标物覆盖后的生效值）；
+ * `color:#c2c2c2` 与 hover 的两条取 layui 本体（`admin.css` 没覆盖颜色）。
+ * ⚠️ **字形是文字 `×`、不是 `layui-icon-close` 字体图标**：我们的 `styles/layui-icons.css` 里没有
+ * 它的规则，而那份文件与 `config/menuIcons.ts` 被 `config/__tests__/menuIcons.spec.ts` 的
+ * 「CSS 规则集合 == 映射表值集合」断言绑死（多写一条规则就必须同时登记映射），两个文件都不在
+ * 本轮的改动面内 ⇒ 用文字字形兜底，登记在报告里。码点本身是有的（`config/layuiIconNames.ts`
+ * 的 `'close': '\u1006'`），将来把两个文件都补上即可换回字体图标。 */
+.shell-tabs__close {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  margin: -7px 0 0;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #c2c2c2;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: center;
+  cursor: pointer;
+}
+.shell-tabs__close:hover {
+  border-radius: 2px;
+  background-color: var(--tt-color-danger);
+  color: #fff;
+}
+
+/* ▾ 下拉控件与其面板。控件位姿取 `admin.css`
+ *   `.layadmin-pagetabs .layadmin-tabs-control{position:absolute;top:0;width:40px;height:100%;…}`
+ *   与 `.layadmin-pagetabs .layui-icon-down{right:0}`；`▾` 是文字字形（同 × 的理由）。
+ * 面板逐条取对标物真实生效的两层：
+ *   layui 本体 `.layui-nav-child{…;position:absolute;min-width:100%;line-height:36px;padding:5px 0;
+ *     box-shadow:0 2px 4px rgba(0,0,0,.12);border:1px solid #eee;background-color:#fff;z-index:100;
+ *     border-radius:2px;white-space:nowrap;box-sizing:border-box}`
+ *     ＋ `.layui-nav-child a:hover{background-color:#f8f8f8;…}`
+ *   `admin.css` `.layadmin-tabs-select.layui-nav .layui-nav-child{top:40px;left:auto;right:0}`
+ *     ＋ `.layadmin-tabs-select.layui-nav .layui-nav-item a{color:#666;padding:0 20px}`。
+ * ⚠️ 两处偏离，都登记在报告里：① 面板的 `1px #eee` 边框本仓没有同值 token，取最浅的
+ * `--tt-border-lighter`（#f6f6f6）；② 面板**不画**对标那条 `box-shadow`（值为 `rgba(0,0,0,.12)`，
+ * 本文件里没有同类可复用的 token，不为它新造一个）。 */
+.shell-tabs__more {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: var(--shell-tabs-h);
+  height: 100%;
+  border-left: 1px solid var(--tt-border-lighter);
+}
+.shell-tabs__more-toggle {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--tt-text-primary);
+  font-size: 12px;
+  cursor: pointer;
+}
+.shell-tabs__more-toggle:hover {
+  background-color: var(--tt-border-lighter);
+}
+.shell-tabs__menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 100;
+  min-width: 100%;
+  margin: 0;
+  padding: 5px 0;
+  list-style: none;
+  white-space: nowrap;
+  background: var(--tt-bg-card);
+  border: 1px solid var(--tt-border-lighter);
+  border-radius: var(--tt-radius);
+  box-sizing: border-box;
+}
+.shell-tabs__menu-item {
+  display: block;
+  width: 100%;
+  padding: 0 20px;
+  border: none;
+  background: transparent;
+  color: var(--tt-text-primary);
+  font-size: 14px;
+  line-height: 36px;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.shell-tabs__menu-item:hover {
+  background-color: var(--tt-bg-subtle);
+}
+
+/* 收起态（992–1199）：左边界跟着 60px 图标栏（对标物收起态的 `left:60px` 同形）。 */
+.shell--collapsed .shell-tabs {
+  left: var(--shell-sidebar-collapsed-w);
+}
+
+.shell-content {
+  margin-top: var(--shell-content-top);
+  margin-left: var(--shell-sidebar-w);
+  /* 内容区跟着侧栏一起收（对标物那条实测过渡规则里就有 `.layui-layout-admin .layui-body` —— 它的内容区，
+   * 也是 `left: 220px ↔ 60px`）；值同 `.3s`。同样只写会变的 `margin-left`，不写 `all`。 */
+  transition: margin-left 0.3s;
+  padding: 16px;
+  background: var(--tt-bg-page);
+  color: var(--tt-text-primary);
+}
+
+/**
+ * **layui island 页**（【系统人员】那 9 页的 iframe）要把内容区那圈 16px 内边距去掉。
+ *
+ * 理由（对标实测）：对标物的内容区是 `.layui-body{left:220px}`、**没有内边距**，
+ * 页面 iframe 直接贴着侧栏；页内间距由**页面自己**给（如筛选栏 `padding-left:5px`、
+ * 表格外层 `<div style="">` 零内边距）。我们壳的 16px 内边距会额外露出一圈
+ * `--tt-bg-page`（`#f2f2f2`）——业务方看到的就是「侧栏与内容之间多出一条灰带（和一条白边）」。
+ *
+ * 类由内容区容器（`layouts/AppTabbedContent.vue`）按「当前路由是不是 island 页」统一加删
+ * （D-0220 前由 `LayuiIslandHost` 在挂载/卸载时加删；页签缓存后宿主不再卸载，改为单一 owner）；
+ * **只对这类页面生效**，其余页面的 16px 内边距（订单页/游戏维护页依赖它）一字不动。
+ */
+body.shell-flush-content .shell-content {
+  padding: 0;
+}
+
+/* 992–1199：侧栏可收成 60px 图标栏
+ *
+ * 收起态**有图标**（Task 3 已落地，旧注释说的「一条空的 60px 竖条」不再成立）：
+ * `AppSidebar.vue` 在**顶部条目**与**分组标题**的槽里各插一个 `<AppIcon>`——这里写元素名、不写行号
+ * （那种行号本仓已因改动漂移过一次），而 `AppIcon` 的根是 `<el-icon>`（渲染成 `<i class="el-icon">`，不是 `span`）。
+ * Element Plus 收起时藏的是条目/标题里的**直接子级 `span`**：
+ *   `.el-menu--collapse>.el-menu-item>span,…>.el-sub-menu__title>span{visibility:hidden;width:0;height:0}`
+ * （node_modules/element-plus/theme-chalk/el-menu.css，单行文件）
+ * ——被藏的是 `<span>` 里的**文字**，以及「即将开放」那个 `<el-tag>`（它的根也是 `span`）；
+ * **图标不在被藏之列**。所以收起态的内容是「图标 + 文字消失」，分组名仍可经 hover 弹出层读到。
+ * 图标自身的定宽/对齐由 EP 的 `[class^=el-icon]` 规则负责，理由见 `AppIcon.vue` 的 script 注释。 */
+.shell--collapsed .shell-sidebar {
+  width: var(--shell-sidebar-collapsed-w);
+  /* 收起态的菜单宽度由 Element Plus 自己算出来，我们不去覆盖它的 width：
+   * node_modules/element-plus/theme-chalk/el-menu.css（压缩成单行）里是
+   *   `.el-menu--collapse{width:calc(var(--el-menu-icon-width) + var(--el-menu-base-level-padding) * 2)}`
+   * 默认 24px + 20px×2 = 64px，比冻结的 60px 宽 4px——只会把 64px 的内容硬塞进 60px 的盒子，
+   * 而侧栏是 overflow-y:auto，横向溢出会变成一条横向滚动条。
+   * 所以改成在收起态把 EP 的图标宽变量设为「60px − 2×内边距」= 20px，让 EP 的算式自己算出 60px：
+   *   icon + 2p = (60 − 2p) + 2p = 60，与 p 的默认值无关，不需要写死 20px。
+   * （EP 2.14.6 没有「收起宽度」的单一变量，全包 grep `collapse-width`/`collapseWidth` 无匹配；
+   *  此处引用的两个变量都定义在 EP 同一文件的 `:root` 里。本文件把图标字号定在 16px（见上面
+   *  `.shell-sidebar` 的图标字号规则），而图标框宽 = 60px − 2×内边距。判据写成不等式：
+   *  框宽 ≥ 16px ⟺ 内边距 ≤ 22px（内边距恰为 22px 时框宽**正好** 16px，不算坏）；
+   *  内边距 > 22px 时框宽才小于 16px——那时按实测调整，别猜。） */
+  --el-menu-icon-width: calc(var(--shell-sidebar-collapsed-w) - var(--el-menu-base-level-padding) * 2);
+}
+.shell--collapsed .shell-content { margin-left: var(--shell-sidebar-collapsed-w); }
+
+/* 收起态的 Logo 区：宽度跟着 60px 图标栏，文字隐藏。
+ * 机制照抄对标物的**形状**（`.layadmin-side-shrink` 那组：Logo 宽缩到 60px + `span{display:none}`），
+ * 但**不抄它收起态挂的那张位图**（那条收窄规则里带 `background-image`，指向它的商标资产，规范 §1.3）——
+ * 所以本文件里不写它的资产名、也不引用任何图片；
+ * 我们只留纯色块，宽度用冻结变量、不写 60px 字面量，也没有新增任何颜色。
+ * 选择器命中路径：AppShell.vue 渲染 `div.shell`（`:class="{'shell--collapsed': collapsed}"`）→ AppSidebar
+ * → `.shell-logo`（Task 3 起 logo 的 DOM 归属在侧栏里），所以 `.shell--collapsed .shell-logo` 是后代匹配；
+ * 折叠状态仍由 AppShell 唯一持有，本文件只是消费者。 */
+.shell--collapsed .shell-logo {
+  width: var(--shell-sidebar-collapsed-w);
+  padding: 0;
+  justify-content: center;
+}
+.shell--collapsed .shell-logo > span { display: none; }
+
+/* 收起态的顶栏左区：跟 Logo 一起从 220 挪到 60，别在两者之间留空档。
+ * 对标物就是这么配对的（实测两条）：`….layui-layout-admin .layui-layout-left{left:220px}`
+ * ↔ 收起时 `.layadmin-side-shrink … .layui-layout-left{left:60px}`；
+ * 我们的左区就是 `.shell-topbar__toggle` / `.shell-topbar__title`（基础规则里是 `left: var(--shell-sidebar-w)`），
+ * 这里换成收敛后的冻结变量。`shell--collapsed` 由 AppShell.vue 加在 `div.shell` 上，而 `<AppTopbar>` 就在
+ * 它内部（模板里 `<AppTopbar>` 是 `div.shell` 的第一个子元素），所以是后代匹配——注意这条路径与
+ * `.shell--collapsed .shell-logo` **不同**：logo 自 Task 3 起挂在 AppSidebar 上。不写行号：行号会随后续改动漂移。 */
+.shell--collapsed .shell-topbar__toggle,
+.shell--collapsed .shell-topbar__title {
+  left: var(--shell-sidebar-collapsed-w);
+}
+
+/* 账号区：对标物这一块是 `.photo`（`home.html:227-232`）——里面是头像与名字行（外加一个我们没做的
+ * 「我的资料」（`topNav.myinfo`，字典见 `home.html:1543`）链接包层 `<a lay-href="/User/myinfo">` +
+ * `<cite class="layui-hide">`，见 `AppAccountBlock.vue` 的注释），没有工作室名；工作室名在
+ * `.layui-logo`（`:224-226`），见上面 `.shell-logo` 段与裁定 R-s。
+ * 它的外框与间距来自抓取页**内联**：`<div class="photo" style="text-align:center;margin-top:70px">`、
+ * `<p style="margin-top:10px">`、`<span class="userName" style="font-size:14px">`，头像的圆形来自
+ * `.layui-circle{border-radius:100%}`
+ * （设计 spec §3 那两行）。这里把那些值搬成规则：上边距换成下面的 20px（算式在注释里）、
+ * 名字距头像 10px、字号 14px 都是内联原值（不另立 token：它们的值就是抓取页的内联值）。 */
+.shell-account {
+  /* ⚠️ 不是照抄对标物的 70px，而是**换算后**的 20px，见下方算式。
+   * 对标物：`.layui-side{top:0}`（生效值——`admin.css` 的 `.layui-layout-admin .layui-side{top:0}`
+   * 与 `layui.css` 的同权重 `top:60px` 打平，靠**加载顺序**胜出：页面先 layui.css 后 admin.css），
+   * 且 `.photo{margin-top:70px}` 是从侧栏**自己的流起点**量的 → 对标物头像落在视口 y≈70。
+   * 我们：`.shell-sidebar{top: var(--shell-topbar-h)}`（50px）→ 若照抄 70px，本块会落在 y=120，
+   * 比对标物低整整一个顶栏高；而 >991px 时 logo 是 fixed、不占流，这个差不会被它抵消
+   * （≤991px 的抽屉里 logo 参与流、在本块之前占 50px，见文件末 @media 段）。
+   * 换算：70px（对标物头像的绝对位置）− 50px（我们侧栏的起始偏移）= **20px**。
+   * 本块的顶部就是头像（工作室名在 `.shell-logo` 槽位里、不占本块空间），所以 >991px 时这 20px
+   * 对上的就是对标物头像的绝对位置——本机无浏览器，未做渲染实测。 */
+  padding-top: 20px;
+  text-align: center;
+}
+
+/* 头像尺寸由 token 给（契约 §2.1 的 --tt-shell-account-avatar-size = 72px，来自抓取页的 height="72"）。
+ * 圆形同对标物的 .layui-circle{border-radius:100%}：**生成头像的 SVG 自己不画圆**，圆由这一条给
+ * （spec §8 的「圆形由使用方 CSS 给」）。
+ * ⚠️ 2026-09-24 更正：本注释原写「组件里不重复写这个数字」——那在**没有**上传头像时不成立，
+ * `avatarDataUri(userName, 72)` 必须把尺寸内联进 SVG（见 AppAccountBlock.vue 的模板注释），
+ * 故 72 在那一处确有第二份（值相同、来源是同一个 token）。 */
+.shell-account__avatar {
+  width: var(--tt-shell-account-avatar-size);
+  height: var(--tt-shell-account-avatar-size);
+  border-radius: 100%;
+}
+
+/* ⚠️ 2026-09-24（我的资料线）：`.shell-account__avatar--placeholder`（首字 + 主色底的 `<span>` 兜底）
+ * 已删除——没有上传头像时改由 `config/avatar.ts` 生成 SVG data: URI 的 `<img>`（spec §8），
+ * 「兜底样式」不再需要。`--tt-shell-avatar-initial-size` 这个 token 因而在当前 CSS 里无消费者；
+ * token 归 `styles/theme.css` 管、不在本线改动面内，故不删（登记在报告里）。 */
+
+.shell-account__user {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+/* 收起态（60px）放不下头像与名字：设计 spec §4.3/§7 第 5 条登记的是「不复刻对标物的裁切，
+ * 改为显式隐藏」（该条同时记了对标物在收起态没有规则、靠侧栏 overflow-x 裁切）。 */
+.shell--collapsed .shell-account {
+  display: none;
+}
+
+/* ≤991：侧栏抽屉（默认收起，靠顶栏按钮开合）。本块是 `max-width: 991px`，所以 767 及以下同样命中
+ * （下面 <768 那条 @media 只改内容区 padding）。
+ *
+ * Task 3 把 `.shell-logo` 与账号区的 DOM 归属挪进了 `.shell-sidebar`（对标物的 `.layui-logo` 也在
+ * `.layui-side` 里，两者本来就同属侧栏那一块）。本段给侧栏加的 `transform` 会让它成为其后代
+ * `position: fixed` 元素的**包含块**（CSS transform 的包含块规则，本机无浏览器、未做实测）。
+ * 本段因此做两件事：
+ *
+ * 1）`.shell-topbar__toggle` / `.shell-topbar__title` 的横向偏移归零。基础规则给它们写了
+ *    `left: var(--shell-sidebar-w)`（220px），原本是给压在那个位置上的 logo 让位；而本断点里
+ *    logo 已经跟随侧栏（它就是抽屉的一部分），左上角是空的，不归零就会把 ☰ 与标题推到中间、
+ *    左边留 220px 空白。`0` 没有对标物实测值，是「logo 已随抽屉走 → 不再需要让位」推出来的
+ *    （**推导值，非实测**）。`.shell--collapsed` 那两条一并写：本轮的取值下 AppShell 的 `collapsed`
+ *    要求 `width > BREAKPOINTS.tabletMax`（991），本断点内它取不到 true、生效的是 (0,1,0) 那条；
+ *    但断点值在 JS 与 CSS 里各写一份（`src/config/breakpoints.ts` 开头就警告「改一处必须同时改另一处」），
+ *    一旦漂移到 collapsed 在本断点为真，权重 (0,2,0) 的收起态规则会把 `left` 定在 60px，故两种形态都收住。
+ *
+ * 2）`.shell-logo` 在本断点退出 `position: fixed`、改为参与抽屉的流。若它继续 fixed，包含块就是侧栏，
+ *    它会落在侧栏**内边距盒**（padding box；CSS Transforms L1 规定被变换的祖先为后代 fixed 元素提供
+ *    的包含块是它的 padding box）的原点 = 视口 y=50（`.shell-sidebar{top: var(--shell-topbar-h)}`），而账号区的
+ *    头像落在视口 y=70（侧栏起点 50 + `.shell-account` 的 20px），于是 logo 的不透明底色会压住头像
+ *    上沿约 30px（logo 占 50–100，头像占 70–142）。参照系之差来自我们的 `top:50px`：对标物的
+ *    `.layui-side` 是 `top:0`，它的 fixed 子元素仍解析到视口 (0,0)，不会撞上头像（它那条 ≤992px 的
+ *    `transform:translate3d(-220px,0,0)` 引自裁定复核，抓取的两份 CSS 不在版本库内，我没有独立复核）。
+ *    改成 static 后，抽屉里的次序是「logo（视口 y=50–100）→ `.shell-account` 的 20px → 头像（y=120）」，
+ *    与桌面端「logo 高 50 → 20px → 头像」的次序一致（桌面端头像在 y=70，见 `.shell-account` 段）；
+ *    `width: 100%` 是让它跟着侧栏宽走（基础规则里那个 220px 是配 `position: fixed` 用的）。
+ *    高度 / 底色 / 字重 / 居中都不动（高度＝顶栏高，见 `.shell-logo` 段与 R-n(b)）。 */
+@media (max-width: 991px) {
+  .shell-sidebar { transform: translateX(-100%); transition: transform 0.2s; }
+  .shell-sidebar--open { transform: translateX(0); }
+  .shell-content { margin-left: 0; }
+  /* 页签条与内容区必须**同一条左边界**：本档侧栏是离屏抽屉（上面那条 `transform: translateX(-100%)`），
+   * 内容区的左让位由它上面那行 `margin-left: 0` 取消；页签条若还留在基础规则的
+   * `var(--shell-sidebar-w)`（220px），内容区从 x=0 起、页签条却从 x=220 起，两者错开一个侧栏宽。
+   * 本档 `AppShell` 的 `collapsed` 取不到 true（它要求宽度 > `BREAKPOINTS.tabletMax`），所以
+   * `.shell--collapsed .shell-tabs` 那条收起态规则在这里本来不发生——但下面把两个选择器一起写，
+   * 理由与**下面**那组顶栏左区相同：断点值在 JS（`src/config/breakpoints.ts`）与 CSS 里各写一份，
+   * 一旦漂移到 `collapsed` 在本档为真，权重 (0,2,0) 的那条会把 left 定回 60px。 */
+  .shell-tabs,
+  .shell--collapsed .shell-tabs {
+    left: 0;
+  }
+  .shell-topbar__toggle,
+  .shell-topbar__title,
+  .shell--collapsed .shell-topbar__toggle,
+  .shell--collapsed .shell-topbar__title {
+    left: 0;
+  }
+  .shell-logo {
+    position: static;
+    width: 100%;
+  }
+}
+/* < 768：只保证不崩；移动壳属移动端 H5 那一期 */
+@media (max-width: 767px) {
+  .shell-content { padding: 8px; }
+}

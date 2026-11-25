@@ -1,0 +1,5086 @@
+/**
+ * 前端 v2（`/v2` 试验线）的炭火样式：`.ttv2` 作用域 token + `cv2-*` 组件类。
+ *
+ * 值的唯一出处 = `docs/FRONTEND-V2-DRAFT.md` §1 的 token 表（⛔ 不写表外的裸色值；
+ * 样稿 direction-F.html 与本表的分叉以表为准——`--tt2-dim` 已有意压深为 #6D6A63）。
+ * 业务方看线上反馈（D-0351）：内容区要「更突出、更直观」——page 底压深、按钮分档、
+ * 行 hover/勾选给色；偏离记录在 DRAFT §8。
+ * 状态与按钮色系（⭐ D-0371，业务方四轮本地预览逐项拍板）：状态签/筛选签/状态卡 = 「墨点 +
+ * 同族浅底填充」三件套（每状态 dot/bg/fg 三枚 token，签与卡标签文字前带墨点）；
+ * 筛选签选中 = 该状态深字色实底白字；状态卡选中 = 浅底不动 + 墨点色描边加粗 + 右上角墨点
+ * 色三角✓；按钮双主钮（查询=青绿 primary、提交=红橙 submit）+ 中性灰浅底档（tool 并入）；
+ * 危险档统一红实底。对比度全部经 .tools/st-contrast.mjs 实测（fg/bg ≥4.5、dot/bg ≥3、
+ * 实底/白字 ≥4.5），逐对读数登记在 DRAFT §1。
+ *
+ * 作用域纪律（由 `src/v2/__tests__/carbonTokens.spec.ts` 钉住）：
+ *  - **全部** `--tt2-*` 定义只挂在 `.ttv2` 选择器下（外壳根元素的类）⇒ 旧前端拿不到；
+ *  - **全部**颜色字面量（hex / rgba）只出现在 `.ttv2` 块内的 `--tt2-*` 声明里；
+ *  - `cv2-*` 类只被 v2 子树使用，类本身无 token 定义，散在外面对旧页面是惰性的。
+ *
+ * Element Plus 子树重映射（DRAFT §1）：v2 页面今天全是自绘控件、不用 EP 组件；
+ * 这里仍按标准给出最小重映射，将来在 `.ttv2` 子树里落第一个 EP 组件时皮肤自动跟炭火走。
+ *
+ * ── 响应式断点口径（业务方一直开着 ~620px 宽的侧栏面板看 /v2）──
+ * 全部 @media 只用下面四个宽度字面量，⛔ 不散落其它魔数（CSS @media 吃不了自定义属性，
+ * 字面量由 CarbonShell.spec / V2OrderNew.spec 钉住）：
+ *   ≤1100px  外壳：侧栏 220px → 72px 图标栏（品牌缩方块、顶部用户块只留 40px 小头像、
+ *            条目只显图标 + 原生 title 提示、组菜单改右浮层；内容区/顶栏/签条 margin-left
+ *            联动 72px；--tt2-side-w-rail）
+ *   ≤900px   录单页两列栅格（左粘贴区+右表单）改上下堆叠、各自全宽；状态卡片行 4 张/行
+ *   ≤720px   外壳：侧栏转顶部抽屉（顶栏 ☰ 开关、盖在内容上、选完自动收）；录单页字段改
+ *            「标签在上、控件在下、控件全宽」；资料/消息两列网格堆叠单列；内容区左右内边距收 16px
+ *   ≤560px   状态卡片行 2 张/行
+ */
+.ttv2 {
+  /* ── token（DRAFT §1 逐条转录；D-0351 起状态签浅底提一档饱和）──────── */
+  --tt2-side: #23252a;
+  --tt2-side-text: #c6cad0;
+  --tt2-side-active: #f5f3ef;
+  /* ⭐ 业务方「顶部栏的颜色需要与菜单栏黑色有一点点区分 不能完全一样」：
+   * 顶栏比侧栏亮半档（同一炭色族，肉眼分得清交界但不抢眼）。 */
+  --tt2-topbar: #2e323a;
+  /* 填充选中/弹窗顶栏上的白；蓝链双档（订单号统一蓝，D-0354）；细滚动条杆。 */
+  --tt2-on-primary: #ffffff;
+  --tt2-on-primary-dim: rgba(255, 255, 255, 0.85);
+  /* ⭐ 业务方「紫色不太好看」：#1d5fd0 等宽粗体下偏紫，换明确的明亮蓝。 */
+  --tt2-link-blue: #1677ff;
+  --tt2-link-blue-deep: #0958d9;
+  --tt2-scroll-thumb: rgba(43, 42, 40, 0.28);
+  /* 连体强调框浅青底 / 死下拉占位 / 大浮层投影（评审：组件 scoped 样式里的
+   * 裸色值收进 token——token 守卫网只扫 carbon.css，组件内的裸值此前在网外）。
+   * 危险实底钮：底 #B03A32 对白 6.00、hover #8F2B24 对白 8.27（探针实测）；
+   * 比 st-error 亮一档——状态签用 st-error，实底钮用 --tt2-btn-danger。 */
+  --tt2-btn-danger: #b03a32;
+  --tt2-danger-hover: #8f2b24;
+  /* 金额红 = 比 st-error 亮一档（⭐ 业务方「暗红色看起来不显眼 换亮一点的红色」）。
+   * #DB3434 对白底实测 4.61:1（AA 普通文本达标；首版 #E5484D 只有 3.91:1，对比度不达标换色）。 */
+  --tt2-money-red: #db3434;
+  --tt2-accent-box-bg: #f4faf9;
+  --tt2-placeholder-dim: #b9c2c0;
+  --tt2-flash-shadow: rgba(43, 42, 40, 0.28);
+  --tt2-page: #ffffff;
+  --tt2-panel: #ffffff;
+  /* 企业微信官网桌面群聊示例取色，仅用于订单聊天。 */
+  --tt2-wecom-peer-bubble: #e4e7eb;
+  --tt2-wecom-own-bubble: #c9e7ff;
+  --tt2-wecom-wechat-label: #15b628;
+  --tt2-wecom-company-label: #ff8214;
+  --tt2-ink: #2b2a28;
+  --tt2-dim: #6d6a63;
+  --tt2-line: #e7e3dc;
+  --tt2-primary: #0b7a70;
+  --tt2-primary-deep: #085a52;
+  /* 行内文字操作 hover 的深档（青绿；白底 8.7:1）。 */
+  --tt2-primary-deeper: #06423c;
+  /* ⭐ 状态签三件套（D-0371，2026-11-03 业务方四轮本地预览逐项拍板）：每状态 = 墨点 dot +
+   * 浅底 bg + 深字 fg 三枚 token；`-line` = 墨点的 40% 透明版（描边只是辅助识别，
+   * 中文状态字照旧常显）。全部读数经探针实测（.tools/st-contrast.mjs）：
+   * fg 对 bg 4.65–6.61、dot 对 bg 3.10–5.62（图形件 ≥3）、fg 对白 5.47–8.83
+   * （对白 ≥4.5 ⇒ 筛选签「选中 = 该状态深字色实底 + 白字」同值过线），逐对登记在 DRAFT §1。 */
+  --tt2-order-doing-ink: #12665d;
+  --tt2-order-doing-bg: #dff3ef;
+  --tt2-order-doing-dot: #2b8c80;
+  --tt2-order-done-ink: #293d8a;
+  --tt2-order-done-bg: #dce4ff;
+  --tt2-order-done-dot: #3f55ae;
+  --tt2-order-refund-ink: #9b5f66;
+  --tt2-order-refund-bg: #fff3f4;
+  --tt2-order-refund-dot: #d39098;
+  --tt2-st-unassigned: #57544c;
+  --tt2-st-unassigned-bg: #efede7;
+  --tt2-st-unassigned-dot: #8a867c;
+  --tt2-st-pending: #5b35a8;
+  --tt2-st-pending-bg: #e9dff9;
+  --tt2-st-pending-dot: #7a45d0;
+  /* 代练中 = 绿、已完成 = 蓝（⭐ 业务方「代练中和已完成的状态颜色太接近」后本档把两态对调并
+   * 各自定色：doing 落草绿族、done 落蓝族——与「代练中=进行中、已完成=终态」的语义对齐）。 */
+  --tt2-st-doing: #1d6b40;
+  --tt2-st-doing-bg: #def0e3;
+  --tt2-st-doing-dot: #2e8b57;
+  --tt2-st-accept: #a03312;
+  --tt2-st-accept-bg: #fad9cb;
+  /* 保存实底的悬停，比字色再深一档。 */
+  --tt2-st-accept-hover: #80290e;
+  --tt2-st-accept-dot: #d64a1e;
+  --tt2-st-done: #0e4fa8;
+  --tt2-st-done-bg: #d8e6fc;
+  --tt2-st-done-dot: #1159c1;
+  /* 问题单红 = 深红档（与待验收的橙红拉开：dot L 42 vs 55、两底并排可辨）。 */
+  --tt2-st-error: #8a2620;
+  --tt2-st-error-bg: #f5c3b7;
+  --tt2-st-error-dot: #8a2620;
+  --tt2-st-refund: #a02434;
+  --tt2-st-refund-bg: #fbedf1;
+  --tt2-st-refund-dot: #c22b3a;
+  --tt2-st-paused: #8f4304;
+  --tt2-st-paused-bg: #fbdfc2;
+  --tt2-st-paused-dot: #b45d04;
+  /* 结算状态「未结账」专用档（浅灰带蓝灰，不进状态卡片/筛选签）。 */
+  --tt2-st-unsettled: #5c6b7a;
+  --tt2-st-unsettled-bg: #eaedf0;
+  --tt2-st-unsettled-dot: #5c6b7a;
+  /* 已退单「显示签」= 对标同款粉实底（⭐ D-0371 第六轮业务方拍板「对标用的这种 我们采用这种颜色」，
+   * 取色 = 其截图实测 #EFAAAA；白字 ~2.0:1——对标即如此，有意豁免 4.5 硬线并登记）。
+   * 结算状态「已结账」= 深绿实底签（底=框、字白 5.84:1、点白 90%）；与订单八状态分家。 */
+  --tt2-st-refund-chip: #efaaaa;
+  --tt2-st-settled: #1f7345;
+  /* 实底签/选中签上的墨点 = 白 90%（图形件档）。 */
+  --tt2-st-dot-on: rgba(255, 255, 255, 0.9);
+  /* 状态签的 1px 同色系描边 = 各状态墨点的 40% 透明版。 */
+  --tt2-st-unassigned-line: rgba(138, 134, 124, 0.4);
+  --tt2-st-pending-line: rgba(122, 69, 208, 0.4);
+  --tt2-st-doing-line: rgba(46, 139, 87, 0.4);
+  --tt2-st-accept-line: rgba(214, 74, 30, 0.4);
+  --tt2-st-done-line: rgba(17, 89, 193, 0.4);
+  --tt2-st-error-line: rgba(138, 38, 32, 0.4);
+  --tt2-st-refund-line: rgba(194, 43, 58, 0.4);
+  --tt2-st-paused-line: rgba(180, 93, 4, 0.4);
+  --tt2-st-unsettled-line: rgba(92, 107, 122, 0.4);
+  /* ── 内容区反馈档（D-0351；出处 = DRAFT §1/§8）────────────────────────── */
+  /* 表格行 hover 的极浅青绿晕（白面板上叠 6% 主青绿；dim 对实效底 5.0:1）。 */
+  --tt2-hover-wash: rgba(11, 122, 112, 0.06);
+  /* 勾选行的浅青绿底（ink 12.4:1 / dim 4.7:1 / primary-deep 7.2:1）。 */
+  --tt2-row-checked: #dff2f0;
+  /* 高频工具档按钮与工具档浅底（⭐ 本档并入中性灰族：底/线与 default 档同值，
+   * 工具件不再自带青绿 tint——字 = ink、hover 走 btn-soft-hover 档）。 */
+  --tt2-tool-bg: #f7f6f2;
+  --tt2-tool-line: #d6d1c6;
+  /* default 档按钮的静止浅底与描边（暖白底 #F7F6F2 / 暖灰线 #D6D1C6——全系统不再有
+   * 纯白按钮）；hover 加深一档（#F0EEE8 / #AFA89A）仍保持墨字。 */
+  --tt2-btn-soft-bg: #f7f6f2;
+  --tt2-btn-soft-line: #d6d1c6;
+  --tt2-btn-soft-hover-bg: #f0eee8;
+  --tt2-btn-soft-hover-line: #afa89a;
+  /* 横排动作的平时字色。悬停改回墨字，并在字下出一条主题绿线。 */
+  --tt2-btn-quiet: #4a4742;
+  /* 查询/刷新字钮悬停的浅青。深橙、琥珀悬停复用状态浅底，不另造色。 */
+  --tt2-btn-find-wash: #e5f3f1;
+  /* EP 化筛选控件（el-select/input/date）的静止边框与 focus 光圈（34px 高、hover/focus
+   * 边框主色 + 3px 光圈、占位文字 dim——皮见下方 .ttv2 .el-* 规则）。 */
+  --tt2-filter-line: #dde3e0;
+  --tt2-focus-ring: rgba(11, 122, 112, 0.12);
+  /* 主提交钮（录单页「提交保存」）= 红橙实底白字（白字对实底 5.04:1、hover 深档 6.36:1）；
+   * 与「查询」青绿 primary 组成双主钮：查询=本系统主题、提交=动作用的醒目暖色。 */
+  --tt2-btn-submit: #c4431b;
+  --tt2-btn-submit-hover: #a93a15;
+  /* 实底提交钮的唯一投影（炭火的「阴影最多一处」例外档；ink 的 14% 透明版）。 */
+  --tt2-btn-submit-shadow: rgba(43, 42, 40, 0.14);
+  /* 悬停预览浮层（.cv2-hovercard）的投影：与提交钮投影同值、但独立 token 不互相连坐。 */
+  --tt2-hovercard-shadow: rgba(43, 42, 40, 0.14);
+  /* ⭐ 工具条功能 tint：蓝=对外推送、琥珀=改状态（独立 token，不再借状态签 pending 族）。
+   * 逐对实测：蓝 8.5 / 琥珀（#6B5400 对 #F5EAC5）6.03，文字对白均 ≥4.5。 */
+  --tt2-tint-blue: #16407e;
+  --tt2-tint-blue-bg: #e3ebf8;
+  --tt2-tint-blue-line: rgba(30, 95, 196, 0.35);
+  --tt2-tint-amber: #6b5400;
+  --tt2-tint-amber-bg: #f5eac5;
+  --tt2-tint-amber-line: rgba(154, 123, 0, 0.42);
+  /* ⭐ 2026-11-05 第三轮定稿（业务方原话「记退款用亮红色 删除用亮黄色 其他都用一样的默认绿色」）：
+   * 工具条 = 9 颗统一青绿（复用 --tt2-primary）+ 记退款亮红 + 删除亮黄；「按功能一色」套件
+   * （tool/status/refund/price 四枚专用 token）随之退场。亮红 #D32F2F 白字 4.98（全套最亮且过线）；
+   * 亮黄 #F5B914 白字 1.77 = 对标黄底白字同款（业务方点名，有意豁免 4.5，出处登记 DRAFT §1/§8）；
+   * push #0E4FA8（白字 7.77）仍服务行内「发平台」。 */
+  --tt2-btn-solid-red: #d32f2f;
+  --tt2-btn-solid-yellow: #f5b914;
+  --tt2-btn-solid-penalty: #70449a;
+  --tt2-btn-solid-push: #0e4fa8;
+  /* ⭐ 管理订单统计句橙（业务方「颜色改成原版一样的颜色」）：对标证据件字面色 `#ff6a00`
+   * （order-orderlist.html 的 .total span）。白底 2.87:1 —— 对标同款、业务方点名，
+   * 有意豁免 4.5 硬线（同「已退单粉底」先例），只挂管理订单页统计句。 */
+  --tt2-summary-orange: #ff6a00;
+  /* 行内订单状态字色。不改旧的 accept / paused：深橙仍给状态卡，褐色仍给已抛平台的单号。 */
+  --tt2-st-accept-ink: #ff6a00;
+  --tt2-st-paused-ink: #c4960a;
+  /* ⭐ 管理订单收款「收」徽标亮绿（业务方「换一个亮点的颜色 试试用对标那样的绿色」，
+   * 原 settled 深绿被否）。白字 5.02:1 过线；只挂管理订单页（scoped 覆盖 settled 底色）。 */
+  --tt2-pay-badge-green: #15803d;
+  /* ⭐ 连体网格的标签格底 = #FBFBFB（对标证据件字面色，业务方 2026-11-07 指定全站换档，
+   * 所有引用本 token 的标签格——筛选 / 表单连体网格——同批生效）。
+   * dim 字对它 5.21:1（≥4.5，比旧 #F5F6F7 的 4.99:1 更高）；ink 13.86 / 深红 accent 更高。 */
+  --tt2-label-bg: #fbfbfb;
+  /* 筛选名字格暖米。弹窗和录单仍用上面的 --tt2-label-bg，不要挪那个值。 */
+  --tt2-filter-label-bg: #f6f4ef;
+  /* 筛选框和录单的空提示。文章、未收款徽标仍用 --tt2-placeholder-dim。 */
+  --tt2-filter-ph: #d0cbc3;
+  /* 录入订单选中接手人：和暖米名字格分开。 */
+  --tt2-assignee-bg: #e5f3f1;
+  --tt2-assignee-ink: #0b7a70;
+  --tt2-assignee-line: #b7ddd8;
+  /* ⭐ 后台首页看板（2026-11-06 v2-admin-dashboard 线）：Metabase 浅色内容区，值 = 定稿
+   * 样稿 r4 取色（docs/plans/2026-11-06-v2-admin-dashboard-mockup.html）。柱/线两枚与
+   * charts.ts 的 COMBO_BAR_COLOR / COMBO_LINE_COLOR 同值两侧并存（canvas 读不到 CSS
+   * 变量，charts.ts 文件头有同一句注记；改值两处同改）。涨绿/跌红 = 环色板两端同族。 */
+  --tt2-dsh-bg: #f4f4f2;
+  --tt2-dsh-card-line: #e8e6e1;
+  --tt2-dsh-row-line: #f1efe9;
+  --tt2-dsh-bar: #4d9bd6;
+  --tt2-dsh-line: #2e8b6e;
+  --tt2-dsh-up: #2e8b6e;
+  --tt2-dsh-down: #c25b4e;
+  --tt2-dsh-tag-amber-fg: #8a6a1f;
+  --tt2-dsh-tag-amber-line: #d99a2b;
+  --tt2-dsh-tag-amber-bg: rgba(217, 154, 43, 0.08);
+  --tt2-dsh-dot-purple: #6f5fc7;
+  /* ── 派生值（出处 = DRAFT §2/§4 的文字规定，非新色）────────────────────── */
+  /* 侧栏当前项「微亮底」：DRAFT §4 给的 rgba(245,243,239,.06) 级（side-active 的透明版）。 */
+  --tt2-side-active-bg: rgba(245, 243, 239, 0.06);
+  --tt2-side-hover-bg: rgba(245, 243, 239, 0.04);
+  /* 侧栏内分隔线：DRAFT §4 样稿用 side-text 的低透明版（深底上 --tt2-line 太亮）。 */
+  --tt2-side-line: rgba(168, 171, 178, 0.16);
+  /* DRAFT §2：数字与金额的等宽栈（用在一切数据上）。 */
+  --tt2-mono: ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  /* 管理订单页全局提示（对标 layer.msg 居中深条）：ink 的 85% 透明版（派生值非新色）。 */
+  --tt2-toast-bg: rgba(43, 42, 40, 0.85);
+  /* ── 外壳尺寸 token（业务方指令：D-0346 放大 + D-0351 收窄/收紧 + D-0354 签加大）──
+   * 240px = 业务方看线上「太宽了点 收窄一些些」（D-0351；D-0346 放大到的 260 收窄一档）；
+   * 44px / 14px = 旧壳菜单主级条目的比例（`--tt-shell-menu-item-h`，只读参照）；
+   * 34px = 子条目行高（业务方 D-0351「展开的子菜单之间隔太远了 要隔近一点的」；比旧壳的
+   *   38px（`--el-menu-sub-item-height` = 44-6）再紧一档——业务方点名要更近）；
+   * 50px = 旧壳顶栏高度（shell.css 冻结值，只读参照）；
+   * 42px = 页签条/签高（⭐ D-0354 业务方「签偏小」——旧壳 40px 提到 42px，签字号同步 13→14px）；
+   * 200ms = 用户触发展开动画的时长（任务口径 ~200ms ease）。
+   * ⛔ 组件类只许 `var(--tt2-…)`，不许写这些值的裸值。 */
+  /* ⭐ 业务方两轮定档：先 240→200（「拉窄一点」），实测又「太窄了」回调到
+   * 220px——对标 layui 后台侧栏宽档，两轮的落点。 */
+  --tt2-side-w: 220px;
+  /* ⭐ 响应式专包：≤1100px 图标栏档的侧栏宽（口径见文件头断点注释）。 */
+  --tt2-side-w-rail: 72px;
+  /* ⭐ 响应式专包：≤720px 抽屉档的遮罩（ink 的 45% 透明版；装饰层无对比度要求）。 */
+  --tt2-scrim: rgba(43, 42, 40, 0.45);
+  --tt2-menu-item-h: 44px;
+  --tt2-sub-item-h: 34px;
+  --tt2-topbar-h: 50px;
+  --tt2-tabs-h: 42px;
+  --tt2-motion: 200ms;
+  --tt2-z-chrome: 20;
+  /* ⭐ D-0354：当前签 = 主色实底白字，签上的关闭 × = 白 80% 透明（悬停全白走 --tt2-panel）。 */
+  --tt2-tab-close: rgba(255, 255, 255, 0.8);
+  /* ── EP 子树重映射（DRAFT §1 末段）────────────────────────────────────── */
+  --el-color-primary: var(--tt2-primary);
+  --el-color-primary-dark-2: var(--tt2-primary-deep);
+  --el-border-radius-base: 4px;
+  /* ⭐ D-0354 追记：筛选控件 EP 化——默认尺寸档抬到 34px（业务方口径），输入框/下拉/
+   * 日期选择器的默认高统一走它。 */
+  --el-component-size: 34px;
+
+  /* ── 子树基底（DRAFT §2：界面/正文 14px、行高 1.6）────────────────────── */
+  color: var(--tt2-ink);
+  background: var(--tt2-page);
+  font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ═══ 外壳（CarbonShell；DRAFT §4）═════════════════════════════════════ */
+
+/* 保持视口滚动条与页面宽度，避免弹窗打开时布局位移。 */
+body.el-popup-parent--hidden:has(.ttv2) {
+  overflow: visible !important;
+  width: auto !important;
+}
+
+.cv2-shell {
+  min-height: 100vh;
+}
+
+.cv2-side {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: var(--tt2-side-w);
+  display: flex;
+  flex-direction: column;
+  background: var(--tt2-side);
+  z-index: 10;
+}
+
+.cv2-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 22px 20px 20px;
+  border-bottom: 1px solid var(--tt2-side-line);
+}
+
+.cv2-brand-mark {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--tt2-primary);
+}
+
+.cv2-brand-name {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--tt2-side-active);
+}
+
+.cv2-brand-tenant {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--tt2-side-text);
+}
+
+.cv2-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 0;
+  /* 菜单可滚但滚动条不可见（D-0351 业务方「展开后会出现滑动条」）：滚轮/触控板照常滚。 */
+  scrollbar-width: none;
+}
+
+.cv2-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.cv2-nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cv2-nav-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  /* ⭐ 业务方「选中颜色填充是全部 不是左右有间隔」：条目盒全宽贴死侧栏两缘
+   * （margin 0 / radius 0，对标 layui 选中实底整行）；原 10px 侧距折进 padding 左右 20px，
+   * 文字位置不变。 */
+  margin: 0;
+  /* 条目高 44px = 旧壳比例（业务方「比较偏小 需要放大点」放大档）；
+   * 字号 14px 走子树基底，不另写。 */
+  height: var(--tt2-menu-item-h);
+  padding: 0 20px;
+  border-radius: 0;
+  color: var(--tt2-side-text);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+/* 图标 = 旧侧边栏同源的字形（config/menuIcons.ts 的表 + 全局 layui-icon 字体），
+ * 不是 SVG：定宽 16px、随文字色（currentColor），同 styles/shell.css 的侧栏口径。 */
+.cv2-nav-icon {
+  flex: none;
+  width: 16px;
+  font-size: 16px;
+  line-height: 1;
+  text-align: center;
+  color: inherit;
+  overflow: hidden;
+}
+
+.cv2-nav-link:hover {
+  color: var(--tt2-side-active);
+  background: var(--tt2-side-hover-bg);
+}
+
+/* 当前项 = ⭐ 业务方「类似对标那样 填充颜色选中」：主色实底色块 + 白字
+ * （旧式「左条 + 微亮底」的对比度在大屏侧栏里太弱，业务方点名要 layui 那种填充选中）。 */
+.cv2-nav-link--active {
+  color: var(--tt2-on-primary);
+  background: var(--tt2-primary);
+  font-weight: 600;
+}
+
+/* ═══ 两级菜单（结构照抄旧侧边栏：直挂条目 + 可折叠分组；数据 = config/menu.ts）═══ */
+
+/* 组头行：与条目行同款盒型，但整行可点（按钮），无默认按钮皮。 */
+.cv2-nav-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: calc(100% - 20px);
+  margin: 2px 10px;
+  height: var(--tt2-menu-item-h);
+  padding: 0 12px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--tt2-side-text);
+  font-family: inherit;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.cv2-nav-head:hover {
+  color: var(--tt2-side-active);
+  background: var(--tt2-side-hover-bg);
+}
+
+/* 折叠箭头：自绘细线（字形集合里没有箭头）；展开时转 90°。
+ * 旋转带 200ms 过渡（业务方「点击展开没有动态效果」——用户触发的动效；
+ * `prefers-reduced-motion` 下被文件末的全局兜底关掉，直接切换）。 */
+.cv2-nav-arrow {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  margin-left: auto;
+  stroke: currentcolor;
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform var(--tt2-motion) ease;
+}
+
+.cv2-nav-head[aria-expanded='true'] .cv2-nav-arrow {
+  transform: rotate(90deg);
+}
+
+/* 展开动画（业务方「原版是滑下去展开的」）：CSS grid 0fr↔1fr 的行高过渡——
+ * 高度自适应内容、无需 max-height 魔数。子列表常驻 DOM（收起 = 行高压到 0fr +
+ * `visibility: hidden`，后者让它退出 a11y 树与焦点序，等价旧 v-show 的语义）。
+ * visibility 与行高同步过渡：展开瞬间可见、收起在过渡结束才隐藏（滑下去的观感）。 */
+.cv2-sub-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--tt2-motion) ease;
+}
+
+.cv2-nav-group--open .cv2-sub-wrap {
+  grid-template-rows: 1fr;
+}
+
+/* 子条目列表：缩进一层，文字与组头错半档。 */
+.cv2-sub-list {
+  list-style: none;
+  margin: 0 0 4px;
+  padding: 0;
+  min-height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  transition: visibility var(--tt2-motion);
+}
+
+.cv2-nav-group--open .cv2-sub-list {
+  visibility: visible;
+}
+
+.cv2-sub-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  /* 行距收紧（D-0351「展开的子菜单之间隔太远了」）：行高 34px token、条目间 1px
+   * （主级条目保持 44px 不动）；缩进与旧壳同层（文字压着组头图标线起）。
+   * ⚠️ box-sizing 必须显式 border-box：carbon.css 没有全局 border-box 复位，
+   * content-box 下 min-height 34 + 上下 padding 8 会渲染成 42px（D-0351 截图实测）。
+   * ⭐ D-0355：字号 13→14px（业务方「与主菜单一致」）；34px 行高与 4px 上下内边距不变
+   * （14px×1.4 行高 ≈ 20px + 8px < 34px，呼吸感不受挤——行高显式给出避免继承 1.6 撑行）。 */
+  box-sizing: border-box;
+  /* ⭐ 随主级条目一起改全宽填充：左右侧距折进 padding（文字缩进位置不变），
+   * 选中/悬停色块都贴死侧栏两缘。 */
+  margin: 1px 0;
+  min-height: var(--tt2-sub-item-h);
+  padding: 4px 12px 4px 36px;
+  border-radius: 0;
+  color: var(--tt2-side-text);
+  text-decoration: none;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.cv2-sub-link:hover {
+  color: var(--tt2-side-active);
+  background: var(--tt2-side-hover-bg);
+}
+
+/* 子条目 active = 同一语法的填充版：主色实底 + 白字（随主级一起换填充选中）。 */
+.cv2-sub-link--active {
+  color: var(--tt2-on-primary);
+  background: var(--tt2-primary);
+  font-weight: 600;
+}
+
+/* 置灰不可点（isClickable=false；同旧侧边栏 disabled）：半透明去链接态，hover 不亮。 */
+.cv2-nav-link--disabled,
+.cv2-sub-link--disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.cv2-nav-link--disabled:hover,
+.cv2-sub-link--disabled:hover {
+  color: var(--tt2-side-text);
+  background: transparent;
+}
+
+/* 顶部用户块（品牌块下方、菜单上方；业务方拍板照旧壳 AppAccountBlock 的竖排形态）：
+ * 居中大圆头像 + 下方居中「名称[职位]」。分隔线顺接：品牌块的下缘线隔开品牌与本块，
+ * 本块的下缘线隔开菜单（同 --tt2-side-line 族）。 */
+.cv2-side-user {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 12px;
+  border-bottom: 1px solid var(--tt2-side-line);
+}
+
+/* 用户块头像 = `<img>`（src：真 avatar_url，缺省按名字生成的 SVG data URI——同旧壳
+ * `.shell-account__avatar` 的语义；SVG 自己不画圆，圆由这里的 border-radius 给）。
+ * object-fit: cover：非方图真头像不变形。尺寸 60px 与生成头像的内联 SVG 尺寸同值
+ *（CarbonShell.vue 的 avatarDataUri(…, 60)，同旧壳「组件里必须写数字」的口径）；
+ * ≤1100px 图标栏档收 40px（见响应式块）。 */
+.cv2-avatar {
+  flex: none;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.cv2-user-line {
+  margin: 0;
+  max-width: 100%;
+  font-size: 13px;
+  color: var(--tt2-side-text);
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.cv2-user-line b {
+  color: var(--tt2-side-active);
+  font-weight: 600;
+}
+
+.cv2-main {
+  margin-left: var(--tt2-side-w);
+  /* 顶栏与标签页条都是 fixed（D-0346 加上）：内容区从它们下缘起排。
+   * ⭐ 业务方「每个页面的顶部间隔 太大了 小一点」：附加空档 26→10px。 */
+  padding: calc(var(--tt2-topbar-h) + var(--tt2-tabs-h) + 10px) 16px 48px;
+  min-width: 0;
+}
+
+/* ═══ 顶栏 + 标签页条（D-0346，业务方「后台首页顶部的顶栏和标签页也需要加上」）═══
+ * 结构语义照旧壳（AppTopbar：左页题 / 右客服工具+账号区；AppTabsBar：清空 + 页签列表），
+ * 皮是炭火：顶栏与侧栏同一块深炭，标签页条落在纯白页底上；
+ * ⭐ D-0354：活动签 = 青绿实底整块 + 白字（对标「当前签实底」版式），非当前悬停青绿浅底。 */
+
+.cv2-topbar {
+  position: fixed;
+  top: 0;
+  left: var(--tt2-side-w);
+  right: 0;
+  height: var(--tt2-topbar-h);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 20px;
+  background: var(--tt2-topbar);
+  color: var(--tt2-side-active);
+  z-index: var(--tt2-z-chrome);
+}
+
+.cv2-topbar-title {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* 右区：客服工具 + 账号 + 退出，整块推到最右（旧壳同一条 margin-left:auto 语义）。 */
+.cv2-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-left: auto;
+  flex: none;
+}
+
+/* 客服工具：外链静态下载页（/kefu-tools/，不进 v2 路由）⇒ 新标签。
+ * 位置 = 顶栏右区（旧壳那颗因 relative 布局洞落进了最左的 logo 遮挡区——本壳从结构上
+ * 就不存在这个洞：链接与账号同住右区容器）。 */
+.cv2-kefu-link {
+  color: var(--tt2-side-text);
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.cv2-kefu-link:hover {
+  color: var(--tt2-side-active);
+  text-decoration: underline;
+}
+
+.cv2-topbar-user {
+  font-size: 13px;
+  color: var(--tt2-side-text);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.cv2-topbar-user b {
+  color: var(--tt2-side-active);
+  font-weight: 600;
+}
+
+.cv2-logout {
+  border: 1px solid var(--tt2-side-line);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--tt2-side-text);
+  font-family: inherit;
+  font-size: 13px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+.cv2-logout:hover {
+  color: var(--tt2-side-active);
+  border-color: var(--tt2-side-active);
+}
+
+.cv2-tabs {
+  position: fixed;
+  top: var(--tt2-topbar-h);
+  left: var(--tt2-side-w);
+  right: 0;
+  height: var(--tt2-tabs-h);
+  display: flex;
+  align-items: stretch;
+  background: var(--tt2-page);
+  border-bottom: 1px solid var(--tt2-line);
+  z-index: var(--tt2-z-chrome);
+}
+
+/* 清空按钮（旧壳 A8 同款语义：清空可关页签、停在首页签）。⭐ D-0354 同步加大（14px）。 */
+.cv2-tabs-clear {
+  flex: none;
+  border: none;
+  border-right: 1px solid var(--tt2-line);
+  background: transparent;
+  color: var(--tt2-dim);
+  font-family: inherit;
+  font-size: 14px;
+  padding: 0 16px;
+  cursor: pointer;
+}
+
+.cv2-tabs-clear:hover {
+  color: var(--tt2-primary-deep);
+}
+
+.cv2-tabs-refresh {
+  /* ⭐ 位置 = 紧挨「清空标签页」右侧（对标形态）。盒型照抄清空钮：随签条通高
+   * （align-items:stretch，无 height/margin），宽 42px、右缘分隔线——两钮同高对齐。 */
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  border: none;
+  border-right: 1px solid var(--tt2-line);
+  background: transparent;
+  color: var(--tt2-dim);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.cv2-tabs-refresh:hover {
+  background: var(--tt2-hover-wash);
+  color: var(--tt2-primary-deep);
+}
+
+.cv2-tabs-list {
+  display: flex;
+  align-items: stretch;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.cv2-tabs-list::-webkit-scrollbar {
+  display: none;
+}
+
+/* ⭐ D-0354 签加大：高随签条 token（42px）、字 14px、左右内边距 20px。 */
+.cv2-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 20px;
+  color: var(--tt2-dim);
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* 非当前签悬停 = 青绿浅底 + 主色深字（色层反馈；:not 排除当前签——实底不换皮）。 */
+.cv2-tab:hover:not(.cv2-tab--active) {
+  background: var(--tt2-tool-bg);
+  color: var(--tt2-primary-deep);
+}
+
+/* 当前签 = 青绿实底整块 + 白字（对标「当前签实底」的版式、色取自本系统主题；D-0354）。
+ * 白字对 primary 实测 5.2:1（≥4.5 硬线）。 */
+.cv2-tab--active {
+  background: var(--tt2-primary);
+  color: var(--tt2-panel);
+  font-weight: 600;
+}
+
+.cv2-tab-close {
+  border: none;
+  background: transparent;
+  color: var(--tt2-dim);
+  font-size: 14px;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cv2-tab-close:hover {
+  color: var(--tt2-st-error);
+  background: var(--tt2-st-error-bg);
+}
+
+/* 当前签上的关闭 ×：白 80% 透明、悬停全白（D-0354；图形件 ≥3:1——80% 白对 primary 实测 3.9:1）。 */
+.cv2-tab--active .cv2-tab-close {
+  color: var(--tt2-tab-close);
+}
+
+.cv2-tab--active .cv2-tab-close:hover {
+  color: var(--tt2-panel);
+  background: transparent;
+}
+
+/* ═══ 页头（DRAFT §6 第 1 条）═════════════════════════════════════════ */
+
+.cv2-page-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* ⭐ 业务方「每个菜单页都有个文字说明菜单 这个是多余的全部去掉」：
+ * 页名已由顶栏（cv2-topbar-title）承担，内容区大标题整行摘除；bare 变体只承载
+ * 页头的功能性内容（日期等），右对齐、压到半行高不占地方。 */
+.cv2-page-head--bare {
+  justify-content: flex-end;
+  /* 随「顶部间隔小一点」：bare 行只承载页头功能性内容，行高压到一行、
+   * 负下距贴住首个面板。 */
+  line-height: 1.2;
+  margin-bottom: -4px;
+}
+
+.cv2-page-date {
+  margin: 0;
+  font-size: 13px;
+  color: var(--tt2-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ═══ KPI 读数带（唯一大胆处；DRAFT §5/§6）════════════════════════════ */
+
+.cv2-kpis {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.cv2-kpi {
+  flex: 1 1 auto;
+  padding-right: 36px;
+}
+
+.cv2-kpi + .cv2-kpi {
+  padding-left: 36px;
+  border-left: 1px solid var(--tt2-line);
+}
+
+.cv2-kpi-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--tt2-dim);
+  letter-spacing: 0.03em;
+}
+
+.cv2-kpi-value {
+  margin: 10px 0 0;
+  font-family: var(--tt2-mono);
+  font-size: 26px;
+  line-height: 1;
+  font-weight: 600;
+  color: var(--tt2-ink);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* 金额组最大且主色（DRAFT §5）。 */
+.cv2-kpi-value--money {
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--tt2-primary);
+}
+
+/* 异常组用异常红（DRAFT §5）。 */
+.cv2-kpi-value--alert {
+  color: var(--tt2-st-error);
+}
+
+.cv2-kpi-cny {
+  font-size: 0.58em;
+  margin-right: 3px;
+  font-weight: 600;
+}
+
+/* 率的副行（计数 + 率成对出现时，率落这里；12px dim 等宽）。 */
+.cv2-kpi-sub {
+  margin: 6px 0 0;
+  font-family: var(--tt2-mono);
+  font-size: 12px;
+  color: var(--tt2-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 非管理员看数据概览的锁定说明（语义照旧首页：这是权限问题，不是「尚未开放」）。 */
+.cv2-kpi-locked {
+  margin: 24px 0 0;
+  padding: 16px 18px;
+  border: 1px solid var(--tt2-line);
+  border-radius: 4px;
+  color: var(--tt2-dim);
+  font-size: 13px;
+}
+
+/* ═══ 面板（DRAFT §5）═════════════════════════════════════════════════ */
+
+.cv2-panel {
+  margin-top: 22px;
+  background: var(--tt2-panel);
+  border: 1px solid var(--tt2-line);
+  border-radius: 4px;
+  padding: 16px 18px;
+}
+
+.cv2-panel-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* 面板右上角的次级动作。 */
+.cv2-panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cv2-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 22px;
+  align-items: start;
+}
+
+.cv2-columns > .cv2-panel {
+  margin-top: 22px;
+}
+
+/* ═══ 二维码横幅（数据同旧首页 D-0262；形态重设计为炭火横幅）═════════ */
+
+.cv2-qr-text {
+  margin: 22px 0 0;
+  text-align: center;
+  color: var(--tt2-dim);
+  font-size: 13px;
+}
+
+.cv2-qr-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.cv2-qr-card {
+  flex: 1 1 240px;
+  background: var(--tt2-panel);
+  border: 1px solid var(--tt2-line);
+  border-radius: 4px;
+  padding: 12px 14px;
+  text-align: center;
+}
+
+.cv2-qr-card-title {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* 「已停用」徽标：浅底深字 + 中文 + 同色系描边（DRAFT §5 状态签口径；D-0351 加描边）。 */
+.cv2-qr-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 0 6px;
+  border: 1px solid var(--tt2-st-refund-line);
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--tt2-st-refund);
+  background: var(--tt2-st-refund-bg);
+  vertical-align: 1px;
+}
+
+.cv2-qr-game {
+  min-height: 20px;
+  margin-top: 2px;
+  color: var(--tt2-primary-deep);
+  font-size: 13px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.cv2-qr-figure {
+  position: relative;
+  height: 260px;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* 只有群码格（≥2 张）可点切图；固定格展示-only，不给手型假象（D-0154 同族：不画死控件）。 */
+.cv2-qr-figure--clickable {
+  cursor: pointer;
+}
+
+.cv2-qr-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.cv2-qr-img--off {
+  opacity: 0.4;
+}
+
+.cv2-qr-empty {
+  width: 100%;
+  line-height: 258px;
+  color: var(--tt2-dim);
+  font-size: 13px;
+  border: 1px dashed var(--tt2-line);
+  border-radius: 4px;
+}
+
+/* 轮播箭头：常驻、4px 圆角（DRAFT §3 不搞胶囊）、命中区 28×28。 */
+.cv2-qr-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  line-height: 26px;
+  text-align: center;
+  border: 1px solid var(--tt2-line);
+  border-radius: 4px;
+  background: var(--tt2-panel);
+  color: var(--tt2-primary-deep);
+  font-size: 18px;
+  cursor: pointer;
+  user-select: none;
+  z-index: 2;
+}
+
+.cv2-qr-arrow--prev {
+  left: 6px;
+}
+
+.cv2-qr-arrow--next {
+  right: 6px;
+}
+
+.cv2-qr-dots {
+  margin-top: 8px;
+  height: 12px;
+}
+
+.cv2-qr-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 0;
+  background: var(--tt2-line);
+  margin: 0 3px;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+
+.cv2-qr-dot--on {
+  background: var(--tt2-primary);
+}
+
+/* ═══ 快捷入口 / 通知 / 我的信息 / 待接 ══════════════════════════════ */
+
+.cv2-shortcut-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.cv2-shortcut {
+  display: block;
+  padding: 10px 12px;
+  border: 1px solid var(--tt2-line);
+  border-radius: 4px;
+  color: var(--tt2-ink);
+  text-decoration: none;
+  font-size: 13px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cv2-shortcut:hover {
+  border-color: var(--tt2-primary-deep);
+  color: var(--tt2-primary-deep);
+}
+
+.cv2-notice-list {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+}
+
+.cv2-notice-item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 0;
+  border-top: 1px solid var(--tt2-line);
+  font-size: 13px;
+}
+
+.cv2-notice-item:first-child {
+  border-top: none;
+}
+
+.cv2-notice-link {
+  color: var(--tt2-ink);
+  text-decoration: none;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.cv2-notice-link:hover {
+  color: var(--tt2-primary-deep);
+  text-decoration: underline;
+}
+
+/* 不可点的条目（如系统公告在 v1 没有落地页）：同一版式，去链接态。 */
+.cv2-notice-plain {
+  color: var(--tt2-dim);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.cv2-notice-time {
+  flex: none;
+  font-family: var(--tt2-mono);
+  font-size: 12px;
+  color: var(--tt2-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.cv2-info-list {
+  margin: 12px 0 0;
+}
+
+.cv2-info-row {
+  display: flex;
+  gap: 12px;
+  padding: 6px 0;
+  border-top: 1px solid var(--tt2-line);
+  font-size: 13px;
+}
+
+.cv2-info-row:first-child {
+  border-top: none;
+}
+
+.cv2-info-label {
+  flex: none;
+  width: 7em;
+  color: var(--tt2-dim);
+}
+
+.cv2-info-value {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* 「待接」占位：一句话说明 + 下一步动作（DRAFT §5 空态口径；⛔ 不编数）。 */
+.cv2-pending-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 0;
+  border-top: 1px solid var(--tt2-line);
+  font-size: 13px;
+}
+
+.cv2-pending-row:first-child {
+  border-top: none;
+}
+
+.cv2-pending-tag {
+  flex: none;
+  padding: 0 6px;
+  border: 1px solid var(--tt2-st-pending-line);
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--tt2-st-pending);
+  background: var(--tt2-st-pending-bg);
+}
+
+.cv2-pending-why {
+  color: var(--tt2-dim);
+}
+
+.cv2-panel-more {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: var(--tt2-primary-deep);
+  text-decoration: none;
+}
+
+.cv2-panel-more:hover {
+  text-decoration: underline;
+}
+
+/* ═══ 列表页（V2MyOrders；D-0346 指令④「功能布局照旧、视觉炭火」）═════════════════ */
+
+/* ── 筛选行（DRAFT §5：一行 flex 摊开；控件 4px 圆角、1px 线框）────────────────── */
+
+.cv2-filter {
+  margin-top: 18px;
+}
+
+/* ── 状态卡片（状态筛选的顶层入口，带单量）────────────────────────────────────
+ * 8 张卡（132×76）：状态名 13px（带墨点）在上、该状态订单数 22px 等宽在下；点击 = 切换
+ * 该状态筛选（单选语义：点已选中的 = 取消回全部）。未选中 = 本状态浅底 + 墨点色顶条 +
+ * 同色系细描边；选中 = 浅底不动、描边转墨点色加粗（左右 2px 顶 3px）+ 右上角墨点色三角 ✓；
+ * 悬停（未选中）= 轻压暗 + 描边随字色。窄屏 flex wrap 自然换行。 */
+.cv2-scards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.cv2-scard {
+  position: relative;
+  box-sizing: border-box;
+  width: 132px;
+  height: 76px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  padding: 10px 14px;
+  border: 1px solid var(--tt2-line);
+  border-radius: 6px;
+  background: var(--tt2-panel);
+  color: var(--tt2-ink);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.cv2-scard:hover:not(.cv2-scard--on) {
+  border-color: var(--tt2-primary-deep);
+  color: var(--tt2-primary-deep);
+}
+
+.cv2-scard-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  /* ⭐ D-0371 第五轮「状态字体稍微加粗」：整排标签与选中卡同档 600。 */
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* 状态卡标签里的墨点放大一档（8 → 9px），与 13px 标签字相称。 */
+.cv2-scard-label .cv2-dot {
+  width: 9px;
+  height: 9px;
+}
+
+.cv2-scard-count {
+  font-family: var(--tt2-mono);
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 状态卡按状态着色：卡 = 本状态浅底 + 深字 + 墨点色顶条 + 同色系细描边（墨点 40% 透明版）。
+ * （`--st-dot` 已由各 `.cv2-st--*` 规则在本元素上定义——选中态与墨点都从它取色。） */
+.cv2-scard.cv2-st--unassigned { background: var(--tt2-st-unassigned-bg); border-color: var(--tt2-st-unassigned-line); border-top: 3px solid var(--tt2-st-unassigned-dot); color: var(--tt2-st-unassigned); }
+.cv2-scard.cv2-st--pending { background: var(--tt2-st-pending-bg); border-color: var(--tt2-st-pending-line); border-top: 3px solid var(--tt2-st-pending-dot); color: var(--tt2-st-pending); }
+.cv2-scard.cv2-st--doing { background: var(--tt2-st-doing-bg); border-color: var(--tt2-st-doing-line); border-top: 3px solid var(--tt2-st-doing-dot); color: var(--tt2-st-doing); }
+.cv2-scard.cv2-st--accept { background: var(--tt2-st-accept-bg); border-color: var(--tt2-st-accept-line); border-top: 3px solid var(--tt2-st-accept-dot); color: var(--tt2-st-accept); }
+.cv2-scard.cv2-st--done { background: var(--tt2-st-done-bg); border-color: var(--tt2-st-done-line); border-top: 3px solid var(--tt2-st-done-dot); color: var(--tt2-st-done); }
+.cv2-scard.cv2-st--refund { --st-dot: var(--tt2-st-refund-dot); background: var(--tt2-st-refund-bg); border-color: var(--tt2-st-refund-line); border-top: 3px solid var(--tt2-st-refund-dot); color: var(--tt2-st-refund); }
+.cv2-scard.cv2-st--paused { background: var(--tt2-st-paused-bg); border-color: var(--tt2-st-paused-line); border-top: 3px solid var(--tt2-st-paused-dot); color: var(--tt2-st-paused); }
+.cv2-scard.cv2-st--error { background: var(--tt2-st-error-bg); border-color: var(--tt2-st-error-line); border-top: 3px solid var(--tt2-st-error-dot); color: var(--tt2-st-error); }
+
+.cv2-scard[class*='cv2-st--']:hover:not(.cv2-scard--on) {
+  filter: brightness(0.97);
+  border-color: currentColor;
+}
+
+.cv2-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 顶部筛选收成管理订单那种连体格：标签在框内左侧，框高 32、圆角 6。
+ * 只打在 .cv2-filter 里，弹窗里的表单字段不跟着变。 */
+.cv2-filter .cv2-field {
+  display: inline-flex;
+  align-items: stretch;
+  height: 32px;
+  gap: 0;
+  padding: 0;
+  border: 1px solid var(--tt2-line);
+  border-radius: 6px;
+  background: var(--tt2-panel);
+  grid-template-columns: none;
+}
+
+.cv2-filter .cv2-field:focus-within {
+  border-color: var(--tt2-primary);
+}
+
+.cv2-filter .cv2-field-label {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0 0 10px;
+  grid-column: auto;
+  grid-row: auto;
+}
+
+.cv2-filter .cv2-field > :not(.cv2-field-label) {
+  grid-column: auto;
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.cv2-filter .cv2-field .el-select,
+.cv2-filter .cv2-field .el-input,
+.cv2-filter .cv2-field .cv2-date {
+  width: 168px;
+}
+
+.cv2-filter .cv2-field .el-date-editor.el-input {
+  width: 148px;
+}
+
+.cv2-filter .cv2-field .el-input__wrapper,
+.cv2-filter .cv2-field .el-select__wrapper,
+.cv2-filter .cv2-field .el-select__wrapper.is-focused,
+.cv2-filter .cv2-field .el-input__wrapper.is-focus {
+  height: 30px;
+  min-height: 30px;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* 名字格暖米浅底，和右边的值隔开。三截才能压过各页 scoped 的单类标签。 */
+.cv2-filter .flt-group > .flt-label,
+.cv2-filter .uf-group > .uf-label,
+.cv2-filter .lg-group > .lg-label,
+.cv2-filter .cv2-field > .cv2-field-label {
+  padding: 0 10px;
+  background: var(--tt2-filter-label-bg);
+  border-right: 1px solid var(--tt2-line);
+}
+
+.cv2-filter .cv2-field > .cv2-field-label {
+  border-radius: 5px 0 0 5px;
+}
+
+/* 名字本身是下拉：浅底只铺这一格。内层要四截，报酬页的白底才盖不住。 */
+.cv2-filter .flt-group > .flt-cell:has(.flt-prefix),
+.cv2-filter .uf-group > .uf-cell:has(.uf-prefix) {
+  background: var(--tt2-filter-label-bg);
+  border-right: 1px solid var(--tt2-line);
+}
+
+.cv2-filter .flt-group .flt-prefix .el-select__wrapper,
+.cv2-filter .uf-group .uf-prefix .el-select__wrapper {
+  background: var(--tt2-filter-label-bg);
+}
+
+.cv2-filter .flt-group:focus-within > .flt-label,
+.cv2-filter .uf-group:focus-within > .uf-label,
+.cv2-filter .lg-group:focus-within > .lg-label,
+.cv2-filter .cv2-field:focus-within > .cv2-field-label,
+.cv2-filter .flt-group:focus-within > .flt-cell:has(.flt-prefix),
+.cv2-filter .uf-group:focus-within > .uf-cell:has(.uf-prefix) {
+  border-right-color: var(--tt2-primary);
+}
+
+.cv2-filter .flt-w140,
+.cv2-filter .uf-w140 {
+  width: 140px;
+}
+
+/* 输入框是 content-box：高 32 再加上下各 1px 内边距，白底正好盖住组框的上下边。
+ * 日期控件根高跟着 --el-component-size（34），会从格子里冒出 1px，同样盖住边。 */
+.cv2-filter .flt-group .el-input .el-input__wrapper,
+.cv2-filter .uf-group .el-input .el-input__wrapper,
+.cv2-filter .lg-group .el-input .el-input__wrapper,
+.cv2-filter .cv2-field .el-input .el-input__wrapper {
+  box-sizing: border-box;
+  height: 32px;
+  min-height: 32px;
+}
+
+.cv2-filter .flt-group .el-date-editor.el-input,
+.cv2-filter .uf-group .el-date-editor.el-input,
+.cv2-filter .lg-group .el-date-editor.el-input,
+.cv2-filter .cv2-field .el-date-editor.el-input {
+  height: 32px;
+  line-height: 32px;
+}
+
+/* 拉长的搜索格把控件撑满，字才不会画出右边框。 */
+.cv2-filter .flt-cell--grow > .el-input,
+.cv2-filter .uf-cell--grow > .el-input,
+.cv2-filter .flt-group--key > .flt-cell {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.cv2-filter .flt-cell--grow > .el-input,
+.cv2-filter .uf-cell--grow > .el-input,
+.cv2-filter .flt-group--key > .flt-cell > .el-input {
+  width: 100%;
+  min-width: 0;
+}
+
+/* ⭐ D-0354：字段 = 两列 grid——标签在左（13px dim、右缘 8px）、控件（及其提示行）在右
+ * 纵向堆叠（对标 `游戏区服 | [全部游戏 ▼]` 的版式；旧版上下结构占两行，一行放不下）。
+ * 用 grid 而不是 flex row：带提示的字段（资料页）提示自动落回控件下方，不用改任何页面标记。 */
+.cv2-field {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 8px;
+  align-items: center;
+  min-width: 0;
+}
+
+.cv2-field--grow {
+  flex: 1 1 100%;
+}
+
+.cv2-field-label {
+  grid-column: 1;
+  grid-row: 1;
+  font-size: 13px;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--tt2-ink) 35%, var(--tt2-dim));
+  white-space: nowrap;
+}
+
+/* 标签以外的子元素（控件 / 提示 / 行）全部落第 2 列。 */
+.cv2-field > :not(.cv2-field-label) {
+  grid-column: 2;
+  min-width: 0;
+}
+
+/* 复选行（「我的资料」绑定块的 同步大厅订单 / 启用 两枚在用；EP 化误删后本批回补）。 */
+.cv2-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--tt2-ink);
+  cursor: pointer;
+}
+
+/* 文本/日期/下拉同皮：4px 圆角、1px 线框、白底墨字。 */
+.cv2-input {
+  min-width: 0;
+  padding: 6px 10px;
+  border: 1px solid var(--tt2-line);
+  border-radius: 4px;
+  background: var(--tt2-panel);
+  color: var(--tt2-ink);
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.cv2-input:focus {
+  outline: 2px solid var(--tt2-primary-deep);
+  outline-offset: 1px;
+}
+
+.cv2-filter-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 查询 / 重置与筛选框同高。查询的青绿在 cv2-btn--primary，这里只定尺寸；重置是白底细框。 */
+.cv2-filter-actions .cv2-btn {
+  height: 32px;
+  padding: 0 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.cv2-filter-actions .cv2-btn--tool {
+  border-color: var(--tt2-line);
+  background: var(--tt2-panel);
+  color: color-mix(in srgb, var(--tt2-ink) 35%, var(--tt2-dim));
+  font-weight: 500;
+}
+
+.cv2-filter-actions .cv2-btn--tool:hover {
+  border-color: var(--tt2-primary);
+  background: var(--tt2-accent-box-bg);
+  color: var(--tt2-primary-deep);
+}
+
+/* 筛选行内的「正在加载…」提示（大厅刷新在途；随刷新按钮一起住筛选行，D-0354）。 */
+.cv2-filter-loading {
+  font-size: 13px;
+  color: var(--tt2-dim);
+}
+
+/* 收入页筛选动作区的统计句（data-v2="total"）= 真数据统计，红字（同上口径；
+ * 「正在加载…」等同类的其他用处不受影响）。 */
+.cv2-filter-loading[data-v2="total"] {
+  color: var(--tt2-st-error);
+}
+
+/* 表头/单元格居中（大厅「接手价 / 参考图」两列，业务方「居中标题」）。 */
+.cv2-table .cv2-th-center {
+  /* ⭐ 必须 .cv2-table 前缀：.cv2-table th/td 是「类+元素」(0,1,1)，单类 (0,1,0) 会被压掉
+   * （业务方「根本没居中」的真因——规则一直在、特异性输了）。 */
+  text-align: center;
+}
+
+.cv2-table .cv2-td-center {
+  text-align: center;
+}
+
+/* 金额红字（对标红数字语义：大厅接手价、收入页 预计/实际收入 与 收入类型）。 */
+.cv2-money {
+  color: var(--tt2-money-red);
+  /* ⭐ 业务方「价格绩效有关的字段 数字加粗一点点」。 */
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 大厅「参考图」图标钮换蓝（与青绿的行内动作区分，业务方「参考图也换个颜色显示」）。 */
+.cv2-iconact-text--blue {
+  color: var(--tt2-link-blue);
+}
+
+.cv2-iconact-text--blue:hover {
+  color: var(--tt2-link-blue-deep);
+}
+
+/* ── Element Plus 筛选控件皮（⭐ D-0354 追记：筛选控件原生 → EP 化）────────────────
+ * .ttv2 的 `--el-*` 重映射（上面 EP 子树重映射块）让 EP 组件自动带青绿 focus/选中；
+ * 下拉面板与日期面板用 `:teleported="false"` 留在 .ttv2 子树内吃同一层皮（页面模板钉）。
+ * 口径（业务方）：高 34px（--el-component-size 已抬）、4px 圆角、边框 #DDE3E0 级、
+ * hover 边框主色、focus 边框主色 + 3px 青绿 12% 光圈、占位文字 dim。 */
+.ttv2 .el-input__wrapper {
+  background: var(--tt2-panel);
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px var(--tt2-filter-line) inset;
+}
+
+.ttv2 .el-input__wrapper:hover {
+  box-shadow: 0 0 0 1px var(--tt2-primary) inset;
+}
+
+.ttv2 .el-input__wrapper.is-focus {
+  box-shadow:
+    0 0 0 1px var(--tt2-primary) inset,
+    0 0 0 3px var(--tt2-focus-ring);
+}
+
+.ttv2 .el-input__inner {
+  color: var(--tt2-ink);
+  font-size: 13px;
+}
+
+.ttv2 .el-input__inner::placeholder {
+  color: var(--tt2-dim);
+}
+
+/* 筛选条里的空提示改浅，字段名才能看出来。下拉已选中「全部」时不走 placeholder，靠 flt-ph。 */
+.cv2-filter .el-input__inner::placeholder,
+.cv2-filter .el-select__placeholder.is-transparent,
+.cv2-filter .flt-ph .el-select__placeholder,
+.cv2-filter .flt-ph .el-select__selected-item {
+  color: var(--tt2-filter-ph);
+  font-weight: 400;
+}
+
+.ttv2 .el-select__wrapper {
+  min-height: 34px;
+  background: var(--tt2-panel);
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px var(--tt2-filter-line) inset;
+  color: var(--tt2-ink);
+  font-size: 13px;
+}
+
+.ttv2 .el-select__wrapper:hover {
+  box-shadow: 0 0 0 1px var(--tt2-primary) inset;
+}
+
+.ttv2 .el-select__wrapper.is-focused {
+  box-shadow:
+    0 0 0 1px var(--tt2-primary) inset,
+    0 0 0 3px var(--tt2-focus-ring);
+}
+
+/* 空值占位（EP 2.5+ 新 select 的占位 = placeholder span 的 is-transparent 态）。 */
+.ttv2 .el-select__placeholder.is-transparent {
+  color: var(--tt2-dim);
+}
+
+/* ⭐ 弹层居中修正：.ttv2 内的 EP 弹层用 :teleported="false" 留在原地吃皮，
+ * 但 EP 此时把遮罩层挂在文档流上（absolute）⇒ 长页面里弹窗定位飘到顶部。
+ * 钉回视口固定——弹窗永远相对视口居中（内部派单/确认/详情等全部弹层同享）。 */
+.ttv2 .el-overlay {
+  position: fixed;
+}
+
+/* ⭐ 弹窗垂直居中（业务方「不管内容多少都中心展开」）：EP 默认只留 15vh 顶距——
+ * 覆盖为 flex 居中；内容超高的弹层在体内滚动（body overflow:auto），不破版。 */
+.ttv2 .el-overlay-dialog {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+.ttv2 .el-dialog {
+  margin: 0;
+  /* ⭐ 2026-11-05：overlay 下移到内容区起线且容器钉成内容区高 ⇒ 上限 = 内容区高 − 上下各 ~24
+   * 居中余量，弹窗永不触底（业务方「与底部保持一定间隔」）。 */
+  max-height: calc(100% - 48px);
+  display: flex;
+  flex-direction: column;
+  /* ⭐ 第二轮：窄视口兜底（width prop 是定值，小屏上一律不超出视口）。 */
+  max-width: calc(100vw - 32px);
+  /* ⭐ 填充顶栏（业务方「顶部应该是没有内边距的」对标顶栏贴死弹窗边）：
+   * EP 新版把 padding 挂在弹窗根上、头部色块四周会露白一圈 ⇒ 根 padding 清零，
+   * 内距全部由 header/body 自己承担；overflow hidden 把色块收进圆角。 */
+  padding: 0;
+  overflow: hidden;
+}
+.ttv2 .el-dialog__body {
+  min-height: 0;
+  overflow: auto;
+}
+.ttv2 .el-dialog,
+.ttv2 .el-dialog__body,
+.ttv2 .el-dialog :is(.dtl-face-content, .dtl-left, .dtl-logs, .as-users) {
+  scrollbar-width: none;
+}
+.ttv2 .el-dialog::-webkit-scrollbar,
+.ttv2 .el-dialog__body::-webkit-scrollbar,
+.ttv2 .el-dialog :is(.dtl-face-content, .dtl-left, .dtl-logs, .as-users)::-webkit-scrollbar {
+  display: none;
+}
+
+/* 编辑表单复用录单页，内嵌时按内容撑开，避免套用订单列表的整页裁切尺寸。 */
+.ttv2 .el-dialog.cv2-edit-dlg .tt-ord {
+  height: auto;
+  margin: 0;
+  overflow: visible;
+}
+
+/* ── 弹窗全局统一（⭐ 第二轮，业务方「订单详情点击后的弹窗全局统一 我看有的
+ *    界面打开布局都不一样」）────────────────────────────────────────────────────────
+ * 三档宽度：sm 480 / md 640 / lg 860（详情类默认 md、KSZP 派单 lg、看图/截图类 lg、
+ * 确认类 sm）；头部统一（标题 16px/600 + 右上 ×）、内边距统一（头 14/20 体 16/20 脚 12/20）、
+ * 按钮排布右下（主右次左，.cv2-dlg-actions 的 flex-end 语义）；垂直居中由上面的
+ * .el-overlay-dialog flex 规则承担。档位类只表达语义（宽度由各弹层的 width prop 传，
+ * 两处必须一致——spec 钉住类与 width 成对）。 */
+/* ⭐ 业务方「点开的弹窗顶部都需要有个颜色填充的顶栏 别光秃秃的全是白色」：
+ * 所有 v2 弹窗头部 = 主色实底条 + 白标题 + 白关闭钮（对标弹窗的蓝色顶栏语义，随炭火主题走
+ * 主色青绿）。圆角由 .ttv2 块内 --el-border-radius-base 重映射给出、overflow hidden（.ttv2 .el-dialog）收口，色块不溢出圆角。 */
+/* ⭐ 业务方「每个输入框右下角都有那些斜杆 这个删掉不需要」：
+ * textarea 拉伸手柄全局禁用（高度一律 autosize/固定行数驱动，不给手动斜拉）。 */
+.ttv2 .el-textarea__inner {
+  resize: none;
+}
+
+.ttv2 .el-dialog__header {
+  padding: 11px 18px;
+  margin: 0;
+  background: var(--tt2-primary);
+}
+
+.ttv2 .el-dialog__title {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--tt2-on-primary);
+}
+
+.ttv2 .el-dialog__headerbtn {
+  top: 10px;
+  right: 12px;
+  width: 24px;
+  height: 24px;
+}
+
+.ttv2 .el-dialog__headerbtn .el-dialog__close {
+  color: var(--tt2-on-primary-dim);
+  font-size: 16px;
+}
+
+.ttv2 .el-dialog__headerbtn:hover .el-dialog__close {
+  color: var(--tt2-on-primary);
+}
+
+.ttv2 .el-dialog__body {
+  padding: 16px 20px;
+}
+
+.ttv2 .el-dialog__footer {
+  padding: 12px 20px;
+}
+
+/* 档位类：宽度由类接管（详情等已摘 width prop 的弹层）。⭐ 选择器必须带
+ * `.ttv2 .el-dialog.` 前缀——Element Plus 的样式是运行时注入、永远排在我们后面，
+ * 同 specificity 的 `.cv2-dialog--xl { width: … }` 会被它的
+ * `.el-dialog { width: var(--el-dialog-width) }` 压掉（实测全部档位渲染成默认 50%，
+ * 业务方「拉宽了浏览器详情还是上下结构」即此因）；两级前缀稳赢级联。
+ * ⭐ 响应式专包：宽 = min(档位, 92/94vw)——窄视口不横向溢出，体内滚动
+ * 由 .ttv2 .el-dialog 的 max-height + body overflow 承担。 */
+.ttv2 .el-dialog.cv2-dialog--sm { width: min(480px, 92vw); }
+.ttv2 .el-dialog.cv2-dialog--md { width: min(640px, 92vw); }
+.ttv2 .el-dialog.cv2-dialog--lg { width: min(860px, 92vw); }
+/* ⭐ 详情类专用宽档（业务方「详情要左右布局 和对标一样」+「详情页面也拉宽一点」）：
+ * island 复刻详情页的「订单详情左 / 订单日志右」并排门槛是容器 ≥992px（layui md 断点，
+ * 按 iframe 视口算），xl 1400 扣内边距后宽裕；真窄（视口 <~1300）才回落上下堆叠。
+ * 详情弹窗 body 零内边距，iframe 撑满。 */
+.ttv2 .el-dialog.cv2-dialog--xl { width: min(1400px, 94vw); }
+.ttv2 .el-dialog.cv2-dialog--xl .el-dialog__body { padding: 0; }
+.ttv2 .el-dialog.cv2-dialog--xl .el-dialog__body .cv2-island-frame {
+  display: block;
+  width: 100%;
+  height: calc(90vh - 82px);
+}
+
+/* 订单详情专用宽（左右各一半，960）。不改上面的 xl，截图等仍走 1400。 */
+.ttv2 .el-dialog.cv2-dialog--detail { width: min(960px, 94vw); }
+.ttv2 .el-dialog.cv2-dialog--detail .el-dialog__body { padding: 0; }
+
+/* 改价 / 抛大厅：比 sm 窄一档。写在 sm 后面，两个类同时在时以这条为准。
+   只拉 .cv2-field 的直接子级，包在内层的短框不跟。 */
+.ttv2 .el-dialog.cv2-dialog--narrow { width: min(400px, 92vw); }
+.ttv2 .el-dialog.cv2-dialog--narrow .cv2-field > .el-input,
+.ttv2 .el-dialog.cv2-dialog--narrow .cv2-field > .el-input .el-input__wrapper {
+  display: flex;
+  width: 100%;
+}
+.ttv2 .el-dialog.cv2-dialog--narrow .cv2-field > .el-input .el-input__inner {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+}
+
+/* 订单详情暖米连体格。左右一样宽。空行挂 dtl-skip 整行不画。 */
+.ttv2 .dtl-wrap {
+  display: flex;
+  min-height: 420px;
+}
+.ttv2 .dtl-wrap > .dtl-left,
+.ttv2 .dtl-wrap > .dtl-right {
+  flex: 1 1 0;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+.ttv2 .dtl-wrap > .dtl-left { padding: 14px 16px 16px; }
+.ttv2 .dtl-wrap > .dtl-right {
+  display: flex;
+  flex-direction: column;
+  padding: 14px 16px;
+  border-left: 1px solid var(--tt2-filter-line);
+}
+.ttv2 .dtl-wrap .dtl-fields,
+.ttv2 .dtl-dlt .dtl-fields {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr) 84px minmax(0, 1fr);
+  border: 1px solid var(--tt2-filter-line);
+  border-right: 0;
+  border-bottom: 0;
+}
+.ttv2 .dtl-fields > .dtl-row { display: contents; }
+.ttv2 .dtl-fields > .dtl-row.dtl-skip { display: none; }
+.ttv2 .dtl-fields .dtl-label,
+.ttv2 .dtl-fields .dtl-row > span {
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-right: 1px solid var(--tt2-filter-line);
+  border-bottom: 1px solid var(--tt2-filter-line);
+  box-sizing: border-box;
+}
+.ttv2 .dtl-fields .dtl-label {
+  justify-content: center;
+  background: var(--tt2-filter-label-bg);
+  color: var(--tt2-ink);
+}
+.ttv2 .dtl-fields .dtl-row > span:not(.dtl-label):not(.cv2-st) {
+  display: block;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.45;
+}
+.ttv2 .dtl-fields > .dtl-row--wide > .dtl-label { grid-column: 1; }
+.ttv2 .dtl-fields > .dtl-row--wide > :not(.dtl-label) {
+  grid-column: 2 / -1;
+  align-items: flex-start;
+}
+.ttv2 .cv2-btn.tt-assignee-picked,
+.ttv2 .cv2-btn.tt-assignee-picked:hover {
+  background: var(--tt2-assignee-bg);
+  color: var(--tt2-assignee-ink);
+  border: 1px solid var(--tt2-assignee-line);
+  filter: none;
+}
+.ttv2 .dtl-face {
+  display: flex;
+  flex-direction: column;
+  height: min(var(--order-detail-max-height, 640px), calc(100vh - var(--tt2-topbar-h) - var(--tt2-tabs-h) - 100px));
+  min-height: 0;
+}
+.ttv2 .el-dialog .dtl-face {
+  --order-detail-max-height: 760px;
+  /* 给详情页签下的独立滚动区保留可滑动的高度。 */
+  min-height: 160px;
+}
+.ttv2 .dtl-face > .dtl-tabs { padding: 0 16px; flex: none; }
+.ttv2 .dtl-face-content { flex: 1; min-height: 0; overflow: auto; }
+.ttv2 .dtl-dlt { padding: 14px 16px 16px; }
+.ttv2 .dtl-dlt .dtl-fields {
+  grid-template-columns: 108px minmax(0, 1fr) 108px minmax(0, 1fr);
+}
+.ttv2 .dtl-dlt .dtl-label { white-space: nowrap; }
+.ttv2 .dtl-dlt-empty { margin: 12px 0; color: var(--tt2-dim); font-size: 13px; }
+.ttv2 .dtl-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--tt2-line); }
+.ttv2 .dtl-tab {
+  padding: 7px 16px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  color: var(--tt2-dim);
+  cursor: pointer;
+}
+.ttv2 .dtl-tab--on {
+  color: var(--tt2-primary-deep);
+  font-weight: 600;
+  border-bottom-color: var(--tt2-primary);
+}
+.ttv2 .dtl-add { display: flex; gap: 8px; align-items: center; margin-top: 12px; }
+.ttv2 .dtl-add .el-input { flex: 1; width: auto; }
+.ttv2 .dtl-logs { flex: 1; overflow-y: auto; margin-top: 12px; }
+.ttv2 .dtl-log { margin: 0 0 9px; font-size: 13px; line-height: 1.6; color: var(--tt2-dim); overflow-wrap: anywhere; }
+.ttv2 .dtl-logs-empty { margin: 16px 0; font-size: 13px; color: var(--tt2-dim); }
+
+/* ⭐ 订单号统一蓝链（业务方「订单号自身颜色需要统一换一个 然后高亮一点 比如对标都是蓝色可点击」）：
+ * 所有可点击查看详情的订单号 = 统一蓝、等宽字体、悬停下划线加深。 */
+.cv2-ono {
+  /* ⭐ 业务方「可点击的订单号颜色换一种 这种不太好看」+「选中状态的下划线不需要」：
+   * 亮蓝下划线款退役，换炭火主题青绿深色、任何状态无下划线（可点性由等宽体+悬停加深表达）。 */
+  color: var(--tt2-primary-deep);
+  font-family: var(--tt2-mono);
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
+.cv2-ono:hover {
+  color: var(--tt2-primary-deeper);
+  text-decoration: none;
+}
+
+.ttv2 .el-checkbox__label {
+  color: var(--tt2-ink);
+  font-size: 13px;
+}
+
+/* 筛选行里的控件定宽（EP 控件默认偏宽/偏窄，按行内排布给定值；尺寸非色值、无需 token）。 */
+.cv2-field .el-select {
+  width: 172px;
+}
+
+.cv2-field .el-input {
+  width: 160px;
+}
+
+/* 弹窗里独占一行的输入框拉满。筛选栏不在弹窗里，上面 160px 不动。
+   并排短框包在内层 span 里，不是 .cv2-field 的直接子级，不会被这条拉满。 */
+.ttv2 .el-dialog .cv2-field > .el-input,
+.ttv2 .el-dialog .cv2-field > .el-textarea {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+.ttv2 .el-dialog .cv2-field > .el-input .el-input__wrapper {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+}
+.ttv2 .el-dialog .cv2-field > .el-input .el-input__inner {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+}
+.ttv2 .el-dialog .cv2-field > .el-textarea .el-textarea__inner {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.cv2-field .el-date-editor.el-input {
+  width: 150px;
+}
+
+/* 日期锚点包裹层（el-date-picker 吞 attrs ⇒ data-v2-filter 挂这里）：与控件同行、不占额外宽。 */
+.cv2-field .cv2-date {
+  display: inline-block;
+}
+
+/* 录单页「时间要求」的天/小时并排（两个窄输入；尺寸非色值、无需 token）。 */
+.cv2-inline-pair {
+  display: inline-flex;
+  gap: 8px;
+}
+
+.cv2-inline-pair .el-input {
+  width: 80px;
+}
+
+/* 状态多选 = 一排可点的签（旧页 xm-select 多选的炭火形态；语义同：多选、空 = 全部）。
+ * 带状态色的签 = 墨点 + 同族浅底填充；未选中就穿自己的浅底，悬停描边转墨点色，
+ * 选中 = 该状态深字色实底 + 白字（深字色对白全部 ≥4.5:1，实底白字同值过线）。 */
+.cv2-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.cv2-chip {
+  padding: 2px 10px;
+  border: 1px solid var(--tt2-line);
+  border-radius: 6px;
+  background: var(--tt2-panel);
+  color: var(--tt2-dim);
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.cv2-chip:hover {
+  border-color: var(--tt2-primary-deep);
+}
+
+/* 带状态色类的签（筛选用）：2026-11-06 状态签改实底白字后，`.cv2-st--*` 只剩墨点实色，
+ * 未选中的浅底 + 状态深字由本块按状态显式给出（已退单仍走 `.cv2-st--refund` 的粉实底特例）；
+ * 悬停不换底、只把描边转墨点色（「这里会选中」的预告）；选中 = 该状态深字色实底 + 白字
+ * （深字色对白全部 ≥4.5:1，实底白字同值过线）。 */
+.cv2-chip.cv2-st--unassigned {
+  color: var(--tt2-st-unassigned);
+  border-color: var(--tt2-st-unassigned-line);
+  background: var(--tt2-st-unassigned-bg);
+}
+
+.cv2-chip.cv2-st--pending {
+  color: var(--tt2-st-pending);
+  border-color: var(--tt2-st-pending-line);
+  background: var(--tt2-st-pending-bg);
+}
+
+.cv2-chip.cv2-st--doing {
+  color: var(--tt2-st-doing);
+  border-color: var(--tt2-st-doing-line);
+  background: var(--tt2-st-doing-bg);
+}
+
+.cv2-chip.cv2-st--accept {
+  color: var(--tt2-st-accept);
+  border-color: var(--tt2-st-accept-line);
+  background: var(--tt2-st-accept-bg);
+}
+
+.cv2-chip.cv2-st--done {
+  color: var(--tt2-st-done);
+  border-color: var(--tt2-st-done-line);
+  background: var(--tt2-st-done-bg);
+}
+
+.cv2-chip.cv2-st--paused {
+  color: var(--tt2-st-paused);
+  border-color: var(--tt2-st-paused-line);
+  background: var(--tt2-st-paused-bg);
+}
+
+.cv2-chip.cv2-st--error {
+  color: var(--tt2-st-error);
+  border-color: var(--tt2-st-error-line);
+  background: var(--tt2-st-error-bg);
+}
+
+.cv2-chip.cv2-st--unassigned:hover {
+  border-color: var(--tt2-st-unassigned-dot);
+}
+
+.cv2-chip.cv2-st--pending:hover {
+  border-color: var(--tt2-st-pending-dot);
+}
+
+.cv2-chip.cv2-st--doing:hover {
+  border-color: var(--tt2-st-doing-dot);
+}
+
+.cv2-chip.cv2-st--accept:hover {
+  border-color: var(--tt2-st-accept-dot);
+}
+
+.cv2-chip.cv2-st--done:hover {
+  border-color: var(--tt2-st-done-dot);
+}
+
+.cv2-chip.cv2-st--refund:hover {
+  border-color: var(--tt2-st-refund-dot);
+}
+
+.cv2-chip.cv2-st--paused:hover {
+  border-color: var(--tt2-st-paused-dot);
+}
+
+.cv2-chip.cv2-st--error:hover {
+  border-color: var(--tt2-st-error-dot);
+}
+
+/* 选中 = 该状态色实底 + 白字（`--tt2-panel` = 纯白；描边同实底色消边）。
+ * ⚠️ 本块必须排在「悬停描边」之后：`.cv2-chip--on.cv2-st--x` (0,3,0) 与 `:hover` (0,3,0)
+ * 同特异性，靠源码顺序让选中的实底在悬停时也不被描边盖掉。 */
+.cv2-chip.cv2-chip--on.cv2-st--unassigned {
+  border-color: var(--tt2-st-unassigned);
+  background: var(--tt2-st-unassigned);
+  color: var(--tt2-panel);
+}
+
+.cv2-chip.cv2-chip--on.cv2-st--pending {
+  border-color: var(--tt2-st-pending);
+  background: var(--tt2-st-pending);
+  color: var(--tt2-panel);
+}
+
+.cv2-chip.cv2-chip--on.cv2-st--doing {
+  border-color: var(--tt2-st-doing);
+  background: var(--tt2-st-doing);
+  color: var(--tt2-panel);
+}
+
+.cv2-chip.cv2-chip--on.cv2-st--accept {
+  border-color: var(--tt2-st-accept);
+  background: var(--tt2-st-accept);
+  color: var(--tt2-panel);
+}
+
+.cv2-chip.cv2-chip--on.cv2-st--done {
+  border-color: var(--tt2-st-done);
+  background: var(--tt2-st-done);
+  color: var(--tt2-panel);
+}
+
+.cv2-chip.cv2-chip--on.cv2-st--refund {
+  border-color: var(--tt2-st-refund);
+  background: var(--tt2-st-refund);
+  color: var(--tt2-panel);
+}
+
+.cv2-chip.cv2-chip--on.cv2-st--paused {
+  border-color: var(--tt2-st-paused);
+  background: var(--tt2-st-paused);
+  color: var(--tt2-panel);
+}
+
+.cv2-chip.cv2-chip--on.cv2-st--error {
+  border-color: var(--tt2-st-error);
+  background: var(--tt2-st-error);
+  color: var(--tt2-panel);
+}
+
+/* 选中签上的墨点转白 90%（实底上再画同色墨点会隐形）。 */
+.cv2-chip--on .cv2-dot {
+  background: var(--tt2-st-dot-on);
+}
+
+/* 通用选中（不带状态色的签，如资料页只读的游戏权限格）：边框走 currentcolor 加粗即可。
+ * ⚠️ 有状态色类的选中走上面的实底规则（特异性更高，这里的 currentcolor 边框被压掉）。 */
+.cv2-chip.cv2-chip--on {
+  border-color: currentcolor;
+  font-weight: 600;
+}
+
+/* ── 按钮与工具栏（DRAFT §5）────────────────────────────────────────── */
+/* 双主钮：primary = 青绿实底白字（查询/确定这类本系统主题主操作，每屏至多一个）；
+ * submit = 红橙实底白字（动线终点的「提交保存」，全系统唯一带投影的钮）。
+ * default/tool = 中性灰浅底墨字（tool 与 default 同皮，仅 token 出处不同）；功能 tint
+ * （蓝=对外推送/琥珀=改状态）按功能着色；danger = 红实底白字（不可逆动作专用）。 */
+
+.cv2-btn {
+  padding: 5px 16px;
+  /* default 档 = 暖白浅底 + 暖灰线 + 墨字（全系统不再有纯白按钮）；hover 加深一档仍墨字。 */
+  border: 1px solid var(--tt2-btn-soft-line);
+  border-radius: 6px;
+  background: var(--tt2-btn-soft-bg);
+  color: var(--tt2-ink);
+  font-family: inherit;
+  font-size: 13px;
+  /* 字重压到 500：浅底档按钮不再整体偏重；实底主钮（primary/submit/danger）自己给 600。 */
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.cv2-btn:hover {
+  border-color: var(--tt2-btn-soft-hover-line);
+  background: var(--tt2-btn-soft-hover-bg);
+  color: var(--tt2-ink);
+}
+
+.cv2-btn--primary {
+  border-color: var(--tt2-primary);
+  background: var(--tt2-primary);
+  color: var(--tt2-panel);
+  font-weight: 600;
+}
+
+.cv2-btn--primary:hover {
+  border-color: var(--tt2-primary-deep);
+  background: var(--tt2-primary-deep);
+  color: var(--tt2-panel);
+}
+
+/* 主提交钮：红橙实底白字 + 轻投影（录单页「提交保存」等动线终点；白字对实底 5.04:1）。 */
+.cv2-btn--submit {
+  border-color: var(--tt2-btn-submit);
+  background: var(--tt2-btn-submit);
+  color: var(--tt2-on-primary);
+  font-weight: 600;
+  box-shadow: 0 1px 2px var(--tt2-btn-submit-shadow);
+}
+
+.cv2-btn--submit:hover {
+  border-color: var(--tt2-btn-submit-hover);
+  background: var(--tt2-btn-submit-hover);
+  color: var(--tt2-on-primary);
+}
+
+/* 高频工具档：底/线走 tool token（与 default 同值的中性灰）——工具件不再自带青绿 tint；
+ * hover 不另写：`.cv2-btn:hover` 的 soft-hover 档就是它的 hover（同皮）。 */
+.cv2-btn--tool {
+  border-color: var(--tt2-tool-line);
+  background: var(--tt2-tool-bg);
+}
+
+/* 功能 tint 变体（工具条按钮按功能着色；尺寸随 .cv2-btn 基类不变）。
+ * ⚠️ :hover 规则必须排在 .cv2-btn:hover 之后——同特异性 (0,2,0) 靠源码顺序压住中性 hover。 */
+.cv2-btn--tint-blue {
+  border-color: var(--tt2-tint-blue-line);
+  background: var(--tt2-tint-blue-bg);
+  color: var(--tt2-tint-blue);
+}
+
+.cv2-btn--tint-blue:hover {
+  border-color: var(--tt2-tint-blue);
+  background: var(--tt2-tint-blue-bg);
+  color: var(--tt2-tint-blue);
+}
+
+.cv2-btn--tint-amber {
+  border-color: var(--tt2-tint-amber-line);
+  background: var(--tt2-tint-amber-bg);
+  color: var(--tt2-tint-amber);
+}
+
+.cv2-btn--tint-amber:hover {
+  border-color: var(--tt2-tint-amber);
+  background: var(--tt2-tint-amber-bg);
+  color: var(--tt2-tint-amber);
+}
+
+/* 行内主行动的小号实底按钮（⭐ D-0354 追记 3：大厅「接手此单」——业务方修订 §5「行内一律
+ * 文字链」：行内主行动可用小号实底，其余行内动作仍文字链）。28px 高 + 白字 + hover deep。 */
+.cv2-btn--sm {
+  height: 28px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+}
+
+/* 危险档 = 红实底白字（不可逆动作，如大厅「接手此单」、确认弹层的「执行」；
+ * 白字对 error 实底 8.83:1，hover 转 danger-hover 深档）。
+ * ⚠️ 全文件只此一处 `.cv2-btn--danger` 定义（同 V2MyOrders.spec 钉「恰好一处」）。 */
+.cv2-btn--danger {
+  border-color: var(--tt2-btn-danger);
+  background: var(--tt2-btn-danger);
+  color: var(--tt2-on-primary);
+  font-weight: 600;
+}
+
+.cv2-btn--danger:hover {
+  border-color: var(--tt2-danger-hover);
+  background: var(--tt2-danger-hover);
+  color: var(--tt2-on-primary);
+}
+
+/* ⭐ 2026-11-04 业务方拍板的「按功能实底 + 白字」套件（管理订单工具条；色值见
+ * --tt2-btn-solid-* 各 token 行的读数）。形状走 .cv2-btn 基类；hover 统一压暗一档
+ * （不逐色配 hover token）。共用此套的行内小号钮（编辑/发内部/发平台）同规则。 */
+.cv2-btn--solid-push,
+.cv2-btn--solid-assign,
+.cv2-btn--solid-red,
+.cv2-btn--solid-yellow {
+  border-color: transparent;
+  color: var(--tt2-on-primary);
+  font-weight: 600;
+}
+
+.cv2-btn--solid-push { background: var(--tt2-btn-solid-push); }
+/* 指派打手（工具条+表格小钮）= 系统主色青绿（实底白字）。 */
+.cv2-btn--solid-assign { background: var(--tt2-primary); }
+/* 记退款亮红 / 删除亮黄（业务方 2026-11-05 拍板；黄底白字=对标同款，豁免登记）。 */
+.cv2-btn--solid-red { background: var(--tt2-btn-solid-red); }
+.cv2-btn--solid-yellow { background: var(--tt2-btn-solid-yellow); }
+
+.cv2-btn[class*='cv2-btn--solid-']:hover {
+  filter: brightness(0.88);
+}
+
+.cv2-btn--mini {
+  padding: 3px 8px;
+  font-size: 12px;
+}
+
+.cv2-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* 表格行内文字操作（D-0351 第 2 条：「详情/验收/催单」这类行内文字操作一律主色深字，
+ * hover 加深 + 下划线——layui 表操作列的文字链口径）。 */
+.cv2-actlink {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--tt2-primary-deep);
+  font-family: inherit;
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.cv2-actlink:hover {
+  color: var(--tt2-primary-deeper);
+  text-decoration: underline;
+}
+
+/* 危险行内动作 = 红字文字链（DRAFT §5 ⑤「危险行内动作红字」；抢单大厅的「接手此单」，
+ * 旧页是 layui 红按钮 `layui-btn-danger`）。色 = 内容区异常红 token，hover 同色 + 下划线。 */
+.cv2-actlink--danger {
+  color: var(--tt2-st-error);
+}
+
+.cv2-actlink--danger:hover {
+  color: var(--tt2-st-error);
+  text-decoration: underline;
+}
+
+/* 行内图标动作（⭐ 业务方「上传与查看做成图标 类似对标那样 别单纯弄个文字」）：
+ * 26px 方形幽灵钮 + 15px layui 字形，默认青绿深字、hover 极浅青底；无文字，语义走
+ * title/aria-label。 */
+.cv2-iconact {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--tt2-primary-deep);
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.cv2-iconact .layui-icon {
+  font-size: 15px;
+  line-height: 1;
+}
+
+.cv2-iconact:hover {
+  background: var(--tt2-hover-wash);
+  color: var(--tt2-primary-deeper);
+}
+
+/* 图标+文字变体（⭐ 业务方「抢单大厅参考图做成图标按钮 带文字的」）：
+ * 同一幽灵钮语法，加文字位（13px 主色深字）；图标 14px 随文字色。 */
+.cv2-iconact-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--tt2-primary-deep);
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.4;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.cv2-iconact-text .layui-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.cv2-iconact-text:hover {
+  background: var(--tt2-hover-wash);
+  color: var(--tt2-primary-deeper);
+}
+
+.cv2-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+/* 横排只认 .ttb-strip。平时没底，悬停只在字下出一条主题绿线。
+ * 实色只留记退款（红）和删除（黄）。没包进横排的工具条走下面的字钮。 */
+.ttb-strip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.ttb-strip .cv2-btn {
+  height: 32px;
+  box-sizing: border-box;
+  padding: 0 8px;
+  border: none;
+  border-radius: 0;
+}
+
+.ttb-strip .cv2-btn:not(.cv2-btn--solid-red):not(.cv2-btn--solid-yellow) {
+  border: none;
+  background: transparent;
+  color: var(--tt2-btn-quiet);
+  font-weight: 500;
+  box-shadow: none;
+}
+
+.ttb-strip .cv2-btn:not(.cv2-btn--solid-red):not(.cv2-btn--solid-yellow):hover {
+  border: none;
+  background: transparent;
+  color: var(--tt2-ink);
+  box-shadow: inset 0 -2px 0 var(--tt2-primary);
+  filter: none;
+}
+
+.ttb-strip .cv2-btn.cv2-btn--solid-red,
+.ttb-strip .cv2-btn.cv2-btn--solid-yellow {
+  border-radius: 6px;
+  color: var(--tt2-on-primary);
+}
+
+.ttb-strip .cv2-btn.cv2-btn--solid-red:hover {
+  background: var(--tt2-btn-solid-red);
+  color: var(--tt2-on-primary);
+  box-shadow: none;
+  filter: brightness(0.88);
+}
+
+.ttb-strip .cv2-btn.cv2-btn--solid-yellow:hover {
+  background: var(--tt2-btn-solid-yellow);
+  color: var(--tt2-on-primary);
+  box-shadow: none;
+  filter: brightness(0.88);
+}
+
+/* 单个按钮：字分色，平时无底。四层才能压过筛选区的 tool 实心和页面 scoped。 */
+.ttv2 .cv2-btn.cv2-btn--find,
+.ttv2 .cv2-btn.cv2-btn--commit,
+.ttv2 .cv2-btn.cv2-btn--back,
+.ttv2 .cv2-btn.cv2-btn--quiet,
+.ttv2 .cv2-filter-actions .cv2-btn.cv2-btn--find,
+.ttv2 .cv2-filter-actions .cv2-btn.cv2-btn--commit,
+.ttv2 .cv2-filter-actions .cv2-btn.cv2-btn--back,
+.ttv2 .cv2-filter-actions .cv2-btn.cv2-btn--quiet {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+  filter: none;
+}
+
+.ttv2 .cv2-btn.cv2-btn--find,
+.ttv2 .cv2-filter-actions .cv2-btn.cv2-btn--find {
+  color: var(--tt2-primary);
+  font-weight: 600;
+}
+
+.ttv2 .cv2-btn.cv2-btn--commit,
+.ttv2 .cv2-filter-actions .cv2-btn.cv2-btn--commit {
+  color: var(--tt2-st-accept);
+  font-weight: 600;
+}
+
+.ttv2 .cv2-btn.cv2-btn--back,
+.ttv2 .cv2-filter-actions .cv2-btn.cv2-btn--back {
+  color: var(--tt2-st-paused);
+  font-weight: 600;
+}
+
+.ttv2 .cv2-btn.cv2-btn--quiet,
+.ttv2 .cv2-filter-actions .cv2-btn.cv2-btn--quiet {
+  color: var(--tt2-btn-quiet);
+  font-weight: 500;
+}
+
+.ttv2 .cv2-btn.cv2-btn--find:hover,
+.ttv2 .cv2-filter-actions .cv2-btn.cv2-btn--find:hover {
+  border-color: transparent;
+  background: var(--tt2-btn-find-wash);
+  color: var(--tt2-primary);
+  box-shadow: none;
+  filter: none;
+}
+
+.ttv2 .cv2-btn.cv2-btn--commit:hover,
+.ttv2 .cv2-filter-actions .cv2-btn.cv2-btn--commit:hover {
+  border-color: transparent;
+  background: var(--tt2-st-accept-bg);
+  color: var(--tt2-st-accept);
+  box-shadow: none;
+  filter: none;
+}
+
+.ttv2 .cv2-btn.cv2-btn--back:hover,
+.ttv2 .cv2-filter-actions .cv2-btn.cv2-btn--back:hover {
+  border-color: transparent;
+  background: var(--tt2-st-paused-bg);
+  color: var(--tt2-st-paused);
+  box-shadow: none;
+  filter: none;
+}
+
+.ttv2 .cv2-btn.cv2-btn--quiet:hover,
+.ttv2 .cv2-filter-actions .cv2-btn.cv2-btn--quiet:hover {
+  border-color: transparent;
+  background: var(--tt2-filter-label-bg);
+  color: var(--tt2-ink);
+  box-shadow: none;
+  filter: none;
+}
+
+/* 查询/搜索，以及录入、新开账号的保存：同色实底白字，比纯字显眼。 */
+.ttv2 .cv2-btn.cv2-btn--fill,
+.ttv2 .cv2-filter-actions .cv2-btn.cv2-btn--fill {
+  background: var(--tt2-primary);
+  border-color: transparent;
+  color: var(--tt2-on-primary);
+  box-shadow: none;
+  filter: none;
+}
+
+.ttv2 .cv2-btn.cv2-btn--fill:hover,
+.ttv2 .cv2-filter-actions .cv2-btn.cv2-btn--fill:hover {
+  background: var(--tt2-primary-deep);
+  border-color: transparent;
+  color: var(--tt2-on-primary);
+  box-shadow: none;
+  filter: none;
+}
+
+.ttv2 .cv2-btn.cv2-btn--commit.cv2-btn--fill,
+.ttv2 .cv2-filter-actions .cv2-btn.cv2-btn--commit.cv2-btn--fill {
+  background: var(--tt2-st-accept);
+}
+
+.ttv2 .cv2-btn.cv2-btn--commit.cv2-btn--fill:hover,
+.ttv2 .cv2-filter-actions .cv2-btn.cv2-btn--commit.cv2-btn--fill:hover {
+  background: var(--tt2-st-accept-hover);
+  color: var(--tt2-on-primary);
+}
+
+/* 表内操作列：同一套小字按钮。危险动作只把字改红，不再一颗一种实底色。 */
+.ttv2 .cv2-rowact {
+  height: 26px;
+  padding: 0 8px;
+  border: 1px solid var(--tt2-filter-line);
+  border-radius: 4px;
+  background: var(--tt2-panel);
+  color: var(--tt2-ink);
+  font: inherit;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.ttv2 .cv2-rowact:hover {
+  border-color: var(--tt2-primary);
+  color: var(--tt2-primary-deep);
+}
+.ttv2 .cv2-rowact--danger {
+  color: var(--tt2-money-red);
+  border-color: color-mix(in srgb, var(--tt2-money-red) 40%, var(--tt2-filter-line));
+}
+.ttv2 .cv2-rowact--danger:hover {
+  color: var(--tt2-money-red);
+  border-color: var(--tt2-money-red);
+}
+
+/* 表内小号字钮单独一颗，圆角 6，不再粘成一条。 */
+.cv2-table td .cv2-btn--sm {
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 6px;
+  vertical-align: middle;
+}
+
+.cv2-toolbar-count {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--tt2-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 统计行（真数据：筛出行数 + 声明句；旧页恒 0 骨架不搬）──────────────────────── */
+
+/* 收入页账单描述句（⭐ D-0371 第六轮）：整段红字沿用「统计值那一排用红色」口径。 */
+.cv2-total-line {
+  margin: 10px 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--tt2-st-error);
+}
+
+.cv2-total {
+  margin: 12px 0 0;
+  font-size: 13px;
+  /* ⭐ 业务方「统计值那一排的文字用红色 别灰色 与对标一样」。 */
+  color: var(--tt2-st-error);
+}
+
+.cv2-total-notice {
+  color: var(--tt2-st-error);
+}
+
+/* ── 表格（DRAFT §5：1px 浅色网格、行 hover 微亮） */
+
+.cv2-table-panel {
+  margin-top: 14px;
+  padding: 0;
+}
+
+.cv2-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 13px;
+}
+
+.cv2-table th {
+  position: relative;
+  padding: 10px 12px;
+  color: var(--tt2-dim);
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* ⭐ 第二轮：列宽拖拽手柄——th 右缘 6px 热区（拖动逻辑 = src/v2/tableResize.ts）；
+ * 悬停给一段淡青绿提示可拖（对白 3:1 级的图形件档）。 */
+.cv2-th-resizer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 6px;
+  cursor: col-resize;
+  user-select: none;
+  touch-action: none;
+  z-index: 1;
+}
+
+.cv2-th-resizer:hover {
+  background: var(--tt2-focus-ring);
+}
+
+/* 拖拽进行中：全页 col-resize 光标 + 禁选中文本（tableResize.ts 挂/摘 body 类）。 */
+body.cv2-col-resizing {
+  cursor: col-resize;
+  user-select: none;
+}
+
+/* ⭐ D-0354 业务方定稿：行高固定、单行、超长内容截断（隐藏尾部）——⛔ 禁止换行与折叠。
+ * 所有单元格统一套用；列宽由 table-layout:fixed + 各列 col/宽度类分配。 */
+.cv2-table td {
+  height: 44px;
+  padding: 0 12px;
+  vertical-align: middle;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+:is(.cv2-table, .cv2-data-grid) > :is(thead, tbody, tfoot) > tr > :is(th, td) {
+  border: 1px solid var(--tt2-line);
+}
+
+/* 面板用分离边框，让网格线随冻结表头和列一起滚动。 */
+.cv2-table-panel .cv2-table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.cv2-table-panel .cv2-table > :is(thead, tbody, tfoot) > tr > :is(th, td) {
+  border-top: 0;
+  border-left: 0;
+}
+
+.cv2-table-panel .cv2-table > :is(thead, tbody, tfoot) > tr > :is(th, td):is(
+  :last-child, :has(+ :is(.cv2-th-fixed, .cv2-td-fixed, .ul-fix-r):last-child)
+) {
+  border-right: 0;
+}
+
+/* 右侧冻结列自己持有分隔线，横滚时不会被划入底下的单元格盖住。 */
+.cv2-table-panel .cv2-table > :is(thead, tbody, tfoot) > tr > :is(.cv2-th-fixed, .cv2-td-fixed, .ul-fix-r):last-child:not(:first-child) {
+  border-left: 1px solid var(--tt2-line);
+}
+
+.cv2-table-panel .cv2-table > thead > tr > th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  height: 38px;
+  padding: 0 12px;
+  background: var(--tt2-panel);
+}
+
+.cv2-table-panel .cv2-table > tbody > tr > td {
+  height: 44px;
+  padding: 0 12px;
+}
+
+/* 行 hover = 极浅青绿晕（D-0351 第 4 条，旧版绿色行 hover 的青绿对应物）；
+ * 勾选行 = 浅青绿底（同类在后 ⇒ 勾选行 hover 时仍是勾选底）。 */
+.cv2-table tbody tr:hover {
+  background: var(--tt2-hover-wash);
+}
+
+.cv2-table tbody tr.cv2-row--checked {
+  background: var(--tt2-row-checked);
+}
+
+/* 状态卡选中态（样式 C）：本状态浅底不动，描边转墨点色并加粗（左右 2px、顶 3px），
+ * 标签加重；右上角叠墨点色三角 + 白 ✓。⚠️ 本块必须排在按状态着色规则之后——
+ * 同特异性靠源码顺序让选中描边盖过未选中的墨点色顶条；:hover 的压暗规则带
+ * `:not(.cv2-scard--on)`，选中卡悬停不会闪。 */
+.cv2-scard.cv2-scard--on {
+  border-color: var(--st-dot);
+  border-left-width: 2px;
+  border-right-width: 2px;
+  border-top: 3px solid var(--st-dot);
+}
+
+.cv2-scard--on .cv2-scard-label {
+  font-weight: 600;
+}
+
+.cv2-scard--on::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-top: 24px solid var(--st-dot);
+  border-left: 24px solid transparent;
+  border-top-right-radius: 5px;
+}
+
+.cv2-scard--on::after {
+  content: '✓';
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  color: var(--tt2-on-primary);
+  font-size: 11px;
+  line-height: 1;
+}
+
+/* 上家团团通镜像行「已受理」：置灰留在原地（D-0303 业务口径「置灰不删卡」——
+ * 大厅读口只投影在厅行，一刷新这张卡就会消失，所以受理成功后不刷新、等下一次重查自然消失；
+ * 旧页给 tr 打 opacity 0.55，同一值）。 */
+.cv2-table tbody tr.cv2-row--peer-claimed {
+  opacity: 0.55;
+}
+
+.cv2-th-check {
+  width: 36px;
+  text-align: center;
+}
+
+.cv2-th-num,
+.cv2-td-num {
+  text-align: right;
+}
+
+.cv2-td-num {
+  font-family: var(--tt2-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.cv2-td-order {
+  white-space: nowrap;
+}
+
+/* 加急徽标：浅底深字 + 中文（DRAFT §5 状态签口径；旧页那颗是 #FFBBFF「急」）。 */
+.cv2-urgent {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 0 5px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--tt2-st-error);
+  background: var(--tt2-st-error-bg);
+  vertical-align: 1px;
+}
+
+/* ⭐ 订单号统一蓝链（D-0354 行内追记：业务方「订单号自身颜色需要统一换一个 高亮一点
+ * 比如对标都是蓝色可点击」）：所有可点详情的订单号 = 统一蓝、等宽、hover 下划线加深。 */
+.cv2-order-link {
+  color: var(--tt2-primary-deep);
+  text-decoration: none;
+  font-family: var(--tt2-mono);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.cv2-order-link:hover {
+  color: var(--tt2-primary-deeper);
+  text-decoration: none;
+}
+
+/* 纯文本单号（抢单大厅用：旧页那颗蓝链点击无动作——「只有接下此单才能看详情」——
+ * v2 不渲染假链接，字形走同一条等宽栈）。 */
+.cv2-order-no {
+  font-family: var(--tt2-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.cv2-td-project {
+  min-width: 200px;
+}
+
+.cv2-td-time {
+  font-family: var(--tt2-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* 表头排序按钮（接手时间；layui 同款三态：升 → 降 → 不排）。 */
+.cv2-sort {
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.cv2-td-shots {
+  white-space: nowrap;
+}
+
+/* 文字操作相邻时补一个字的间隙（按钮改文字链后没有边框自带间距）。 */
+.cv2-td-shots .cv2-actlink + .cv2-actlink {
+  margin-left: 10px;
+}
+
+/* 状态签（实底填充 + 白字，2026-11-06 业务方拍板改回老版 layui-badge 的实底风）：
+ * 底 = 各态 `--st-dot` 实色（墨点色升级为底色）、字白、1px 描边留宽消色（布局零位移）；
+ * 形状/圆点/尺寸不动，每状态由 `.cv2-st--*` 规则只提供 `--st-dot`。 */
+.cv2-st {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 12px;
+  /* ⭐ D-0371 第五轮「状态字体稍微加粗」：与选中状态卡的标签同档 600。 */
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  background: var(--st-dot, var(--tt2-st-unassigned-dot));
+  color: var(--tt2-on-primary);
+}
+
+/* 墨点：状态签/筛选签/状态卡标签文字前的色点（纯装饰，aria-hidden 由模板保证）；
+ * 点色按宿主分档，见下面两条规则。 */
+.cv2-dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+/* 状态签已实底 ⇒ 点转白 90%（实底上再画同色点会隐形）；筛选签/状态卡仍浅底，
+ * 点取宿主状态规则定义的 `--st-dot`，无状态类的宿主回落中性灰点。 */
+.cv2-st .cv2-dot {
+  background: var(--tt2-st-dot-on);
+}
+
+.cv2-chip .cv2-dot,
+.cv2-scard .cv2-dot {
+  background: var(--st-dot, var(--tt2-st-unassigned-dot));
+}
+
+/* 各状态只供墨点实色（签底的唯一驱动）；浅底三件套留给状态卡与筛选签的专用规则。 */
+.cv2-st--unassigned {
+  --st-dot: var(--tt2-st-unassigned-dot);
+}
+
+.cv2-st--pending {
+  --st-dot: var(--tt2-st-pending-dot);
+}
+
+.cv2-st--doing {
+  --st-dot: var(--tt2-st-doing-dot);
+}
+
+.cv2-st--accept {
+  --st-dot: var(--tt2-st-accept-dot);
+}
+
+.cv2-st--done {
+  --st-dot: var(--tt2-st-done-dot);
+}
+
+/* 开放平台等设置页面的启用及成功状态。 */
+.cv2-st--open {
+  --st-dot: var(--tt2-st-doing-dot);
+}
+
+.cv2-st--refund {
+  /* ⭐ D-0371 第六轮：显示签 = 对标同款粉实底白字白点（业务方拍板采用对标色）；
+   * 状态卡仍是浅底三件套（.cv2-scard.cv2-st--refund 整组覆盖回浅底并钉回彩点）。 */
+  --st-dot: var(--tt2-st-dot-on);
+  color: var(--tt2-on-primary);
+  border-color: var(--tt2-st-refund-chip);
+  background: var(--tt2-st-refund-chip);
+}
+
+/* 结算状态「未结账」专用档（底 = 灰蓝墨点实色、字白；浅色三件套 token 仍留作他处取色；
+ * 只用于结算列——它不是订单状态，不进状态卡片/筛选签）。 */
+.cv2-st--unsettled {
+  --st-dot: var(--tt2-st-unsettled-dot);
+}
+
+/* 结算状态「已结账」= 深绿实底签（底=框、白字 5.84:1、点白 90%）——结清语义正向，
+ * 与「已完成」的蓝签分家；同样只住收入页结算列。 */
+.cv2-st--settled {
+  --st-dot: var(--tt2-st-dot-on);
+  color: var(--tt2-on-primary);
+  border-color: var(--tt2-st-settled);
+  background: var(--tt2-st-settled);
+}
+
+.cv2-st--paused {
+  --st-dot: var(--tt2-st-paused-dot);
+}
+
+.cv2-st--error {
+  --st-dot: var(--tt2-st-error-dot);
+}
+
+/* 自助注册链接三态（v2「新开系统账号」页记录表专用别名）：复用对应状态的墨点实色——
+ * 绿(doing)=可用、灰(unassigned)=已消耗、琥珀(paused)=失效；
+ * 墨点是签体模板里自渲染的 <i class="cv2-dot"/> 子节点。 */
+.cv2-st--reg-unused {
+  --st-dot: var(--tt2-st-doing-dot);
+}
+
+.cv2-st--reg-used {
+  --st-dot: var(--tt2-st-unassigned-dot);
+}
+
+.cv2-st--reg-expired {
+  --st-dot: var(--tt2-st-paused-dot);
+}
+
+/* 蓝系别名签（系统人员 v2：业类「代陪」与查重「正常」专用）：复用 done 墨点实色。 */
+.cv2-st--info {
+  --st-dot: var(--tt2-st-done-dot);
+}
+
+/* 表格里的普通状态标记。 */
+.cv2-table .cv2-st:not(.cv2-st--pushed):not(.cv2-st--mark):where(:not(.cv2-order-status)) {
+  gap: 5px;
+  padding: 2px 8px 2px 7px;
+  border-radius: 999px;
+  border-color: transparent;
+  font-weight: 500;
+  background: var(--tt2-st-unassigned-bg);
+  color: var(--tt2-st-unassigned);
+}
+
+.cv2-table .cv2-st--pending:not(.cv2-st--mark):where(:not(.cv2-order-status)) { background: var(--tt2-st-pending-bg); color: var(--tt2-st-pending); }
+.cv2-table .cv2-st--doing:not(.cv2-st--pushed):not(.cv2-st--mark):where(:not(.cv2-order-status)) { background: var(--tt2-st-doing-bg); color: var(--tt2-st-doing); }
+.cv2-table .cv2-st--accept:not(.cv2-st--mark):where(:not(.cv2-order-status)) { background: var(--tt2-st-accept-bg); color: var(--tt2-st-accept); }
+.cv2-table .cv2-st--done:not(.cv2-st--mark):where(:not(.cv2-order-status)),
+.cv2-table .cv2-st--info { background: var(--tt2-st-done-bg); color: var(--tt2-st-done); }
+.cv2-table .cv2-st--error:not(.cv2-st--mark):where(:not(.cv2-order-status)) { background: var(--tt2-st-error-bg); color: var(--tt2-st-error); }
+.cv2-table .cv2-st--paused:not(.cv2-st--mark):where(:not(.cv2-order-status)),
+.cv2-table .cv2-st--reg-expired { background: var(--tt2-st-paused-bg); color: var(--tt2-st-paused); }
+.cv2-table .cv2-st--refund:not(.cv2-st--mark):where(:not(.cv2-order-status)) { background: var(--tt2-st-refund-bg); color: var(--tt2-st-refund); }
+.cv2-table .cv2-st--unassigned:not(.cv2-st--mark):where(:not(.cv2-order-status)),
+.cv2-table .cv2-st--reg-used { background: var(--tt2-st-unassigned-bg); color: var(--tt2-st-unassigned); }
+.cv2-table .cv2-st--open:not(.cv2-st--mark):where(:not(.cv2-order-status)),
+.cv2-table .cv2-st--reg-unused,
+.cv2-table .cv2-st--settled { background: var(--tt2-st-doing-bg); color: var(--tt2-st-doing); }
+.cv2-table .cv2-st--unsettled { background: var(--tt2-st-unassigned-bg); color: var(--tt2-st-unassigned); }
+
+.cv2-table .cv2-st:not(.cv2-st--pushed):not(.cv2-st--mark):where(:not(.cv2-order-status)) .cv2-dot {
+  width: 6px;
+  height: 6px;
+  background: currentColor;
+}
+
+/* 普通行内状态标记。 */
+.cv2-st.cv2-st--mark:where(:not(.cv2-order-status)) {
+  gap: 5px;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--st-ink, var(--tt2-st-unassigned));
+  font-size: 13px;
+  font-weight: 500;
+  cursor: default;
+}
+
+.cv2-st.cv2-st--mark:where(:not(.cv2-order-status)) .cv2-dot {
+  width: 7px;
+  height: 7px;
+  background: currentColor;
+}
+
+.cv2-st.cv2-st--mark:where(:not(.cv2-order-status)).cv2-st--unassigned { --st-ink: var(--tt2-st-unassigned); }
+.cv2-st.cv2-st--mark:where(:not(.cv2-order-status)).cv2-st--pending { --st-ink: var(--tt2-st-pending); }
+.cv2-st.cv2-st--mark:where(:not(.cv2-order-status)).cv2-st--doing,
+.cv2-st.cv2-st--mark:where(:not(.cv2-order-status)).cv2-st--open { --st-ink: var(--tt2-st-doing); }
+.cv2-st.cv2-st--mark:where(:not(.cv2-order-status)).cv2-st--accept { --st-ink: var(--tt2-st-accept-ink); }
+.cv2-st.cv2-st--mark:where(:not(.cv2-order-status)).cv2-st--done { --st-ink: var(--tt2-st-done); }
+.cv2-st.cv2-st--mark:where(:not(.cv2-order-status)).cv2-st--error { --st-ink: var(--tt2-st-error); }
+.cv2-st.cv2-st--mark:where(:not(.cv2-order-status)).cv2-st--paused { --st-ink: var(--tt2-st-paused-ink); }
+.cv2-st.cv2-st--mark:where(:not(.cv2-order-status)).cv2-st--refund { --st-ink: var(--tt2-st-refund-chip); }
+/* 交易状态「已结算」在表里本来就跟代练中同一档绿，色点沿用这档。 */
+.cv2-st.cv2-st--mark:where(:not(.cv2-order-status)).cv2-st--settled { --st-ink: var(--tt2-st-doing); }
+.cv2-st.cv2-st--mark:where(:not(.cv2-order-status)).cv2-st--unsettled { --st-ink: var(--tt2-st-unsettled); }
+
+button.cv2-st.cv2-st--mark:where(:not(.cv2-order-status)) {
+  padding: 3px 6px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button.cv2-st.cv2-st--mark:where(:not(.cv2-order-status)):hover {
+  background: color-mix(in srgb, var(--st-ink) 16%, var(--tt2-panel));
+}
+
+button.cv2-st.cv2-st--mark:where(:not(.cv2-order-status)).cv2-st--refund:hover {
+  background: color-mix(in srgb, var(--tt2-st-refund-chip) 70%, var(--tt2-panel));
+}
+
+/* 订单状态在表格和详情共用配色。 */
+.cv2-st.cv2-order-status {
+  box-sizing: border-box;
+  height: 25px;
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  color: var(--order-status-ink, var(--tt2-st-unassigned));
+  background: var(--order-status-bg, var(--tt2-st-unassigned-bg));
+  border-color: transparent;
+  cursor: default;
+}
+
+.cv2-order-status .cv2-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--order-status-dot, var(--st-dot, var(--tt2-st-unassigned-dot)));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--order-status-dot, var(--st-dot, var(--tt2-st-unassigned-dot))) 12%, transparent);
+}
+
+button.cv2-st.cv2-order-status { cursor: pointer; }
+button.cv2-st.cv2-order-status:hover { border-color: var(--order-status-dot, var(--st-dot)); }
+
+.cv2-order-status.cv2-st--pending {
+  --order-status-ink: var(--tt2-st-pending);
+  --order-status-bg: var(--tt2-st-pending-bg);
+}
+.cv2-order-status.cv2-st--doing {
+  --order-status-ink: var(--tt2-order-doing-ink);
+  --order-status-bg: var(--tt2-order-doing-bg);
+  --order-status-dot: var(--tt2-order-doing-dot);
+}
+.cv2-order-status.cv2-st--accept {
+  --order-status-ink: var(--tt2-st-accept);
+  --order-status-bg: var(--tt2-st-accept-bg);
+}
+.cv2-order-status.cv2-st--done {
+  --order-status-ink: var(--tt2-order-done-ink);
+  --order-status-bg: var(--tt2-order-done-bg);
+  --order-status-dot: var(--tt2-order-done-dot);
+}
+.cv2-order-status.cv2-st--error {
+  --order-status-ink: var(--tt2-st-error);
+  --order-status-bg: var(--tt2-st-error-bg);
+}
+.cv2-order-status.cv2-st--paused {
+  --order-status-ink: var(--tt2-st-paused);
+  --order-status-bg: var(--tt2-st-paused-bg);
+}
+.cv2-order-status.cv2-st--refund {
+  --order-status-ink: var(--tt2-order-refund-ink);
+  --order-status-bg: var(--tt2-order-refund-bg);
+  --order-status-dot: var(--tt2-order-refund-dot);
+}
+
+/* 空态（DRAFT §5：一句话说明，不卖萌不道歉）。 */
+.cv2-empty {
+  padding: 28px 12px;
+  text-align: center;
+  color: var(--tt2-dim);
+}
+
+/* ⭐ D-0365（V2Income）：结算状态格旁的「已申请」小标记（样式从简——
+ * 挨着结算状态签的一枚细描边 chip，取炭火中性 token；不是状态签、不占 cv2-st 槽位）。 */
+.cv2-applied {
+  margin-left: 6px;
+  padding: 1px 6px;
+  font-size: 11px;
+  color: var(--tt2-dim);
+  border: 1px solid var(--tt2-line);
+  border-radius: 3px;
+}
+
+.cv2-pager {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  padding: 12px 14px;
+  border-top: 1px solid var(--tt2-line);
+  /* ⭐ 2026-11-05 业务方「改成冻结那种 始终展示在底部 方便不用滑到底」：钉在滚动视口底
+   * （分页条须在横向滚动层之外，见各列表页结构）；白底压住从底下滚过的行。 */
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  background: var(--tt2-panel);
+}
+
+/* 悬停预览浮层（大厅「代练/陪玩内容」悬停预览，2026-11-05）：跟随光标的小卡，非弹窗。 */
+.cv2-hovercard {
+  position: fixed;
+  z-index: 80;
+  max-width: 420px;
+  padding: 10px 14px;
+  border: 1px solid var(--tt2-line);
+  border-radius: 6px;
+  background: var(--tt2-panel);
+  box-shadow: 0 4px 14px var(--tt2-hovercard-shadow);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--tt2-ink);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  pointer-events: none;
+}
+
+.cv2-pager-total {
+  font-size: 12px;
+  color: var(--tt2-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.cv2-pager-size {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--tt2-dim);
+}
+
+.cv2-input--inline {
+  width: 64px;
+  padding: 3px 6px;
+}
+
+/* 分页选中页码 = 主色实底白字（D-0351 第 5 条；⭐ 主题定稿青绿后走 deep 档，白字对
+ * `#085A52` 实测 8.2:1）。EP 内核取 `--el-color-primary`；只动选中页的底色，
+ * ⛔ 不改 `--el-color-primary`（那会连坐 EP 全部组件的选中色）。 */
+.ttv2 .el-pagination.is-background .el-pager li.is-active {
+  background-color: var(--tt2-primary-deep);
+}
+
+/* ── toast（页面内自绘：ElMessage 会 teleport 到 body、拿不到 .ttv2 皮）──────────── */
+
+.cv2-toast {
+  position: fixed;
+  top: calc(var(--tt2-topbar-h) + var(--tt2-tabs-h) + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 16px;
+  border: 1px solid var(--tt2-line);
+  border-radius: 4px;
+  background: var(--tt2-panel);
+  color: var(--tt2-ink);
+  font-size: 13px;
+  z-index: 60;
+  max-width: 60vw;
+}
+
+.cv2-toast--error {
+  color: var(--tt2-st-error);
+  border-color: var(--tt2-st-error);
+}
+
+/* ⭐ 2026-11-05：EP 2.14 弹窗过渡（dialog-fade）在本环境永不收尾（enter-active 挂死、
+ * 后续显隐失效——指派弹窗打不开的真因）。设计规范本就「动效默认为零」（DRAFT §7）⇒
+ * 弹窗过渡整体归零：Vue 检测零时长立即完成过渡，显隐回归可靠。 */
+.ttv2 .dialog-fade-enter-active,
+.ttv2 .dialog-fade-leave-active {
+  transition: none !important;
+  animation: none !important;
+}
+
+.ttv2 .dialog-fade-enter-from,
+.ttv2 .dialog-fade-leave-to {
+  opacity: 1;
+}
+
+/* ⭐ 2026-11-05：弹层以右侧内容区为基准居中（业务方「应该在内容展示区的居中 而不是把左侧栏
+ * 也加上」）。⚠️ 两层都要偏移：外层 .el-overlay 与内层 .el-overlay-dialog 都是 fixed inset:0，
+ * 只偏外层会被内层盖回全屏（实测）。挂在 .ttv2 根 = 全部 v2 弹窗统一口径。 */
+.ttv2 .el-overlay,
+.ttv2 .el-overlay-dialog {
+  left: var(--tt2-side-w);
+  top: calc(var(--tt2-topbar-h) + var(--tt2-tabs-h));
+  /* ⛔ 容器高度必须钉成内容区高度：默认 height:100% 在偏移后仍指全屏，
+   * 垂直居中就按全屏算 ⇒ 弹窗底缘顶到视口底（业务方「与底部保持一定间隔」实测 12px）。 */
+  height: calc(100vh - var(--tt2-topbar-h) - var(--tt2-tabs-h));
+  height: calc(100dvh - var(--tt2-topbar-h) - var(--tt2-tabs-h));
+}
+
+@media (max-height: 280px) {
+  /* 极矮窗口借用顶栏空间，标题、内容和按钮一起滚动。 */
+  .ttv2 .el-overlay,
+  .ttv2 .el-overlay-dialog {
+    top: 0;
+    height: 100vh;
+    height: 100dvh;
+  }
+
+  .ttv2 .el-dialog {
+    max-height: calc(100% - 24px);
+    display: block;
+    overflow: auto;
+  }
+
+  .ttv2 .el-dialog__body { overflow: visible; }
+
+  /* 原生详情随弹窗滚动，给其余页签保留独立的内容区。 */
+  .ttv2 .el-dialog .dtl-face:has(> .dtl-tabs [data-v2="tab-local"][aria-selected="true"]),
+  .ttv2 .el-dialog .dtl-wrap { height: auto; }
+  .ttv2 .el-dialog .dtl-face-content:has(> .dtl-wrap) { overflow: visible; }
+}
+
+/* ── 弹层内容（el-dialog 本体是 EP 内核；这里只铺内容排版）────────────────────── */
+
+.cv2-dlg-text {
+  margin: 0;
+  font-size: 14px;
+}
+
+.cv2-dlg-radios {
+  display: flex;
+  gap: 20px;
+  padding: 6px 0;
+}
+
+.cv2-radio {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.cv2-dlg-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* island iframe（订单详情 / 截图）：旧页层体 85%×92%、70/80%×85% 的等比炭火版。 */
+.cv2-island-frame {
+  width: 100%;
+  height: 78vh;
+  border: none;
+}
+
+.cv2-island-frame--short {
+  height: 68vh;
+}
+
+/* 参考图看图弹层（抢单大厅）：签名 URL 图 + 文件名说明，缩略图网格。 */
+.cv2-shot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  max-height: 68vh;
+  overflow: auto;
+}
+
+.cv2-shot-item {
+  margin: 0;
+}
+
+.cv2-shot-item img {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--tt2-line);
+  border-radius: 4px;
+}
+
+/* ═══ 页内页签（「我的资料」三页签 /「我的消息」外层与侧边分档；D-0353）══════════
+ * 与壳层标签页条（.cv2-tabs）同一语法的小号版：白底下划线式，活动签 = 主色下条 + 墨字。 */
+
+.cv2-ptabs {
+  display: flex;
+  gap: 4px;
+  margin-top: 18px;
+  border-bottom: 1px solid var(--tt2-line);
+}
+
+.cv2-ptab {
+  padding: 8px 14px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--tt2-dim);
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.cv2-ptab:hover {
+  color: var(--tt2-ink);
+}
+
+.cv2-ptab--on {
+  border-bottom-color: var(--tt2-primary);
+  color: var(--tt2-ink);
+  font-weight: 600;
+}
+
+/* 侧边分档签（消息三档）：竖排列表 + 未读计数徽标（>0 才显示，同旧页语义）。 */
+.cv2-mtabs {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 132px;
+}
+
+.cv2-mtab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--tt2-dim);
+  font-family: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.cv2-mtab:hover {
+  color: var(--tt2-ink);
+  background: var(--tt2-hover-wash);
+}
+
+.cv2-mtab--on {
+  background: var(--tt2-tool-bg);
+  color: var(--tt2-primary-deep);
+  font-weight: 600;
+}
+
+.cv2-mtab-count {
+  margin-left: auto;
+  min-width: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  font-size: 12px;
+  line-height: 18px;
+  text-align: center;
+  color: var(--tt2-panel);
+  background: var(--tt2-st-error);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ═══ 表单（「我的资料」；D-0353）。字段复用 .cv2-field / .cv2-input，这里只铺栅格与态 ══ */
+
+.cv2-form-grid {
+  display: grid;
+  /* ⭐ D-0354 追记 3（业务方「太散乱」）：两列网格收拢 + 限宽 880px，行距收紧 gap 14px；
+   * 字段源码顺序即配对（登录账号/身份证号、底薪/是否实名……），宽字段（--wide）跨两列。 */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  max-width: 880px;
+  margin-top: 14px;
+}
+
+.cv2-form-grid .cv2-field--wide {
+  grid-column: 1 / -1;
+}
+
+/* 表单尾动作行（保存 / 测试连接；从内联样式的 cv2-filter-actions 收编，随网格限宽 880px）。 */
+.cv2-form-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 880px;
+  margin-top: 14px;
+}
+
+.cv2-input:disabled,
+.cv2-input[readonly] {
+  color: var(--tt2-dim);
+  /* 只读/禁用底 = 中性灰签一族（D-0354 起 done-bg 已是灰绿，只读底语义归「未分配」灰）。 */
+  background: var(--tt2-st-unassigned-bg);
+}
+
+.cv2-field-hint {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--tt2-dim);
+}
+
+.cv2-field-hint--warn {
+  color: var(--tt2-st-error);
+}
+
+/* 资料块里的大头像（旧页 #avatar 240px 上限的炭火版：96px 圆 + 1px 线框）。 */
+.cv2-avatar-lg {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  border: 1px solid var(--tt2-line);
+  object-fit: cover;
+  display: block;
+}
+
+/* 说明性引言块（结算空态说明 / 绑定块导语；alert 变体走 error 签一族）。 */
+.cv2-note {
+  margin: 14px 0 0;
+  padding: 10px 14px;
+  border: 1px solid var(--tt2-line);
+  border-left: 3px solid var(--tt2-line);
+  border-radius: 4px;
+  color: var(--tt2-dim);
+  font-size: 13px;
+}
+
+.cv2-note--alert {
+  border-left-color: var(--tt2-st-error);
+  color: var(--tt2-st-error);
+  font-weight: 600;
+}
+
+/* 「一步步开通」折叠向导（下家绑定块上方；默认收起）。 */
+.cv2-guide {
+  margin-top: 14px;
+  max-width: 560px;
+  font-size: 13px;
+}
+
+.cv2-guide summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--tt2-primary-deep);
+}
+
+.cv2-guide ol {
+  margin: 8px 0 0 18px;
+  padding: 0;
+}
+
+.cv2-guide li {
+  margin-bottom: 6px;
+}
+
+.cv2-guide figure {
+  margin: 8px 0 0;
+}
+
+.cv2-guide img {
+  width: 100%;
+  border: 1px solid var(--tt2-line);
+  border-radius: 4px;
+}
+
+.cv2-shot-item figcaption {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--tt2-dim);
+  overflow-wrap: anywhere;
+}
+
+.cv2-guide figcaption {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--tt2-dim);
+}
+
+/* 健康状态 / 回显信息行（复用 .cv2-info-list 的行距语义，但格宽按本页字段）。 */
+.cv2-info-row .cv2-info-value b {
+  font-weight: 600;
+}
+
+/* ═══ 「我的消息」两栏布局（侧边三档 + 主表；D-0353）══════════════════════ */
+
+.cv2-msg-layout {
+  display: flex;
+  gap: 18px;
+  margin-top: 16px;
+  align-items: flex-start;
+}
+
+.cv2-msg-main {
+  flex: 1;
+  min-width: 0;
+}
+
+/* 消息标题 / 内容两条点击链（长串内容要能折行，⛔ 不省略号吞字）。 */
+.cv2-msg-link {
+  overflow-wrap: anywhere;
+}
+
+/* ═══ 「我的资料」的媒体区 / 回调地址 / 实名行 / ②式结果区（D-0353）════════════ */
+
+/* 头像 + 更换按钮 + 收款码格的一行（flex 摊开，窄屏可换行）。 */
+.cv2-media-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.cv2-media-qr {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-left: 12px;
+}
+
+.cv2-media-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 实名那一格：状态签 + 入口文字链。 */
+.cv2-realname-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 回调地址那一行的只读输入 + 复制按钮。 */
+.cv2-callback-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.cv2-callback-row .cv2-input {
+  flex: 1;
+}
+
+/* ②式「测试连接」逐条表的结果区。 */
+.cv2-test-result {
+  margin-top: 14px;
+  border: 1px solid var(--tt2-line);
+  border-radius: 4px;
+  padding: 10px 12px;
+  overflow-x: auto;
+}
+
+
+/* ═══ 响应式（⭐ 响应式专包；断点口径见文件头注释）══════════════════════
+ * 三档外壳联动：220px（默认）→ 72px 图标栏（≤1100）→ 顶部抽屉（≤720）；组件类只引用
+ * token 与档位值，颜色一律 var(--tt2-…)。抽屉开合类 .cv2-shell--drawer-open 挂外壳根元素
+ * （CarbonShell 的 ☰ 按钮翻转；宽档下 CSS 直接忽略它，无 JS 断点侦测）。 */
+
+/* ☰ 按钮：抽屉档（≤720）专属开关，宽档整体不渲染出来。 */
+.cv2-burger {
+  display: none;
+  flex: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  width: 34px;
+  height: 34px;
+  padding: 0 7px;
+  border: 1px solid var(--tt2-side-line);
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.cv2-burger-bar {
+  display: block;
+  width: 100%;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--tt2-side-text);
+}
+
+.cv2-burger:hover {
+  border-color: var(--tt2-side-active);
+}
+
+.cv2-burger:hover .cv2-burger-bar {
+  background: var(--tt2-side-active);
+}
+
+/* 抽屉遮罩：只在「≤720 且抽屉开着」时出现（盖在内容上、点它收抽屉）。 */
+.cv2-scrim {
+  display: none;
+}
+
+/* 内部通讯的开发环境预览 */
+.cv2-chat-account {
+  display: grid;
+  flex: none;
+  align-content: center;
+  gap: 8px;
+  height: 122px;
+  padding: 10px 14px;
+  box-sizing: border-box;
+  border-bottom: 1px solid var(--tt2-side-line);
+}
+
+.cv2-chat-account-identity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  color: var(--tt2-side-active);
+}
+
+.cv2-chat-account-identity img {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.cv2-chat-account-identity p {
+  margin: 0;
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.cv2-chat-account-identity :is(b, small) {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cv2-chat-account-identity small {
+  color: var(--tt2-side-text);
+  font-size: 12px;
+}
+
+.cv2-chat-entry {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 10px;
+  border: 1px solid var(--tt2-side-line);
+  border-radius: 6px;
+  background: var(--tt2-topbar);
+  color: var(--tt2-side-active);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.cv2-chat-entry:hover,
+.cv2-chat-entry[aria-current='page'] {
+  border-color: var(--tt2-side-text);
+  background: color-mix(in srgb, var(--tt2-topbar), var(--tt2-side-text) 9%);
+}
+
+.cv2-chat-entry-label {
+  flex: 1;
+  white-space: nowrap;
+}
+
+.cv2-chat-entry .layui-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.cv2-chat-entry .cv2-chat-entry-chevron {
+  color: var(--tt2-side-text);
+  font-size: 12px;
+}
+
+.cv2-chat-count,
+.cv2-chat-order,
+.cv2-chat-title--canonical,
+.cv2-chat-time {
+  font-family: var(--tt2-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.cv2-chat-count {
+  display: inline-grid;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  box-sizing: border-box;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--tt2-btn-danger);
+  color: var(--tt2-on-primary);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.cv2-main.cv2-main--chat {
+  padding-bottom: 12px;
+}
+
+.cv2-chat-workspace {
+  display: grid;
+  grid-template-columns: minmax(268px, 32%) minmax(0, 1fr);
+  height: calc(100vh - var(--tt2-topbar-h) - var(--tt2-tabs-h) - 22px);
+  height: calc(100dvh - var(--tt2-topbar-h) - var(--tt2-tabs-h) - 22px);
+  min-height: 440px;
+  box-sizing: border-box;
+  border: 1px solid var(--tt2-line);
+  border-radius: 4px;
+  background: var(--tt2-panel);
+  line-height: 1.45;
+}
+
+.cv2-chat-workspace :is(h1, h2, p) {
+  margin: 0;
+}
+
+.cv2-chat-workspace :is(button, input, textarea) {
+  font-family: inherit;
+}
+
+.cv2-chat-workspace :is(button, input, textarea, [tabindex]):focus-visible,
+.cv2-chat-entry:focus-visible {
+  outline: 2px solid var(--tt2-primary);
+  outline-offset: 2px;
+}
+
+.cv2-chat-entry:focus-visible {
+  outline-color: var(--tt2-side-active);
+}
+
+.cv2-chat-inbox,
+.cv2-chat-thread {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+}
+
+.cv2-chat-inbox {
+  border-right: 1px solid var(--tt2-line);
+  background: color-mix(in srgb, var(--tt2-panel), var(--tt2-row-checked) 16%);
+}
+
+.cv2-chat-inbox-header {
+  display: grid;
+  gap: 8px;
+  padding: 10px 12px 12px;
+  border-bottom: 1px solid var(--tt2-line);
+}
+
+.cv2-chat-inbox-heading,
+.cv2-chat-thread-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cv2-chat-inbox-heading h1,
+.cv2-chat-thread-header h2 {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.cv2-chat-inbox-heading h1,
+.cv2-chat-thread-title {
+  flex: 1;
+}
+
+.cv2-chat-icon {
+  display: inline-grid;
+  flex: none;
+  min-width: 34px;
+  min-height: 34px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--tt2-dim);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.cv2-chat-icon:hover,
+.cv2-chat-icon[aria-expanded='true'],
+.cv2-chat-icon.cv2-chat-new {
+  border-color: var(--tt2-filter-line);
+  background: var(--tt2-row-checked);
+  color: var(--tt2-primary-deep);
+}
+
+.cv2-chat-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 0 9px;
+  border: 1px solid var(--tt2-filter-line);
+  border-radius: 4px;
+  background: var(--tt2-panel);
+  color: var(--tt2-dim);
+}
+
+.cv2-chat-search:focus-within {
+  border-color: var(--tt2-primary);
+  box-shadow: 0 0 0 3px var(--tt2-focus-ring);
+}
+
+.cv2-chat-search input {
+  width: 100%;
+  min-width: 0;
+  min-height: 34px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--tt2-ink);
+  font-size: 13px;
+}
+
+.cv2-chat-search input:focus-visible {
+  outline: none;
+}
+
+.cv2-chat-workspace :is(input, textarea)::placeholder {
+  color: var(--tt2-dim);
+}
+
+.cv2-chat-list {
+  min-height: 0;
+  margin: 0;
+  padding: 8px;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.cv2-chat-list li + li {
+  margin-top: 4px;
+}
+
+.cv2-chat-row,
+.cv2-chat-contact {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  min-height: 58px;
+  padding: 8px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--tt2-ink);
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.cv2-chat-row:hover,
+.cv2-chat-contact:hover {
+  background: var(--tt2-hover-wash);
+}
+
+.cv2-chat-row[aria-current='true'] {
+  border-color: var(--tt2-filter-line);
+  background: var(--tt2-row-checked);
+}
+
+.cv2-chat-summary {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  gap: 2px;
+}
+
+.cv2-chat-title,
+.cv2-chat-preview {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cv2-chat-title {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.cv2-chat-title--canonical {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.cv2-chat-order {
+  color: var(--tt2-dim);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.cv2-chat-preview,
+.cv2-chat-contact small {
+  display: block;
+  color: var(--tt2-dim);
+  font-size: 12px;
+}
+
+.cv2-chat-row-status {
+  display: grid;
+  flex: none;
+  align-self: center;
+  justify-items: center;
+  gap: 3px;
+  color: var(--tt2-primary-deep);
+  font-size: 13px;
+  line-height: 1;
+}
+
+.cv2-chat-avatar {
+  display: grid;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--tt2-row-checked);
+  color: var(--tt2-primary-deep);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.cv2-chat-thread-header {
+  position: relative;
+  min-height: 62px;
+  padding: 9px 16px;
+  border-bottom: 1px solid var(--tt2-line);
+  background: var(--tt2-panel);
+}
+
+.cv2-chat-thread-title {
+  display: grid;
+  min-width: 0;
+}
+
+.cv2-chat-thread-title h2 {
+  overflow-wrap: anywhere;
+}
+
+.cv2-chat-thread-title small {
+  color: var(--tt2-dim);
+  font-size: 12px;
+}
+
+.cv2-chat-icon.cv2-chat-back {
+  display: none;
+}
+
+.cv2-chat-log {
+  flex: 1;
+  min-height: 0;
+  padding: 10px 20px 16px;
+  overflow: auto;
+  background: color-mix(in srgb, var(--tt2-panel), var(--tt2-filter-line) 23%);
+}
+
+.cv2-chat-empty,
+.cv2-chat-time {
+  display: block;
+  margin: 8px auto 12px;
+  color: var(--tt2-dim);
+  font-size: 12px;
+  text-align: center;
+}
+
+.cv2-chat-list .cv2-chat-empty,
+.cv2-chat-log .cv2-chat-empty {
+  padding: 12px 8px;
+}
+
+.cv2-chat-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin: 0 0 10px;
+}
+
+.cv2-chat-message--own {
+  flex-direction: row-reverse;
+}
+
+.cv2-chat-message--own .cv2-chat-avatar {
+  background: var(--tt2-primary-deep);
+  color: var(--tt2-on-primary);
+}
+
+.cv2-chat-message-content {
+  display: grid;
+  justify-items: start;
+  gap: 4px;
+  min-width: 0;
+  max-width: 80%;
+}
+
+.cv2-chat-message--own .cv2-chat-message-content {
+  justify-items: end;
+}
+
+.cv2-chat-sender {
+  color: var(--tt2-dim);
+  font-size: 12px;
+  line-height: 1;
+}
+
+.cv2-chat-bubble {
+  min-width: 0;
+  min-height: 32px;
+  padding: 5px 10px;
+  box-sizing: border-box;
+  border: 1px solid var(--tt2-filter-line);
+  border-radius: 5px;
+  background: var(--tt2-panel);
+  font-size: 13px;
+  line-height: 20px;
+  overflow-wrap: anywhere;
+}
+
+.cv2-chat-bubble p {
+  white-space: pre-wrap;
+}
+
+.cv2-chat-message--own .cv2-chat-bubble,
+.cv2-chat-message--highlighted .cv2-chat-bubble {
+  background: var(--tt2-row-checked);
+}
+
+.cv2-chat-message--highlighted .cv2-chat-bubble {
+  border-color: var(--tt2-primary);
+}
+
+.cv2-chat-quoted-message {
+  display: block;
+  max-width: 100%;
+  margin: 0 0 4px;
+  padding: 0 0 0 7px;
+  overflow: hidden;
+  border: 0;
+  border-left: 2px solid var(--tt2-primary);
+  background: transparent;
+  color: var(--tt2-dim);
+  font-size: 12px;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.cv2-chat-quoted-message:hover,
+.cv2-chat-mention-mark {
+  color: var(--tt2-primary-deep);
+  font-weight: 600;
+}
+
+.cv2-chat-composer {
+  position: relative;
+  display: grid;
+  gap: 6px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--tt2-line);
+  background: var(--tt2-panel);
+}
+
+.cv2-chat-editor {
+  display: grid;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid var(--tt2-filter-line);
+  border-radius: 4px;
+}
+
+.cv2-chat-editor textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  max-height: 140px;
+  padding: 0;
+  box-sizing: border-box;
+  border: 0;
+  background: transparent;
+  color: var(--tt2-ink);
+  font-size: 13px;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.cv2-chat-compose-actions,
+.cv2-chat-draft-quote {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--tt2-dim);
+  font-size: 12px;
+}
+
+.cv2-chat-draft-quote {
+  padding: 4px 8px;
+  border-left: 2px solid var(--tt2-primary);
+  background: var(--tt2-hover-wash);
+}
+
+.cv2-chat-draft-quote div {
+  display: grid;
+  min-width: 0;
+}
+
+.cv2-chat-draft-quote span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cv2-chat-popup {
+  position: absolute;
+  z-index: 2;
+  top: calc(100% - 7px);
+  right: 16px;
+  min-width: 112px;
+  padding: 5px;
+  border: 1px solid var(--tt2-filter-line);
+  border-radius: 4px;
+  background: var(--tt2-panel);
+  box-shadow: 0 4px 14px var(--tt2-hovercard-shadow);
+}
+
+.cv2-chat-remark {
+  padding: 12px;
+}
+
+.cv2-chat-remark form {
+  display: grid;
+  gap: 8px;
+}
+
+.cv2-chat-remark input {
+  min-height: 34px;
+  padding: 0 8px;
+  border: 1px solid var(--tt2-filter-line);
+  border-radius: 4px;
+  color: var(--tt2-ink);
+}
+
+.cv2-chat-remark form div {
+  display: flex;
+  justify-content: end;
+  gap: 8px;
+}
+
+.cv2-chat-context {
+  position: fixed;
+  z-index: calc(var(--tt2-z-chrome) + 1);
+  right: auto;
+}
+
+.cv2-chat-mentions {
+  top: auto;
+  right: auto;
+  bottom: calc(100% - 6px);
+  left: 14px;
+  min-width: 158px;
+}
+
+.cv2-chat-context button,
+.cv2-chat-mentions button {
+  display: block;
+  width: 100%;
+  min-height: 32px;
+  padding: 4px 8px;
+  border: 0;
+  border-radius: 6px;
+  background: var(--tt2-panel);
+  color: var(--tt2-ink);
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.cv2-chat-context button:hover,
+.cv2-chat-mentions button:hover {
+  background: var(--tt2-hover-wash);
+}
+
+.cv2-chat-mentions small {
+  color: var(--tt2-dim);
+}
+
+/* ── ≤1100px：图标栏档 ──────────────────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .cv2-side {
+    width: var(--tt2-side-w-rail);
+  }
+
+  /* 内容区/顶栏/签条随档联动（240 → 72）。 */
+  .cv2-main {
+    margin-left: var(--tt2-side-w-rail);
+  }
+
+  .cv2-topbar {
+    left: var(--tt2-side-w-rail);
+  }
+
+  .cv2-tabs {
+    left: var(--tt2-side-w-rail);
+  }
+
+  /* 品牌缩成方块：文字块整块藏掉、主色方块放大居中。 */
+  .cv2-brand {
+    justify-content: center;
+    padding: 16px 0;
+  }
+
+  .cv2-brand > div {
+    display: none;
+  }
+
+  .cv2-brand-mark {
+    width: 22px;
+    height: 22px;
+  }
+
+  /* 条目只显图标：文字与箭头藏掉、图标居中；tooltip 走条目上的原生 title（模板钉）。 */
+  .cv2-nav-link,
+  .cv2-nav-head {
+    justify-content: center;
+    padding: 0;
+    margin: 2px 8px;
+  }
+
+  .cv2-nav-head {
+    width: calc(100% - 16px);
+  }
+
+  .cv2-nav-link span,
+  .cv2-nav-head span,
+  .cv2-nav-head .cv2-nav-arrow {
+    display: none;
+  }
+
+  /* 组子菜单 = 右浮层（实现最稳的一种：点组头开合，机制沿用同一份 open 状态；
+   * 浮层要溢出 72px 栏 ⇒ 滚动容器放行 overflow，菜单条目数今天的量级在任何可用的
+   * 面板高度内都摆得下）。 */
+  .cv2-nav {
+    overflow: visible;
+  }
+
+  .cv2-nav-group {
+    position: relative;
+  }
+
+  .cv2-sub-wrap {
+    display: block;
+  }
+
+  .cv2-sub-list {
+    position: absolute;
+    top: 0;
+    left: calc(100% - 4px);
+    z-index: 1;
+    min-width: 176px;
+    max-width: 240px;
+    max-height: 60vh;
+    margin: 0;
+    padding: 6px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background: var(--tt2-side);
+    border: 1px solid var(--tt2-side-line);
+    border-radius: 4px;
+  }
+
+  .cv2-sub-link {
+    margin: 1px 6px;
+    /* 图标栏档恢复小圆角幽灵盒（全宽填充是宽侧栏档的语法，窄条里贴边反而怪）。 */
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  /* 顶部用户块退化成居中小头像（40px；竖排容器水平已居中，文字藏掉）。 */
+  .cv2-side-user {
+    padding: 12px 0;
+  }
+
+  .cv2-avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .cv2-user-line {
+    display: none;
+  }
+
+  .cv2-chat-account {
+    justify-items: center;
+    padding-inline: 0;
+  }
+
+  .cv2-chat-account-identity p,
+  .cv2-chat-entry-label,
+  .cv2-chat-entry .cv2-chat-entry-chevron {
+    display: none;
+  }
+
+  .cv2-chat-entry {
+    justify-content: center;
+    width: 44px;
+    box-sizing: border-box;
+    padding: 0;
+  }
+
+  .cv2-chat-entry .cv2-chat-count {
+    position: absolute;
+    top: -5px;
+    right: -6px;
+  }
+}
+
+/* ── ≤900px：状态卡片 4 张/行（flex+定宽 → grid 定列数；620px 面板下不再挤成竖条）；──
+ *    同档收看板网格（v2-admin-dashboard 线）：窄屏退单列。 */
+@media (max-width: 900px) {
+  .cv2-scards {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .cv2-scard {
+    width: auto;
+  }
+
+  .cv2-dsh-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cv2-dsh-card--sp2,
+  .cv2-dsh-card--sp3 {
+    grid-column: auto;
+  }
+}
+
+/* ── ≤720px：抽屉档 + 两列网格堆叠 ──────────────────────────────────────────── */
+@media (max-width: 720px) {
+  .ttv2 .el-overlay:has(.dtl-face),
+  .ttv2 .el-overlay-dialog:has(.dtl-face) { left: 0; }
+
+  /* 内容区贴满：margin 0、左右内边距收 16px（620px 面板里多出 32px 可读宽度）。 */
+  .cv2-main {
+    margin-left: 0;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .cv2-topbar {
+    left: 0;
+  }
+
+  .cv2-tabs {
+    left: 0;
+  }
+
+  /* 顶栏窄档：☰ 出现；账号文字折进抽屉底部的用户块（顶栏只留 页题/客服工具/退出）。 */
+  .cv2-burger {
+    display: inline-flex;
+  }
+
+  .cv2-topbar-user {
+    display: none;
+  }
+
+  /* 侧栏 → 抽屉：恢复 240px 全量菜单，平时收在屏左外，开着才盖到内容上（z 压过顶栏）。 */
+  .cv2-side {
+    z-index: 30;
+    width: var(--tt2-side-w);
+    border-right: 1px solid var(--tt2-side-line);
+    transform: translateX(-100%);
+    transition: transform var(--tt2-motion) ease;
+  }
+
+  .cv2-shell--drawer-open .cv2-side {
+    transform: translateX(0);
+  }
+
+  .cv2-shell--drawer-open .cv2-scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 25;
+    background: var(--tt2-scrim);
+  }
+
+  /* 撤销图标栏档的收起：抽屉里回到完整菜单形态。 */
+  .cv2-brand {
+    justify-content: flex-start;
+    padding: 22px 20px 20px;
+  }
+
+  .cv2-brand > div {
+    display: block;
+  }
+
+  .cv2-brand-mark {
+    width: 12px;
+    height: 12px;
+  }
+
+  .cv2-nav {
+    overflow-y: auto;
+  }
+
+  .cv2-nav-link,
+  .cv2-nav-head {
+    justify-content: flex-start;
+    padding: 0 12px;
+    margin: 2px 10px;
+  }
+
+  .cv2-nav-head {
+    width: calc(100% - 20px);
+  }
+
+  .cv2-nav-link span,
+  .cv2-nav-head span {
+    display: inline;
+  }
+
+  .cv2-nav-head .cv2-nav-arrow {
+    display: block;
+  }
+
+  .cv2-nav-group {
+    position: static;
+  }
+
+  .cv2-sub-wrap {
+    display: grid;
+  }
+
+  .cv2-sub-list {
+    position: static;
+    min-width: 0;
+    max-width: none;
+    max-height: none;
+    margin: 0 0 4px;
+    padding: 0;
+    overflow: hidden;
+    background: transparent;
+    border: none;
+  }
+
+  .cv2-sub-link {
+    /* 抽屉档与宽侧栏档同语法：全宽贴边（缩进由 base 的 padding-left 36px 承担）。 */
+    margin: 1px 0;
+    white-space: normal;
+  }
+
+  /* 顶部用户块回宽档竖排形态（图标栏档的小头像与藏字在这里还原）。 */
+  .cv2-side-user {
+    padding: 16px 12px;
+  }
+
+  .cv2-avatar {
+    width: 60px;
+    height: 60px;
+  }
+
+  .cv2-user-line {
+    display: block;
+  }
+
+  /* 两列网格堆叠单列：资料页表单网格、消息页「侧边分档 + 主表」两栏。 */
+  .cv2-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cv2-msg-layout {
+    flex-direction: column;
+  }
+
+  /* 消息侧边分档在堆叠档转横排（可横滚），不再挤占正文宽度。 */
+  .cv2-mtabs {
+    flex-direction: row;
+    min-width: 0;
+    overflow-x: auto;
+  }
+
+  .cv2-mtab {
+    flex: none;
+  }
+
+  .cv2-chat-account {
+    justify-items: stretch;
+    padding-inline: 14px;
+  }
+
+  .cv2-chat-account-identity p,
+  .cv2-chat-entry-label,
+  .cv2-chat-entry .cv2-chat-entry-chevron {
+    display: block;
+  }
+
+  .cv2-chat-entry {
+    width: auto;
+    padding: 0 10px;
+  }
+
+  .cv2-chat-entry .cv2-chat-count {
+    position: static;
+  }
+
+  .cv2-chat-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cv2-chat-inbox {
+    border-right: 0;
+  }
+
+  .cv2-chat-workspace:not(.cv2-chat-workspace--thread) .cv2-chat-thread,
+  .cv2-chat-workspace--thread .cv2-chat-inbox {
+    display: none;
+  }
+
+  .cv2-chat-icon.cv2-chat-back {
+    display: inline-grid;
+  }
+
+  .cv2-chat-thread-header,
+  .cv2-chat-log {
+    padding-inline: 10px;
+  }
+}
+
+/* ── ≤560px：状态卡片 2 张/行（排在 900 块之后 ⇒ 窄档覆盖列数）────────────────── */
+@media (max-width: 560px) {
+  .cv2-scards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ═══ 焦点可见 & 动效兜底（DRAFT §7）═════════════════════════════════ */
+
+
+.ttv2 a:focus-visible,
+.ttv2 button:focus-visible {
+  outline: 2px solid var(--tt2-primary-deep);
+  outline-offset: 1px;
+  border-radius: 4px;
+}
+
+.ttv2 .cv2-side a:focus-visible,
+.ttv2 .cv2-side button:focus-visible {
+  outline-color: var(--tt2-side-active);
+  outline-offset: -2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ttv2 *,
+  .ttv2 *::before,
+  .ttv2 *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ⭐ 业务方「所有出现订单号的地方加一个一键快速复制单号的小按钮 按钮简洁美观」：
+ * 20px 幽灵钮 + 内联 SVG 双矩形复制图形（layui 无 copy 字形），默认弱灰、悬停主题色，
+ * 点击写剪贴板并由页面 toast 回执。 */
+.cv2-copybtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  margin-left: 6px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--tt2-dim);
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.cv2-copybtn svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.cv2-copybtn:hover {
+  background: var(--tt2-hover-wash);
+  color: var(--tt2-primary-deep);
+}
+
+/* 内容自适应小弹窗（大厅「代练/陪玩项目」点击看全文）：宽随内容、上限 640。 */
+.ttv2 .el-dialog.cv2-dialog--fit {
+  width: auto;
+  max-width: min(640px, 92vw);
+}
+
+.ttv2 .el-dialog.cv2-dialog--fit .el-dialog__body {
+  padding: 16px 20px;
+}
+
+/* ⭐ 大厅「代练/陪玩项目」内容格 = 可点按钮（样式即纯文本，悬停提示主题色）；
+ * 点开 = cv2-dialog--fit 小弹窗看全文（pre-wrap、行高放松）。 */
+.cv2-project-more {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.cv2-project-more:hover {
+  color: var(--tt2-primary-deep);
+}
+
+.cv2-project-full {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ═══ 后台首页看板（2026-11-06 v2-admin-dashboard 线；像素对照 = mockup r4）═════
+ * Metabase 浅色卡片风：内容区浅灰底 + 白卡 1px 线框；圆角/字号照 v2 现行档（4px 卡角、
+ * 零投影）。canvas 侧色在 charts.ts（JS 常量），本段 token 只服务 CSS 侧（图例点/涨跌字/墨点）。
+ * ⚠️ 负边距对应 .cv2-main 的内边距（上 10 / 左右 16 / 下 48）——主容器改内边距时这里同改。 */
+.cv2-dsh {
+  margin: -10px -16px -48px;
+  padding: 10px 22px 48px;
+  min-height: 100%;
+  background: var(--tt2-dsh-bg);
+}
+
+.cv2-dsh-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.cv2-dsh-title {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--tt2-ink);
+}
+
+.cv2-dsh-updated {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--tt2-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.cv2-dsh-locked {
+  margin: 14px 0 0;
+  padding: 16px 18px;
+  border: 1px solid var(--tt2-dsh-card-line);
+  border-radius: 4px;
+  background: var(--tt2-panel);
+  color: var(--tt2-dim);
+  font-size: 13px;
+}
+
+/* ── 区间行：四预设 + 范围框 + 自选日历浮层 ───────────────────────────── */
+.cv2-dsh-range {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.cv2-dsh-rbtn {
+  padding: 6px 16px;
+  border: 1px solid var(--tt2-dsh-card-line);
+  border-radius: 4px;
+  background: var(--tt2-panel);
+  color: var(--tt2-ink);
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.cv2-dsh-rbtn--on {
+  border-color: var(--tt2-primary);
+  color: var(--tt2-primary);
+}
+
+.cv2-dsh-rbox {
+  padding: 6px 14px;
+  border: 1px solid var(--tt2-dsh-card-line);
+  border-radius: 4px;
+  background: var(--tt2-panel);
+  color: var(--tt2-dim);
+  font-family: inherit;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.cv2-dsh-rbox:hover {
+  border-color: var(--tt2-primary);
+  color: var(--tt2-primary);
+}
+
+.cv2-dsh-cal {
+  position: absolute;
+  left: 0;
+  top: 40px;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 14px 16px;
+  border: 1px solid var(--tt2-dsh-card-line);
+  border-radius: 4px;
+  background: var(--tt2-panel);
+}
+
+.cv2-dsh-cal-dash {
+  color: var(--tt2-dim);
+}
+
+/* ── 卡片网格（3 列；sp2/sp3 跨列）──────────────────────────────────── */
+.cv2-dsh-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.cv2-dsh-card {
+  min-width: 0;
+  padding: 14px 16px;
+  border: 1px solid var(--tt2-dsh-card-line);
+  border-radius: 4px;
+  background: var(--tt2-panel);
+}
+
+.cv2-dsh-card--sp2 { grid-column: span 2; }
+.cv2-dsh-card--sp3 { grid-column: span 3; }
+
+.cv2-dsh-card-title {
+  margin: 0 0 4px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--tt2-ink);
+}
+
+.cv2-dsh-note {
+  margin: 0;
+  font-size: 12px;
+  color: var(--tt2-dim);
+}
+
+.cv2-dsh-fail {
+  color: var(--tt2-dsh-down);
+}
+
+.cv2-dsh-tag {
+  display: inline-block;
+  padding: 0 8px;
+  margin-left: 6px;
+  border: 1px solid var(--tt2-primary);
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--tt2-primary);
+  vertical-align: 1px;
+}
+
+.cv2-dsh-tag--gray {
+  border-color: var(--tt2-dsh-card-line);
+  color: var(--tt2-dim);
+}
+
+.cv2-dsh-tag--amber {
+  border-color: var(--tt2-dsh-tag-amber-line);
+  background: var(--tt2-dsh-tag-amber-bg);
+  color: var(--tt2-dsh-tag-amber-fg);
+}
+
+.cv2-dsh-tag--inline {
+  margin-left: 0;
+}
+
+/* ── KPI 卡 ─────────────────────────────────────────────────────────── */
+.cv2-dsh-kpi-num {
+  display: block;
+  margin-top: 6px;
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--tt2-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.cv2-dsh-kpi-sub {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--tt2-dim);
+}
+
+.cv2-dsh-up { color: var(--tt2-dsh-up); }
+.cv2-dsh-down { color: var(--tt2-dsh-down); }
+
+/* ── 图表区（容器定高；ECharts 自己量尺寸）───────────────────────────── */
+.cv2-dsh-dl {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.cv2-dsh-chart {
+  min-width: 0;
+  height: 170px;
+}
+
+.cv2-dsh-chart--donut { flex: none; width: 150px; }
+.cv2-dsh-chart--trend { width: 100%; height: 240px; }
+.cv2-dsh-chart--wide { width: 100%; height: 230px; }
+
+.cv2-dsh-mini-legend {
+  display: flex;
+  gap: 14px;
+  margin: 2px 0 6px;
+  font-size: 12px;
+  color: var(--tt2-dim);
+}
+
+.cv2-dsh-mini-legend i {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 5px;
+  border-radius: 2px;
+}
+
+.cv2-dsh-dot-bar { background: var(--tt2-dsh-bar); }
+.cv2-dsh-dot-line { background: var(--tt2-dsh-line); }
+
+/* ── 环形图例（页面自绘；悬停 ⇄ 扇区高亮走 charts 控制器）────────────── */
+.cv2-dsh-legend {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.cv2-dsh-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 4px;
+  border-radius: 4px;
+  font-size: 12.5px;
+}
+
+.cv2-dsh-legend-dot {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+}
+
+.cv2-dsh-legend-name {
+  color: var(--tt2-ink);
+}
+
+.cv2-dsh-legend-val {
+  margin-left: auto;
+  color: var(--tt2-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.cv2-dsh-legend-sub {
+  margin: 4px 0 0;
+  padding: 4px 4px 0;
+  border-top: 1px dashed var(--tt2-dsh-card-line);
+  font-size: 11.5px;
+  color: var(--tt2-dim);
+}
+
+/* ── 接单排行榜 ─────────────────────────────────────────────────────── */
+.cv2-dsh-board {
+  margin-top: 6px;
+}
+
+.cv2-dsh-board-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 4px;
+  border-bottom: 1px solid var(--tt2-dsh-row-line);
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.cv2-dsh-board-row:hover {
+  background: var(--tt2-accent-box-bg);
+}
+
+.cv2-dsh-board-row:last-child {
+  border-bottom: none;
+}
+
+.cv2-dsh-board-rank {
+  flex: none;
+  width: 18px;
+  color: var(--tt2-dim);
+  font-size: 12px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.cv2-dsh-board-name {
+  flex: none;
+  width: 52px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--tt2-ink);
+}
+
+.cv2-dsh-board-bar {
+  flex: 1 1 auto;
+  height: 12px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--tt2-dsh-row-line);
+}
+
+.cv2-dsh-board-bar i {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--tt2-primary);
+  opacity: 0.85;
+}
+
+.cv2-dsh-board-ct {
+  flex: none;
+  width: 86px;
+  color: var(--tt2-dim);
+  font-size: 12px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 行清单（待处理 / 同步健康）─────────────────────────────────────── */
+.cv2-dsh-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 2px;
+  border-bottom: 1px solid var(--tt2-dsh-row-line);
+  font-size: 13px;
+  color: var(--tt2-ink);
+}
+
+.cv2-dsh-row:last-child { border-bottom: none; }
+.cv2-dsh-row--sm { font-size: 12.5px; }
+
+.cv2-dsh-row b {
+  font-weight: 500;
+  color: var(--tt2-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.cv2-dsh-row-val {
+  margin-left: auto;
+  color: var(--tt2-dim);
+  font-size: 12px;
+}
+
+.cv2-dsh-dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.cv2-dsh-dot--accept { background: var(--tt2-dsh-tag-amber-line); }
+.cv2-dsh-dot--issue { background: var(--tt2-dsh-down); }
+.cv2-dsh-dot--unassigned { background: var(--tt2-dsh-dot-purple); }
+.cv2-dsh-dot--settle { background: var(--tt2-dsh-line); }
+.cv2-dsh-dot--warn { background: var(--tt2-dsh-tag-amber-line); }
+
+/* ── 多指标小卡（大厅/App/代练通）───────────────────────────────────── */
+.cv2-dsh-metrics {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.cv2-dsh-stat-num {
+  display: block;
+  margin-top: 2px;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--tt2-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 排行榜弹窗（Phase 1 四格）─────────────────────────────────────── */
+.cv2-dsh-mgrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 16px;
+  margin: 10px 0 12px;
+}
+
+.cv2-dsh-mnum {
+  display: block;
+  margin-top: 2px;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--tt2-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.cv2-dsh-mnum--sm { font-size: 14px; }
+
+/* ── 通知行 ────────────────────────────────────────────────────────── */
+.cv2-dsh-nt-row {
+  display: flex;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--tt2-dsh-row-line);
+  font-size: 13px;
+}
+
+.cv2-dsh-nt-row:last-child { border-bottom: none; }
+
+.cv2-dsh-nt-date {
+  flex: none;
+  width: 44px;
+  color: var(--tt2-dim);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.cv2-dsh-nt-link {
+  color: var(--tt2-primary-deep);
+}
+
+.cv2-dsh-nt-link:hover {
+  color: var(--tt2-primary-deeper);
+  text-decoration: underline;
+}
+
+.cv2-dsh-nt-plain {
+  color: var(--tt2-ink);
+}
+
+/* ── 骨架屏（加载态；reduced-motion 下静止）────────────────────────── */
+.cv2-dsh-skel {
+  height: 150px;
+  border-radius: 4px;
+  background: var(--tt2-tool-bg);
+  animation: cv2-dsh-pulse 1.4s ease-in-out infinite;
+}
+
+.cv2-dsh-skel--short { height: 56px; }
+.cv2-dsh-skel--wide { height: 200px; }
+
+@keyframes cv2-dsh-pulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cv2-dsh-skel { animation: none; }
+}
+
+@media (pointer: coarse) {
+  .cv2-chat-workspace :is(.cv2-chat-icon, .cv2-chat-composer button, .cv2-chat-popup button) {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .cv2-chat-workspace :is(input, textarea) {
+    font-size: 16px;
+  }
+}
+
+/* ── 新老客标签（订单列表「旺旺/来源」最左 + 详情行）──────────────
+ * 新客 = 青绿（进行中档）、老客 = 暖橙（琥珀档），全部走现有炭火 token。
+ * 由 V2OrderManage 列表/详情共用；录单页的三段控件用各页 scoped 样式。 */
+.cv2-kind-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  margin-right: 4px;
+  padding: 0 4px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 16px;
+  vertical-align: middle;
+}
+.cv2-kind-tag--new {
+  border-color: var(--tt2-st-doing-line);
+  background: var(--tt2-st-doing-bg);
+  color: var(--tt2-st-doing);
+}
+.cv2-kind-tag--old {
+  border-color: var(--tt2-tint-amber-line);
+  background: var(--tt2-tint-amber-bg);
+  color: var(--tt2-tint-amber);
+}

@@ -1,0 +1,42 @@
+/**
+ * 对标「私有图标类」审计 —— 结论：**不存在私有图标字体，本文件不含任何 CSS 规则**。
+ *
+ * 这条结论不是推断，是两路独立实测（2026-09-20）：
+ *
+ * 一、静态证据：把对标 `/User/userlist` 加载的**全部**样式与 .tools 下 100 个镜像资产都搜了一遍，
+ *     `layui-zhuce` / `layui-biaoji1` / `layui-quanxianguanli1` / `layui-xitongsuopingshi` /
+ *     `layui-yincangmima` / `layui-xianshimima` / `layui-shanchu` **一个定义都没有**：
+ *       · 页面第 14-17 行的 4 个 <link>：
+ *           /layuiadmin/layui/css/layui.css?V=128102  (129745 B)  -> zhuce=0  @font-face 只有 layui-icon
+ *           /layuiadmin/style/admin.css               ( 21014 B)  -> zhuce=0  @font-face 0 条
+ *           /layuiadmin/lib/formselects-v4.css        ( 18795 B)  -> zhuce=0  @font-face 只有 xm-iconfont
+ *           /CSS/zdy.css?v=1100008                    (  1756 B)  -> zhuce=0  @font-face 0 条
+ *       · `grep -rl zhuce .tools/recon/suqing1/assets`（100 个镜像 JS/CSS）-> 0 命中
+ *       · `grep -rn "\.css" userlist.js common.js` -> 无动态插入样式表
+ *
+ * 二、运行时证据（Playwright 打开对标真实页面，见 .tools/scratch/bench-probe.mjs 的输出）：
+ *     `document.styleSheets` 里的规则**没有任何一条**匹配这些类名（逐表扫 cssText 的结果为 []）；
+ *     7 个类的实测计算样式完全一致：
+ *       box 4×13、`padding: 0px 2px`、`font-family: layui-icon`（继承自通用 `.layui-icon`）、
+ *       `::before content: none`、`::after content: none`
+ *     —— 即：**对标自己也不显示字形**，这些 <i> 只贡献 `padding` 的 4px。
+ *
+ * 那 4px 的机制是通用规则，出自对标 `layui.css`（压缩单行）：
+ *   `.layui-btn .layui-icon{padding:0 2px;vertical-align:middle\0;vertical-align:bottom}`
+ *   `.layui-icon{font-family:layui-icon!important;font-size:16px;font-style:normal;...}`
+ * 这两条我们的 vendored `src/frontend/public/layui/css/layui.css`（官方 2.13.9）里**都有**，
+ * 所以「图标真的显示」这件事在对标侧本来就不成立；按钮宽度只由这 4px 决定，
+ * 而 `probe-layout.mjs cmp` 实测 21 颗工具栏按钮宽度已**逐颗相等**（见交付报告）。
+ *
+ * 顺带核过：真正的 layui 图标字体我们也与对标**逐字节相同**，不存在字体差异——
+ *   src/frontend/public/layui/font/iconfont.woff2  md5 a2e91cbafc724d04ae37c887adc54b9e
+ *   src/frontend/public/layui/font/iconfont.woff   md5 2ea4f90912607dc48d3882527c963e36
+ *   src/frontend/public/layui/font/iconfont.ttf    md5 8abaa00c9d62db16c8a5a7506fef24c4
+ *   src/frontend/public/layui/font/iconfont.eot    md5 fd2aca38dae247c8b940720c5e1aabab
+ * （对标 /layuiadmin/layui/font/iconfont.*?v=293 下载后 md5 与上表逐一相同；只有 iconfont.svg 不同，
+ *   那是 IE/iOS 4.1 时代的遗留格式，现代浏览器走 woff2。）
+ *
+ * ⚠️ 因此**故意不写** `@font-face`、也**故意不给**这些类任何 `content`/宽度规则：
+ * 给了字形反而与对标不一致（多出 16px 左右的字形宽）。若将来对标补上了这些字形，
+ * 请回来改这一条结论，并同步改 `probe-layout` 的按钮宽度判据。
+ */

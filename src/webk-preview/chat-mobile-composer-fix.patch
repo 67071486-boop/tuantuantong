@@ -1,0 +1,71 @@
+diff --git a/src/components/chat/input.ts b/src/components/chat/input.ts
+index 2e10060..7f8ed9f 100644
+--- a/src/components/chat/input.ts
++++ b/src/components/chat/input.ts
+@@ -651,6 +651,7 @@ export default class ChatInput {
+   public confirmSending: () => Promise<boolean>;
+
+   public emoticonsDropdown: EmoticonsDropdown;
++  private emoticonsHeightObserver?: ResizeObserver;
+
+   public excludeParts: Partial<{
+     scheduled: boolean,
+@@ -1910,10 +1911,11 @@ export default class ChatInput {
+       if(emoticonsDropdown === this.emoticonsDropdown) {
+         createRoot((dispose) => {
+           this.chat.destroyMiddlewareHelper.onDestroy(dispose);
++          this.chat.destroyMiddlewareHelper.onDestroy(() => this.emoticonsHeightObserver?.disconnect());
+           createEffect(() => {
+             const shouldBeTop = windowSize.height >= 570 && windowSize.width > 600;
+             this.emoticonsDropdown.getElement().classList.toggle('is-under', !shouldBeTop);
+-            if(!shouldBeTop && this.emoticonsDropdown.isActive()) this.emoticonsDropdown.chatInput.onEmoticonsUnder();
++            if(this.emoticonsDropdown.isActive()) this.emoticonsDropdown.chatInput.onEmoticonsPlacement(!shouldBeTop);
+           });
+         });
+       }
+@@ -2634,22 +2636,37 @@ export default class ChatInput {
+
+   private onEmoticonsOpen = () => {
+     this.onEmoticonsToggle(true);
+-    // * the panel is every chat's: this field's only when it opens over it
+-    if(this.emoticonsDropdown.chatInput === this && this.emoticonsDropdown.getElement().classList.contains('is-under')) {
+-      this.onEmoticonsUnder();
++    if(this.emoticonsDropdown.chatInput === this) {
++      this.onEmoticonsPlacement(this.emoticonsDropdown.getElement().classList.contains('is-under'));
+     }
+   };
+
+-  /**
+-   * The emoji panel open under this field - opened there, or moved there by the window's size: the bot's keyboard, which
+-   * stands there too, is out of it at once, or the field would stand on both meanwhile
+-   */
+-  public onEmoticonsUnder() {
++  private onEmoticonsPlacement(under: boolean) {
++    if(!under) {
++      this.clearEmoticonsHeight();
++      return;
++    }
+     this.replyKeyboard?.suspend(false);
++    if(!document.body.classList.contains('tt-h5-chat') || this.emoticonsHeightObserver) return;
++
++    // The panel is in the composer flow, but the history scrolls independently.
++    const panel = this.emoticonsDropdown.getElement();
++    const updateHeight = () => this.chat.setChatInputKeyboardHeight(panel.offsetHeight);
++    this.emoticonsHeightObserver = new ResizeObserver(updateHeight);
++    this.emoticonsHeightObserver.observe(panel);
++    updateHeight();
++  }
++
++  private clearEmoticonsHeight() {
++    if(!this.emoticonsHeightObserver) return;
++    this.emoticonsHeightObserver.disconnect();
++    this.emoticonsHeightObserver = undefined;
++    this.chat.setChatInputKeyboardHeight(0);
+   }
+
+   private onEmoticonsClose = () => {
+     this.onEmoticonsToggle(false);
++    this.clearEmoticonsHeight();
+     // * a bot keyboard that came while the user had it open: once it is closed, which it is after the event
+     if(this.emoticonsDropdown.chatInput === this) queueMicrotask(() => this.replyKeyboard?.resume());
+   };

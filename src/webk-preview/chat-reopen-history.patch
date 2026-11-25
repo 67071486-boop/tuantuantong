@@ -1,0 +1,81 @@
+diff --git a/src/components/chat/bubbles.ts b/src/components/chat/bubbles.ts
+index caa8eea..da224fc 100644
+--- a/src/components/chat/bubbles.ts
++++ b/src/components/chat/bubbles.ts
+@@ -38,5 +38,5 @@ import deferredPromise, {CancellablePromise} from '@helpers/cancellablePromise';
+ import memoizeAsyncWithTTL from '@helpers/memoizeAsyncWithTTL';
+ import RepliesElement from '@components/chat/replies';
+-import DEBUG from '@config/debug';
++import DEBUG, {IS_LOCAL_CHAT_PREVIEW} from '@config/debug';
+ import Modes from '@config/modes';
+ import {SliceEnd} from '@helpers/slicedArray';
+@@ -7227,11 +7227,13 @@ export default class ChatBubbles {
+     // * the first frame gets what fills the screen where the chat opens
+     const firstScreen = this.getFirstScreen({chatType, peerId, savedPosition, followingUnread, readMaxId, isTarget, isJump, lastMsgFullMid});
++    // The local history API treats a nonzero offset as pagination or a message jump.
++    const historyAnchor = IS_LOCAL_CHAT_PREVIEW && firstScreen?.at === 'end' && !isTarget ? undefined : additionalFullMid;
+     let result: Awaited<ReturnType<ChatBubbles['getHistory']>>;
+     if(!savedPosition?.mids) {
+       result = await m(this.getHistory1(
+-        !isJump && !additionalFullMid && lastMsgFullMid === topMessageFullMid ? EMPTY_FULL_MID : lastMsgFullMid,
++        !isJump && !historyAnchor && lastMsgFullMid === topMessageFullMid ? EMPTY_FULL_MID : lastMsgFullMid,
+         true,
+         isJump,
+-        additionalFullMid,
++        historyAnchor,
+         undefined,
+         firstScreen,
+diff --git a/src/pages/localChatPreview/liveChat.ts b/src/pages/localChatPreview/liveChat.ts
+index 935e94b..f598923 100644
+--- a/src/pages/localChatPreview/liveChat.ts
++++ b/src/pages/localChatPreview/liveChat.ts
+@@ -148,5 +148,4 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+   const rendered = new Map<number, Message.message>();
+   const loaded = new Set<number>();
+-  const startedHistory = new Set<PeerId>();
+   const openingUnread = new Map<PeerId, {messageId: number}>();
+   const dialogs = new Map<PeerId, ChatDialog>();
+@@ -503,5 +502,4 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+       seedMirror('peers', String(memberId), undefined);
+     }
+-    startedHistory.delete(peerId);
+     deferredReads.delete(peerId);
+     reads.delete(id);
+@@ -698,12 +696,11 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+     }
+
+-    const startsAtNewest = !startedHistory.has(peerId) && offsetId === conversation.last_message?.id && !backLimit;
+-    const pageOlder = offsetId && !startsAtNewest && !backLimit && anchor;
+-    const queryParams = !offsetId || startsAtNewest ? {} : pageOlder ? {before: String(pageOlder.seq)} : {around: String(offsetId)};
++    const pageOlder = offsetId && !backLimit && anchor;
++    const queryParams = !offsetId ? {} : pageOlder ? {before: String(pageOlder.seq)} : {around: String(offsetId)};
+     const unreadOpening = openingUnread.get(peerId);
+     const retryUnreadAnchor = () => backLimit && unreadOpening?.messageId === offsetId && openingUnread.get(peerId) === unreadOpening;
+     let page: Awaited<ReturnType<typeof api.history>>;
+     try {
+-      page = initialOrderHistory && (!offsetId || startsAtNewest) ?
++      page = initialOrderHistory && !offsetId ?
+         initialOrderHistory : await api.history(conversation.id, queryParams);
+       initialOrderHistory = undefined;
+@@ -719,5 +716,4 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+     }
+     if(!page || !conversations.has(peerId)) return emptyHistory;
+-    startedHistory.add(peerId);
+     return historyResult(peerId, page, pageOlder ? offsetId : undefined);
+   }
+@@ -1255,11 +1251,11 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+     const peerId = options.peerId;
+     if(restrictNewPrivateChat(peerId)) return Promise.resolve(false);
+     const firstUnread = conversations.get(peerId)?.first_unread_message_id;
+-    const shouldJump = firstUnread && !options.lastMsgId && !options.threadId && appImManager.chat.peerId !== peerId;
+-    const unreadOpening = isH5 && shouldJump ? {messageId: firstUnread} : undefined;
++    const unreadOpening = firstUnread && !options.lastMsgId && !options.threadId && appImManager.chat.peerId !== peerId ?
++      {messageId: firstUnread} : undefined;
+     if(unreadOpening) openingUnread.set(peerId, unreadOpening);
+-    const selected = selectPeer(shouldJump ? {
+-      ...options, lastMsgId: firstUnread, internalChatUnreadEntry: !!unreadOpening
++    const selected = selectPeer(unreadOpening ? {
++      ...options, lastMsgId: unreadOpening.messageId, internalChatUnreadEntry: true
+     } : options, animate);
+     return selected.then((result) => {
+       if(appImManager.chat.peerId === peerId) clearManualUnread(peerId);

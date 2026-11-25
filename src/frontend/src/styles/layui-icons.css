@@ -1,0 +1,44 @@
+/* 图标字体与字形。来源：layui 2.13.5（MIT）；码点从官方 CSS 的 .layui-icon-<名字>:before 逐条抄来。
+ * 故意**不**照搬 layui 的 font-size:16px —— 字号交给上下文（EP 默认给条目图标 18px、给组标题图标
+ * 继承的 14px；侧栏作用域按壳复刻 spec §3 把两者统一成对标物的 16px，见 styles/shell.css 的图标字号规则）。 */
+@font-face {
+  font-family: 'layui-icon';
+  src: url('../assets/fonts/iconfont.woff2') format('woff2');
+  font-weight: normal; font-style: normal; font-display: block;
+}
+.layui-icon {
+  font-family: 'layui-icon' !important;
+  font-size: inherit; font-style: normal;
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+}
+.layui-icon-home::before     { content: '\e68e'; }
+.layui-icon-list::before     { content: '\e60a'; }
+.layui-icon-service::before  { content: '\e626'; }
+.layui-icon-username::before { content: '\e66f'; }
+.layui-icon-form::before     { content: '\e63c'; }
+.layui-icon-group::before    { content: '\e613'; }
+.layui-icon-rmb::before      { content: '\e65e'; }
+.layui-icon-app::before      { content: '\e653'; }
+.layui-icon-set::before      { content: '\e716'; }
+/* 页签条的刷新按钮（非菜单用途，映射在 config/menuIcons.ts 的 UI_ICONS）。
+ * 码点取自 src/config/layuiIconNames.ts 的 `'refresh-1': '\ue666'`（生成表，源头是 layui@2.13.5 官方 CSS；
+ * 该行行号会随生成表变化漂移，所以这里引键名而不是行号）。 */
+.layui-icon-refresh-1::before { content: '\e666'; }
+
+/* 动作图标（游戏维护三页的按钮）。码点取自 `src/config/layuiIconNames.ts` 的生成表
+ * （官方 layui 2.13.5；这里引键名不引行号——行号会随生成表漂移）。
+ * ⚠️ **一处已知偏差**：对标物这三个按钮用的是 layuiAdmin 的私有图标（`layui-jia` /
+ * `layui-tianjiazujian` / `layui-shanchu`），那几个只存在于它的私有字体——本次从它的
+ * `layui.css` / `admin.css` / `zdy.css` 三份里都**没有取到码点**，所以新增按钮改用它官方
+ * 对应的 `add-1`。偏差记在 spec §9 与实施计划里。 */
+.layui-icon-delete::before  { content: '\e640'; }
+.layui-icon-edit::before    { content: '\e642'; }
+.layui-icon-refresh::before { content: '\e669'; }
+.layui-icon-add-1::before   { content: '\e654'; }
+
+/* 订单截图列的动作图标（v2，业务方 2026-11-03「上传与查看需要做成图标 类似对标那样
+ * 别单纯弄个文字」）。码点取自 `src/config/layuiIconNames.ts` 的生成表（官方 layui 2.13.5；
+ * 这里引键名不引行号——行号会随生成表漂移）。 */
+.layui-icon-upload::before  { content: '\e67c'; }
+.layui-icon-picture::before { content: '\e64a'; }
+.layui-icon-ok::before      { content: '\e605'; }

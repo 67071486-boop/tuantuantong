@@ -1,0 +1,108 @@
+<!-- 复刻证据件：对标物 `/System/homesystemsetting` 的页内 `<style>` 原文 + 处理过的 body 标记。
+     来源：`.tools/recon/<对标取数快照>/html/System__homesystemsetting.html`（离线勘察产物，只读）。
+     与对标原文的差异：删掉非标记的 `<script src>`（layui / common.js / 页面 JS）与 HTML 注释；
+     `<script type="text/html">` 里 `{{d.xxx}}` 这类单元格模板**原样保留**
+     （空表下不渲染，见简报 §0 第 3 条）；该页 HTML 里 `{{` 只出现在这些模板内，
+     故没有需要按 i18n 字典解的中文表达式。
+     PII：无。 -->
+<style>
+        body {
+            background-color: #fff
+        } 
+        .layadmin-pagetabs {
+            height: 40px;
+            line-height: 40px;
+            padding: 0 80px 0 40px;
+            background-color: #fafafa;
+            box-sizing: border-box;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+            border-bottom: 1px solid #1AA094;
+        }
+            .layadmin-pagetabs .layui-tab-title li.layui-this, .layadmin-pagetabs .layui-tab-title li:hover {
+                background-color: #009688;
+                color: #fff;
+            }
+</style>
+    
+
+<style type="text/css">
+    .layui-table-cell {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 15px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        box-sizing: border-box;
+        font-size: 12px;
+    }
+
+    .lableb {
+        display: inline-block;
+        padding: 2px 4px;
+        font-size: 12px;
+        line-height: 14px;
+        color: #fff;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #999;
+        overflow: hidden;
+        border-radius: 3px;
+        margin-right: 2px;
+    }  
+</style>
+<form class="layui-form" action="" lay-filter="form">
+    <blockquote class="layui-elem-quote" style="font-size:14px">
+        <p>如果有给你发单的上家也是用鸡蛋铺工作室管理系统，你可以在这里设置同步绑定，绑定后上家指派给你的单子或者你从上家系统里接到的单子将自动同步到你这个系统里来。当你将订单状态改成代练中、问题单、已完成时，将会自动同步到上家系统，并且你这边传的截图，也将自动同步到上家系统。</p>
+        <p>设置这个功能后，能大大提高客服转单的工作效率</p>
+    </blockquote>
+    <table class="layui-hide" id="tableList" lay-filter="tableList"></table>
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-xs" lay-event="refresh" type="button" title="刷新当前数据"><i class="layui-icon">&#xe669;</i>刷新列表</button>
+            <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="addBtn" type="button" lay-tips="绑定一个新的上家管理系统">绑定一个新的上家系统</button>
+        </div>
+    </script>
+    <script type="text/html" id="baroperating">
+        <a class="layui-btn layui-btn-xs layui-btn-danger" style="" lay-event="submitDel" title="删除该上家与本系统的绑定"><i class="layui-icon layui-icon-delete"></i>删除绑定</a>
+    </script>
+    <div class="change" style="display:none">
+        <div class="layui-form-pane" style="margin-top:10px;margin-left:10px;margin-right:10px">
+            <blockquote class="layui-elem-quote">
+                注意：只支持同为鸡蛋铺的系统绑定，其它系统暂不支持
+            </blockquote>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 135px; padding: 8px 5px;">上家系统名称</label>
+                <div class="layui-input-block" style="margin-left: 135px;">
+                    <input type="text" name="homeCompany" id="homeCompany" lay-verify="" autocomplete="off" placeholder="可以自定义一个上家系统名称" maxlength="20" class="layui-input layui-input-shadow" value="">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 135px; padding: 8px 5px;">上家系统网址</label>
+                <div class="layui-input-block" style="margin-left: 135px;">
+                    <input type="text" name="homeUrl" id="homeUrl" lay-verify="" autocomplete="off" placeholder="例如：http://d.jidanpu.com" maxlength="70" class="layui-input layui-input-shadow" value="">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 135px; padding: 8px 5px;">登录上家系统账号</label>
+                <div class="layui-input-block" style="margin-left: 135px;">
+                    <input type="text" name="homeAcc" id="homeAcc" lay-verify="" autocomplete="off" placeholder="填上能登录上家系统的子账号" maxlength="32" class="layui-input layui-input-shadow boxshadow-success" value="">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 135px; padding: 8px 5px;">登录上家系统密码</label>
+                <div class="layui-input-block" style="margin-left: 135px;">
+                    <input type="text" name="homePwd" id="homePwd" lay-verify="" autocomplete="off" placeholder="填上能登录上家系统的密码" maxlength="32" class="layui-input layui-input-shadow boxshadow-success" value="">
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align:center;align-items:center">
+            <div class="layui-input-inline">
+                <button class="layui-btn layui-btn-normal layui-btn-lg w-lg" id="saveBtn" lay-submit="" type="button" lay-filter="savebtn" style="">验证并保存绑定</button>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="bid" name="bid" value="" />
+</form>

@@ -1,0 +1,499 @@
+diff --git a/src/components/chat/chat.ts b/src/components/chat/chat.ts
+index adcaed5..0386845 100644
+--- a/src/components/chat/chat.ts
++++ b/src/components/chat/chat.ts
+@@ -3,6 +3,7 @@ import type {RequestWebViewOptions} from '@appManagers/appAttachMenuBotsManager'
+ import type {HistoryStorageKey, MessageSendingParams, MessagesStorageKey, MyMessage, RequestHistoryOptions} from '@appManagers/appMessagesManager';
+ import type {AppImManager, ChatSetPeerOptions} from '@lib/appImManager';
+ import EventListenerBase from '@helpers/eventListenerBase';
++import {IS_LOCAL_VISITOR_CHAT} from '@config/debug';
+ import {logger, LogTypes} from '@lib/logger';
+ import rootScope from '@lib/rootScope';
+ import ChatBubbles, {FullMid, splitFullMid} from '@components/chat/bubbles';
+@@ -1669,7 +1670,7 @@ export default class Chat extends EventListenerBase<{
+   }
+
+   public initSearch(options: {query?: string, filterPeerId?: PeerId, reaction?: Reaction, focus?: boolean} = {}): void {
+-    if(!this.peerId) return;
++    if(!this.peerId || IS_LOCAL_VISITOR_CHAT) return;
+     options.query ||= '';
+     this.searchSignal(options);
+     if(options.focus) {
+diff --git a/src/components/chat/contextMenu.ts b/src/components/chat/contextMenu.ts
+index 01b06f0..4f9a2ef 100644
+--- a/src/components/chat/contextMenu.ts
++++ b/src/components/chat/contextMenu.ts
+@@ -2,6 +2,7 @@ import type {MyDocument} from '@appManagers/appDocsManager';
+ import type Chat from '@components/chat/chat';
+ import IS_TOUCH_SUPPORTED from '@environment/touchSupport';
+ import Modes from '@config/modes';
++import {IS_LOCAL_CHAT_PREVIEW} from '@config/debug';
+ import ButtonMenu, {ButtonMenuItem, ButtonMenuItemOptions, ButtonMenuItemOptionsVerifiable, setButtonMenuItemDisabled} from '@components/buttonMenu';
+ import showDeleteMessagesPopup from '@components/popups/deleteMessages';
+ import showPinMessagePopup from '@components/popups/unpinMessage';
+@@ -1175,12 +1176,18 @@ export default class ChatContextMenu {
+       icon: 'copy',
+       text: 'Copy',
+       welcome: true,
+-      onClick: this.onCopyClick,
+-      verify: () => this.canCopyText() &&
+-        !!this.selectedMessagesText &&
+-        !this.isTextSelected &&
+-        !this.isWidgetTextSelected &&
+-        (!this.isAnchorTarget || (this.message as Message.message).message !== this.target.innerText)
++      onClick: () => {
++        if(IS_LOCAL_CHAT_PREVIEW) {
++          const text = this.getLocalMessageCopyText();
++          if(text !== undefined) void copyTextToClipboard(text);
++        } else {
++          void this.onCopyClick();
++        }
++      },
++      verify: () => !this.isTextSelected && !this.isWidgetTextSelected && (IS_LOCAL_CHAT_PREVIEW ?
++        this.getLocalMessageCopyText() !== undefined :
++        this.canCopyText() && !!this.selectedMessagesText &&
++          (!this.isAnchorTarget || (this.message as Message.message).message !== this.target.innerText))
+     }, {
+       icon: 'copy',
+       text: 'Text.CopyLabel_PhoneNumber',
+@@ -2593,6 +2600,15 @@ export default class ChatContextMenu {
+     return !this.contentNoForwards;
+   }
+
++  private getLocalMessageCopyText() {
++    if(this.avatarPeerId || this.chat.noForwards || this.chat.selection.isSelecting || this.message?._ !== 'message') return;
++    const message = this.chat.getMessageByPeer(this.message.peerId, this.message.mid);
++    if(message?._ !== 'message' || message.peerId !== this.message.peerId ||
++      message.pFlags.noforwards || (message.media as MessageMedia.messageMediaPhoto)?.ttl_seconds ||
++      !message.message?.trim()) return;
++    return message.message;
++  }
++
+   private onCopyClick = async() => {
+     if(!this.isWidgetTextSelected && isSelectionEmpty()) {
+       const {text, html} = this.selectedMessagesText;
+diff --git a/src/components/chat/input.ts b/src/components/chat/input.ts
+index 0302e80..4489574 100644
+--- a/src/components/chat/input.ts
++++ b/src/components/chat/input.ts
+@@ -27,6 +27,7 @@ import type Chat from '@components/chat/chat';
+ import type {AppImManager} from '@lib/appImManager';
+ import IS_TOUCH_SUPPORTED from '@environment/touchSupport';
+ import Modes from '@config/modes';
++import {IS_LOCAL_VISITOR_CHAT} from '@config/debug';
+ import ChatRecording from '@components/chat/recording/chatRecording';
+ import {ButtonMenuItemOptions, ButtonMenuItemOptionsVerifiable, ButtonMenuSync} from '@components/buttonMenu';
+ import emoticonsDropdown, {EmoticonsDropdown} from '@components/emoticonsDropdown';
+@@ -1757,7 +1758,7 @@ export default class ChatInput {
+     this.fileInput.multiple = true;
+     this.fileInput.style.display = 'none';
+
+-    this.richMessageInput.mountAccessories([this.botCommandsToggle, this.attachMenu].filter(Boolean), [
++    this.richMessageInput.mountAccessories([this.botCommandsToggle, IS_LOCAL_VISITOR_CHAT ? undefined : this.attachMenu].filter(Boolean), [
+       this.btnScheduled,
+       this.btnToggleReplyMarkup,
+       this.btnSuggestPost,
+diff --git a/src/components/chat/selection.ts b/src/components/chat/selection.ts
+index c5ebc1b..7f21139 100644
+--- a/src/components/chat/selection.ts
++++ b/src/components/chat/selection.ts
+@@ -15,6 +15,7 @@ import showSendNowPopup from '@components/popups/sendNow';
+ import appNavigationController, {NavigationItem} from '@components/appNavigationController';
+ import {IS_MOBILE_SAFARI} from '@environment/userAgent';
+ import Modes from '@config/modes';
++import {IS_LOCAL_VISITOR_CHAT} from '@config/debug';
+ import I18n, {i18n, _i18n} from '@lib/langPack';
+ import findUpClassName from '@helpers/dom/findUpClassName';
+ import blurActiveElement from '@helpers/dom/blurActiveElement';
+@@ -1139,7 +1140,7 @@ export default class ChatSelection extends AppSelection {
+   }
+
+   public canSelectBubble(bubble: HTMLElement) {
+-    return bubble &&
++    return !IS_LOCAL_VISITOR_CHAT && bubble &&
+       // * a service message IS selectable (it can be deleted just like a regular one) — only the
+       // * bubbles that stand for no message at all are not: date separators, and the admin log,
+       // * which is a read-only view whose entries live outside the message storage
+diff --git a/src/components/chat/topbar.ts b/src/components/chat/topbar.ts
+index 57c8fb4..b346ea7 100644
+--- a/src/components/chat/topbar.ts
++++ b/src/components/chat/topbar.ts
+@@ -2,6 +2,7 @@ import type {Channel} from '@appManagers/appChatsManager';
+ import type {AppSidebarRight} from '@components/sidebarRight';
+ import type Chat from '@components/chat/chat';
+ import {LEFT_COLUMN_ACTIVE_CLASSNAME} from '@lib/appColumns';
++import {IS_LOCAL_VISITOR_CHAT} from '@config/debug';
+ import mediaSizes, {ScreenSize} from '@helpers/mediaSizes';
+ import rootScope, {BroadcastEvents} from '@lib/rootScope';
+ import ButtonIcon from '@components/buttonIcon';
+@@ -492,7 +493,7 @@ export default class ChatTopbar {
+       onClick: () => {
+         this.chat.initSearch();
+       },
+-      verify: () => mediaSizes.isMobile
++      verify: () => !IS_LOCAL_VISITOR_CHAT && mediaSizes.isMobile
+     }, {
+       icon: 'filter',
+       text: 'FilterActions',
+@@ -600,7 +601,8 @@ export default class ChatTopbar {
+           selection.toggleByElement(bubble);
+         };
+       },
+-      verify: () => !this.chat.selection.isSelecting && !!this.chat.bubbles.getRenderedLength() && !(this.chat.type === ChatType.Logs)
++      verify: () => !IS_LOCAL_VISITOR_CHAT &&
++        !this.chat.selection.isSelecting && !!this.chat.bubbles.getRenderedLength() && this.chat.type !== ChatType.Logs
+     }, {
+       icon: 'select',
+       text: 'Chat.Menu.ClearSelection',
+@@ -1399,7 +1401,7 @@ export default class ChatTopbar {
+
+     return () => {
+       const canHaveSomeButtons = !(this.chat.type === ChatType.Pinned || this.chat.type === ChatType.Scheduled || this.chat.type === ChatType.Welcome || this.chat.type === ChatType.Static || this.chat.type === ChatType.Logs);
+-      const canHaveSearch = canHaveSomeButtons || this.chat.type === ChatType.Logs;
++      const canHaveSearch = !IS_LOCAL_VISITOR_CHAT && (canHaveSomeButtons || this.chat.type === ChatType.Logs);
+
+       if(this.btnSearch) {
+         this.btnSearch.classList.toggle('hide', !canHaveSearch);
+diff --git a/src/components/dialogsContextMenu.ts b/src/components/dialogsContextMenu.ts
+index c1560e7..8a0b105 100644
+--- a/src/components/dialogsContextMenu.ts
++++ b/src/components/dialogsContextMenu.ts
+@@ -3,6 +3,7 @@ import type {ForumTopic} from '@layer';
+ import type {AnyDialog} from '@lib/storages/dialogs';
+ import {findDialogListElement} from '@components/dialogElement';
+ import rootScope from '@lib/rootScope';
++import {IS_LOCAL_VISITOR_CHAT} from '@config/debug';
+ import {useAppSettings} from '@stores/appSettings';
+ import {ButtonMenuItemOptionsVerifiable} from '@components/buttonMenu';
+ import showDeleteDialogPopup from '@components/popups/deleteDialog';
+@@ -139,6 +140,7 @@ export default class DialogsContextMenu {
+       },
+       onOpenBefore: async() => {
+         this.buttons?.forEach(button => button?.onOpen?.());
++        if(IS_LOCAL_VISITOR_CHAT) return;
+         // delete button
+         const langPackKey: LangPackKey = this.threadId ? 'Delete' : await this.managers.appPeersManager.getDeleteButtonText(this.peerId);
+         const lastButton = this.buttons[this.buttons.length - 1];
+@@ -467,6 +469,10 @@ export default class DialogsContextMenu {
+       verify: () => this.canDelete
+     }].filter(Boolean) as DialogContextMenuButton[];
+
++    if(IS_LOCAL_VISITOR_CHAT) {
++      this.buttons = this.buttons.filter(({text}) => text === 'ChatList.Context.Preview' || text === 'MarkAsRead');
++    }
++
+     // a chat row inside a Community panel is a dialog row like any other, so the items
+     // stay the ones every dialog gets — only those that make no sense there are dropped
+     for(const button of this.buttons) {
+diff --git a/src/components/dialogsSelection.ts b/src/components/dialogsSelection.ts
+index 7e09d6d..f19686d 100644
+--- a/src/components/dialogsSelection.ts
++++ b/src/components/dialogsSelection.ts
+@@ -1,4 +1,5 @@
+ import {leaveChat} from '@components/popups/deleteDialog';
++import {IS_LOCAL_VISITOR_CHAT} from '@config/debug';
+ import showPinLimitReached from '@components/showPinLimitReached';
+ import {
+   DialogsSelectionBase,
+@@ -62,7 +63,7 @@ export default class DialogsSelection extends DialogsSelectionBase<DialogsSelect
+    * row of a list that is down to its avatars.
+    */
+   public canSelect(element: HTMLElement) {
+-    return this.isRowOfList(element) &&
++    return !IS_LOCAL_VISITOR_CHAT && this.isRowOfList(element) &&
+       !this.isListNarrow() &&
+       !!element.dataset.peerId &&
+       !element.dataset.threadId &&
+diff --git a/src/config/debug.ts b/src/config/debug.ts
+index 28c2765..6ffed04 100644
+--- a/src/config/debug.ts
++++ b/src/config/debug.ts
+@@ -13,6 +13,8 @@ export const IS_POPUP_SANDBOX = !!SANDBOX_PARAMS?.has('popups');
+ // `?widgets=1` — the widget sandbox (components/widgetSandbox/sandbox), on the popup sandbox's mock environment.
+ export const IS_WIDGET_SANDBOX = !!SANDBOX_PARAMS?.has('widgets');
+ export const IS_LOCAL_CHAT_PREVIEW = import.meta.env.VITE_TTT_CHAT_HOSTED === '1' || !!SANDBOX_PARAMS?.has('local-chat');
++export const IS_LOCAL_VISITOR_CHAT = IS_LOCAL_CHAT_PREVIEW && typeof location !== 'undefined' &&
++  ['guest', 'desk'].includes(new URLSearchParams(location.search).get('visitor'));
+ // Sandbox pages use fixture managers without a Telegram session.
+ export const IS_SANDBOX_PAGE = IS_POPUP_SANDBOX || IS_WIDGET_SANDBOX || IS_LOCAL_CHAT_PREVIEW;
+ export const DEBUG = (IS_BETA || Modes.debug)/*  && false */;
+diff --git a/src/pages/localChatPreview/composerImages.ts b/src/pages/localChatPreview/composerImages.ts
+index ea1a04f..4950856 100644
+--- a/src/pages/localChatPreview/composerImages.ts
++++ b/src/pages/localChatPreview/composerImages.ts
+@@ -173,7 +173,7 @@ export function chatPhotoDownloads(
+   };
+ }
+
+-export function installImageOnlyComposer(report: (error: string) => void) {
++export function installImageOnlyComposer(report: (error: string) => void, allowImages = true) {
+   function updateRecordingButton(button: HTMLButtonElement) {
+     if(button.matches(recordingButtonSelector)) {
+       button.dataset.previewRecordingDisabled = '';
+@@ -214,8 +214,10 @@ export function installImageOnlyComposer(report: (error: string) => void) {
+   }
+
+   function validateFiles(event: Event, files: FileList | undefined) {
+-    const error = files?.length > ALBUM_MAX_FILES ? '每组最多发送 10 张图片' :
+-      Array.from(files ?? [], imageValidationError).find(Boolean);
++    if(!files?.length) return false;
++    const error = !allowImages ? '访客会话仅支持发送文字和表情' :
++      files.length > ALBUM_MAX_FILES ? '每组最多发送 10 张图片' :
++      Array.from(files, imageValidationError).find(Boolean);
+     if(!error) return false;
+     stop(event);
+     report(error);
+diff --git a/src/pages/localChatPreview/installPreviewMenus.ts b/src/pages/localChatPreview/installPreviewMenus.ts
+index 7fef2be..7f248c8 100644
+--- a/src/pages/localChatPreview/installPreviewMenus.ts
++++ b/src/pages/localChatPreview/installPreviewMenus.ts
+@@ -1,5 +1,6 @@
+ import {appendButtonMenuItems, setButtonMenuItemDisabled} from '@components/buttonMenu';
+ import {getIconContent} from '@components/icon';
++import {IS_LOCAL_VISITOR_CHAT} from '@config/debug';
+ import contextMenuController from '@helpers/contextMenuController';
+ import I18n, {type LangPackKey} from '@lib/langPack';
+ import {positionH5ComposeMenu} from './h5ListControls';
+@@ -30,6 +31,7 @@ const h5DialogItems = new Set<LangPackKey>([
+   'ChatList.Context.Unpin'
+ ]);
+
++const hiddenVisitorConversationItems = new Set<LangPackKey>(['AddContact', 'BlockUser', 'Unblock']);
+ const disabledProfileMenuItems = new Set<LangPackKey>([
+   'BlockUser',
+   'ChatList.Context.Mute',
+@@ -45,10 +47,13 @@ type OrderProfileOptions = {
+   isOrderMember: (peerId: PeerId) => boolean;
+   openMemberProfile: (peerId: PeerId) => void;
+   selfId: PeerId;
+-  editRemark: (peerId: PeerId) => void;
++  editRemark?: (peerId: PeerId) => void;
+   hasConversation: (peerId: PeerId) => boolean;
+   isH5?: boolean;
+   openWorkerDirectory?: () => void;
++  openWideWindow?: () => void;
++  openVisitorDesk?: () => void;
++  visitorDeskAvailable?: () => boolean;
+ };
+ const menuLabelSelector = '.btn-menu-item-text, .btn-menu-item-text .i18n';
+ const createConversationLabel = new Set<LangPackKey>(['CreateANew']);
+@@ -182,8 +187,7 @@ export function installPreviewMenus(order?: OrderProfileOptions) {
+     const isConversationMenu = trigger?.closest('.chat-utils');
+     const dialogPeerId = trigger?.matches('.chatlist-chat[data-peer-id]') ?
+       Number(trigger.dataset.peerId).toPeerId(false) : undefined;
+-    const isManagedDialog = order && dialogPeerId !== undefined && order.hasConversation(dialogPeerId);
+-    if(isManagedDialog) {
++    if(order?.editRemark && dialogPeerId !== undefined && order.hasConversation(dialogPeerId)) {
+       if(!menu.querySelector(':scope > .btn-menu-item[data-preview-remark]')) {
+         appendButtonMenuItems(menu, [{
+           icon: 'edit',
+@@ -196,7 +200,7 @@ export function installPreviewMenus(order?: OrderProfileOptions) {
+     }
+     if(order?.isH5 && trigger?.id === 'new-menu') {
+       positionH5ComposeMenu(menu, trigger);
+-    } else if(order?.isH5 && dialogPeerId !== undefined) {
++    } else if(!IS_LOCAL_VISITOR_CHAT && order?.isH5 && dialogPeerId !== undefined) {
+       for(const item of menu.querySelectorAll<HTMLElement>(':scope > .btn-menu-item')) {
+         if(!item.hasAttribute('data-preview-remark') && !hasLabel(item, menuLabelSelector, h5DialogItems)) {
+           setButtonMenuItemDisabled(undefined, true, item);
+@@ -222,10 +226,32 @@ export function installPreviewMenus(order?: OrderProfileOptions) {
+           appendButtonMenuItems(menu, [{icon: 'user', regularText: '通讯录', onClick: order.openWorkerDirectory}]);
+           item.replaceWith(menu.lastElementChild);
+         } else if(hasLabel(item, menuLabelSelector, hiddenItems) || (isConversationMenu && icon?.textContent === deleteIcon) ||
++          (isConversationMenu && IS_LOCAL_VISITOR_CHAT && hasLabel(item, menuLabelSelector, hiddenVisitorConversationItems)) ||
+           (isMainMenu && order?.openWorkerDirectory && hasLabel(item, menuLabelSelector, createConversationLabel))) {
+           item.remove();
+         }
+       }
++      if(isMainMenu && order) {
++        if(order.openWideWindow && !menu.querySelector('.preview-open-wide-window')) {
++          appendButtonMenuItems(menu, [{
++            icon: 'newtab',
++            className: 'preview-open-wide-window',
++            regularText: '在新窗口打开',
++            onClick: order.openWideWindow
++          }]);
++        }
++        const visitorDeskItem = menu.querySelector('.preview-open-visitor-desk');
++        if(order.openVisitorDesk && order.visitorDeskAvailable?.()) {
++          if(!visitorDeskItem) appendButtonMenuItems(menu, [{
++            icon: 'user',
++            className: 'preview-open-visitor-desk',
++            regularText: '访客接待',
++            onClick: order.openVisitorDesk
++          }]);
++        } else {
++          visitorDeskItem?.remove();
++        }
++      }
+       // Remove leading and trailing separators before Web K assigns focus.
+       removeOrphanSeparators(menu);
+     } else if(trigger?.closest('.profile-actions')) {
+diff --git a/src/pages/localChatPreview/liveChat.ts b/src/pages/localChatPreview/liveChat.ts
+index 26c78a3..9f1508f 100644
+--- a/src/pages/localChatPreview/liveChat.ts
++++ b/src/pages/localChatPreview/liveChat.ts
+@@ -8,6 +8,7 @@ import {MOCK_LIMIT, MOCK_PREMIUM_LIMIT} from '@components/popupSandbox/mockManag
+ import {installSandboxEnvironment} from '@components/popupSandbox/environment';
+ import appChatBackground from '@components/chat/bubbles/chatBackground';
+ import {ChatType} from '@components/chat/chatType';
++import {IS_LOCAL_VISITOR_CHAT} from '@config/debug';
+ import appNavigationController from '@components/appNavigationController';
+ import {toast} from '@components/toast';
+ import {joinDeepPath} from '@helpers/object/setDeepProperty';
+@@ -344,6 +345,7 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+       from_id: {_: 'peerUser', user_id: sender.toUserId()},
+       pFlags: {
+         ...(outgoing ? {out: true} : {}),
++        ...(raw.revoked || raw.noforwards ? {noforwards: true} : {}),
+         ...(unread ? {unread: true} : {}),
+         ...(!raw.revoked && conversation.kind === 'order' && conversation.pinned_message_id === raw.id ? {pinned: true} : {}),
+         ...(!outgoing && !raw.revoked && conversation.kind === 'order' && raw.mention_member_ids?.includes(conversation.self_member_id) ?
+@@ -549,6 +551,7 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+   ));
+
+   async function changePreferences(peerId: PeerId, changes: ConversationPreferences) {
++    if(IS_LOCAL_VISITOR_CHAT) return false;
+     const conversation = conversations.get(peerId);
+     if(!conversation || (isH5 && !api.visible())) return false;
+     try {
+@@ -942,6 +945,10 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+
+   let imageSends = Promise.resolve();
+   function sendGrouped(options: SendMessage & {caption?: string; sendFileDetails: {file: unknown; width?: number; height?: number}[]}) {
++    if(IS_LOCAL_VISITOR_CHAT) {
++      toast('访客会话仅支持发送文字和表情');
++      return Promise.resolve();
++    }
+     imageSends = imageSends.then(async() => {
+       const files = options.sendFileDetails;
+       if(!files.length || conversations.get(options.peerId)?.kind === 'system') return;
+@@ -1007,6 +1014,7 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+   }
+
+   async function deleteMessages(peerId: PeerId, mids: number[], revoke: boolean) {
++    if(IS_LOCAL_VISITOR_CHAT) return;
+     const conversation = conversations.get(peerId);
+     if(!conversation) return;
+     if(!revoke) {
+@@ -1188,6 +1196,7 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+       },
+       readMentions: () => Promise.resolve(),
+       canDeleteMessage: ({mid, peerId}: Message.message) => {
++        if(IS_LOCAL_VISITOR_CHAT) return false;
+         const message = messages.get(mid);
+         const conversation = conversations.get(peerId);
+         return !!message && !!conversation && !message.revoked && senderIsSelf(conversation, message.sender_id, user.id);
+@@ -1223,7 +1232,7 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+     api.reportOrderHistory(true);
+     return;
+   }
+-  installImageOnlyComposer(toast);
++  installImageOnlyComposer(toast, !IS_LOCAL_VISITOR_CHAT);
+   if(!isH5) {
+     const style = document.createElement('style');
+     style.textContent = `
+@@ -1278,6 +1287,7 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+     if(restrictNewPrivateChat(options.peerId)) return Promise.resolve(false);
+     return openPeer(options);
+   };
++  let lastOpenedConversationPeer: PeerId | undefined;
+   appImManager.setPeer = (options = {}, animate) => {
+     const peerId = options.peerId;
+     if(restrictNewPrivateChat(peerId)) return Promise.resolve(false);
+@@ -1289,7 +1299,10 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+       ...options, lastMsgId: unreadOpening.messageId, internalChatUnreadEntry: true
+     } : options, animate);
+     return selected.then((result) => {
+-      if(appImManager.chat.peerId === peerId) clearManualUnread(peerId);
++      if(appImManager.chat.peerId === peerId) {
++        if(conversations.has(peerId) && !appImManager.chat.isPreview) lastOpenedConversationPeer = peerId;
++        clearManualUnread(peerId);
++      }
+       return result;
+     }).finally(() => {
+       if(unreadOpening && openingUnread.get(peerId) === unreadOpening) openingUnread.delete(peerId);
+@@ -1432,6 +1445,8 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+   rootScope.addEventListener('dialogs_multiupdate', syncPresenceWatch);
+   syncPresenceWatch();
+
++  const params = new URLSearchParams(location.search);
++  const visitorMode = params.get('visitor');
+   const openWorkerDirectory = workerDirectoryOnly ? () => showWorkerDirectory({
+     contacts: async() => (await api.contacts()).contacts,
+     openContact: async(id) => {
+@@ -1443,15 +1458,21 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+       await appImManager.setInnerPeer({peerId});
+     }
+   }) : undefined;
++  if(visitorMode === 'guest') api.connectDirectory(openWorkerDirectory);
++  const isDesktopWeb = (!isH5 || visitorMode === 'guest' || visitorMode === 'desk') && params.get('app') !== '1';
+   installPreviewMenus({
+     isH5,
+     openWorkerDirectory,
++    openWideWindow: isDesktopWeb && import.meta.env.VITE_TTT_CHAT_HOSTED === '1' ?
++      () => api.openWideWindow(conversations.get(appImManager.chat.peerId || lastOpenedConversationPeer)?.id) : undefined,
++    openVisitorDesk: visitorMode ? undefined : api.openVisitorDesk,
++    visitorDeskAvailable: api.visitorDeskAvailable,
+     isOrderGroup: () => groups.has(appImManager.chat.peerId),
+     isOrderMember,
+     openMemberProfile,
+     selfId: myId,
+     hasConversation: (peerId) => conversations.has(peerId),
+-    editRemark: (peerId) => {
++    editRemark: IS_LOCAL_VISITOR_CHAT ? undefined : (peerId) => {
+       const conversation = conversations.get(peerId);
+       if(conversation) editConversationRemark(conversation.remark ?? '', (remark) => changePreferences(peerId, {remark}));
+     }
+diff --git a/src/pages/localChatPreview/liveTransport.ts b/src/pages/localChatPreview/liveTransport.ts
+index b3ece87..4c3942e 100644
+--- a/src/pages/localChatPreview/liveTransport.ts
++++ b/src/pages/localChatPreview/liveTransport.ts
+@@ -13,6 +13,7 @@ export type ChatMessage = {
+   text: string;
+   created_at: string;
+   revoked: boolean;
++  noforwards?: boolean;
+   reply_to_id: number | null;
+   image?: ChatImage;
+   album_id?: string | null;
+@@ -128,6 +129,8 @@ export function createLiveTransport(orderNo?: string) {
+   let listControlsReady = false;
+   let openConversation: (id: number, messageId?: number, retained?: boolean) => Promise<boolean>;
+   let handleBack: () => boolean;
++  let openDirectory: (() => void) | undefined;
++  let visitorDeskAvailable = new URLSearchParams(location.search).get('visitorDesk') === '1';
+   let onPresence: (conversationId: number, online: boolean | null) => void;
+   let orderHistoryActionState: (state: OrderHistoryActionState) => void;
+
+@@ -156,6 +159,10 @@ export function createLiveTransport(orderNo?: string) {
+       }
+     } else if(data?.type === 'tt:chat.back' && handleBack && Number.isSafeInteger(data.id) && data.id > 0) {
+       window.parent.postMessage({type: 'tt:chat.backResult', id: data.id, detail: handleBack()}, parentOrigin);
++    } else if(data?.type === 'tt:chat.openDirectory') {
++      openDirectory?.();
++    } else if(data?.type === 'tt:chat.visitorDeskAvailable' && typeof data.detail === 'boolean') {
++      visitorDeskAvailable = data.detail;
+     } else if(data?.type === 'tt:chat.requestListControlsReady' && listControlsReady) {
+       reportListControlsReady();
+     } else if(data?.type === 'tt:chat.openConversation' || data?.type === 'tt:chat.openRetainedConversation') {
+@@ -254,6 +261,19 @@ export function createLiveTransport(orderNo?: string) {
+       window.parent.postMessage({type: 'tt:chat.navigationReady'}, parentOrigin);
+     },
+     connectBack: (handler: () => boolean) => { handleBack = handler; },
++    connectDirectory: (handler: typeof openDirectory) => { openDirectory = handler; },
++    visitorDeskAvailable: () => visitorDeskAvailable,
++    openVisitorDesk: () => {
++      if(visitorDeskAvailable) window.parent.postMessage({type: 'tt:chat.openVisitorDesk'}, parentOrigin);
++    },
++    openWideWindow: (conversationId?: number) => {
++      const parent = window.parent as Window & {ttOpenChatWide?: (source: Window, id?: number) => boolean};
++      if(typeof parent.ttOpenChatWide === 'function') {
++        parent.ttOpenChatWide(window, conversationId);
++      } else {
++        parent.postMessage({type: 'tt:chat.openWideWindow', detail: {conversationId}}, parentOrigin);
++      }
++    },
+     connectPresence: (handler: typeof onPresence) => { onPresence = handler; },
+     watchPresence: (conversationId: number | null) => {
+       if(!orderPath) window.parent.postMessage({type: 'tt:chat.watchPresence', detail: conversationId}, parentOrigin);

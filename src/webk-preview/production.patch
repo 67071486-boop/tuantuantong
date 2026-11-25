@@ -1,0 +1,204 @@
+diff --git a/index.html b/index.html
+index dac6cbb..eb88249 100644
+--- a/index.html
++++ b/index.html
+@@ -1,12 +1,12 @@
+ <!DOCTYPE html>
+-<html lang="en">
++<html lang="zh-CN">
+   <head>
+     <meta charset="utf-8" />
+     <!-- What the page itself may load besides its own files: no remote images, media, fonts or style sheets, no form
+     submissions, no plugins. Interactive widgets draw their DOM into this page (a shadow root per widget, their code
+     never runs here); this keeps a markup that got past their validator from reaching the network. Frames stay open
+     (mini apps, games, payment forms, embeds), and so do scripts and connections. -->
+-    <meta http-equiv="Content-Security-Policy" content="img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; style-src 'self' 'unsafe-inline'; form-action 'none'; object-src 'none'; base-uri 'self'">
++    <meta http-equiv="Content-Security-Policy" content="img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; style-src 'self' 'unsafe-inline'; form-action 'none'; object-src 'none'; base-uri 'self'{{#if hostedChat}}; connect-src 'self' blob:; worker-src 'self' blob:; script-src 'self'; frame-src 'none'{{/if}}">
+     <title>{{title}}</title>
+     <meta name="description" content="{{description}}">
+     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,shrink-to-fit=no,viewport-fit=cover">
+diff --git a/src/config/debug.ts b/src/config/debug.ts
+index d046f5d..28c2765 100644
+--- a/src/config/debug.ts
++++ b/src/config/debug.ts
+@@ -12,7 +12,7 @@ const SANDBOX_PARAMS = (IS_BETA || IS_PREVIEW) && typeof(location) !== 'undefine
+ export const IS_POPUP_SANDBOX = !!SANDBOX_PARAMS?.has('popups');
+ // `?widgets=1` — the widget sandbox (components/widgetSandbox/sandbox), on the popup sandbox's mock environment.
+ export const IS_WIDGET_SANDBOX = !!SANDBOX_PARAMS?.has('widgets');
+-export const IS_LOCAL_CHAT_PREVIEW = !!SANDBOX_PARAMS?.has('local-chat');
++export const IS_LOCAL_CHAT_PREVIEW = import.meta.env.VITE_TTT_CHAT_HOSTED === '1' || !!SANDBOX_PARAMS?.has('local-chat');
+ // Sandbox pages use fixture managers without a Telegram session.
+ export const IS_SANDBOX_PAGE = IS_POPUP_SANDBOX || IS_WIDGET_SANDBOX || IS_LOCAL_CHAT_PREVIEW;
+ export const DEBUG = (IS_BETA || Modes.debug)/*  && false */;
+diff --git a/src/index.ts b/src/index.ts
+index edbe8e3..d4e61ad 100644
+--- a/src/index.ts
++++ b/src/index.ts
+@@ -448,7 +448,11 @@ if(import.meta.env.DEV || import.meta.env.VITE_PREVIEW) {
+   setRootClasses();
+   if(Modes.test) mountTestDcBadge();
+
+-  if(import.meta.env.DEV && IS_LOCAL_CHAT_PREVIEW) {
++  if((import.meta.env.DEV || import.meta.env.VITE_TTT_CHAT_HOSTED === '1') && IS_LOCAL_CHAT_PREVIEW) {
++    if(import.meta.env.VITE_TTT_CHAT_HOSTED === '1' && window.parent === window) {
++      document.body.textContent = '请从团团通打开内部沟通。';
++      return;
++    }
+     await import('@components/popupSandbox/bootstrapState');
+     const {startLocalChatPreview} = await import('./pages/localChatPreview');
+     await startLocalChatPreview();
+diff --git a/src/pages/localChatPreview.ts b/src/pages/localChatPreview.ts
+index 377161b..a9f93dd 100644
+--- a/src/pages/localChatPreview.ts
++++ b/src/pages/localChatPreview.ts
+@@ -62,7 +62,7 @@ function addMessage(peerId: PeerId, text: string, fromId: PeerId, date = Math.fl
+ }
+
+ export async function startLocalChatPreview() {
+-  if(new URLSearchParams(location.search).get('live') === '1') {
++  if(import.meta.env.VITE_TTT_CHAT_HOSTED === '1' || new URLSearchParams(location.search).get('live') === '1') {
+     const {startLiveChat} = await import('./localChatPreview/liveChat');
+     await startLiveChat();
+     return;
+diff --git a/src/pages/localChatPreview/h5ListControls.ts b/src/pages/localChatPreview/h5ListControls.ts
+index 89c5382..fafcad0 100644
+--- a/src/pages/localChatPreview/h5ListControls.ts
++++ b/src/pages/localChatPreview/h5ListControls.ts
+@@ -6,6 +6,9 @@ export function installH5ListControls(closeFromList: () => void) {
+   const pencil = document.querySelector('#column-left .item-main #new-menu');
+   if(!pencil?.parentElement) return false;
+   pencil.classList.add('tt-h5-list-pencil');
++  if(import.meta.env.VITE_TTT_CHAT_HOSTED === '1' && new URLSearchParams(location.search).get('nativeHost') === '1') {
++    return true;
++  }
+
+   const close = document.createElement('button');
+   close.type = 'button';
+diff --git a/src/pages/localChatPreview/liveChat.ts b/src/pages/localChatPreview/liveChat.ts
+index c610e0d..4553e3d 100644
+--- a/src/pages/localChatPreview/liveChat.ts
++++ b/src/pages/localChatPreview/liveChat.ts
+@@ -930,7 +930,7 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+   }
+
+   seedMirror('thumbs', getThumbKey(greetingSticker), {
+-    [THUMB_TYPE_FULL]: {type: THUMB_TYPE_FULL, downloaded: greetingSticker.size, url: '/assets/img/emoji/1f44b.png'}
++    [THUMB_TYPE_FULL]: {type: THUMB_TYPE_FULL, downloaded: greetingSticker.size, url: `${import.meta.env.BASE_URL}assets/img/emoji/1f44b.png`}
+   });
+
+   mockManagers.override({
+@@ -1329,13 +1329,13 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+   document.title = '团团通内部通讯';
+   api.changed.addEventListener('change', synchronize);
+   let navigation = 0;
+-  api.connectNavigation(async(id) => {
++  api.connectNavigation(async(id, messageId) => {
+     const serial = ++navigation;
+     try {
+       if(!peerByConversation.has(id)) await refreshDialogs();
+       if(serial !== navigation) return;
+       const peerId = peerByConversation.get(id);
+-      if(peerId !== undefined) await appImManager.setInnerPeer({peerId});
++      if(peerId !== undefined) await appImManager.setInnerPeer({peerId, lastMsgId: messageId});
+       else toast('未找到该会话');
+     } catch(error) {
+       if(serial === navigation) reportSendFailure(error);
+diff --git a/src/pages/localChatPreview/liveTransport.ts b/src/pages/localChatPreview/liveTransport.ts
+index 775bd53..69d41ad 100644
+--- a/src/pages/localChatPreview/liveTransport.ts
++++ b/src/pages/localChatPreview/liveTransport.ts
+@@ -74,7 +74,8 @@ type Change = {
+ };
+
+ export function createLiveTransport(orderNo?: string) {
+-  const parentOrigin = document.referrer && new URL(document.referrer).origin;
++  const hosted = import.meta.env.VITE_TTT_CHAT_HOSTED === '1';
++  const parentOrigin = hosted ? location.origin : document.referrer && new URL(document.referrer).origin;
+   const allowedParents = [
+     'http://localhost:5181',
+     'http://127.0.0.1:5181',
+@@ -83,7 +84,15 @@ export function createLiveTransport(orderNo?: string) {
+     'http://127.0.0.1:5183',
+     'http://127.0.0.1:5184'
+   ];
+-  if(window.parent === window || !allowedParents.includes(parentOrigin)) {
++  let parentAllowed = !hosted && allowedParents.includes(parentOrigin);
++  if(hosted) {
++    try {
++      parentAllowed = window.parent.location.origin === parentOrigin;
++    } catch {
++      // The browser rejects location access for a frame embedded by another origin.
++    }
++  }
++  if(window.parent === window || !parentAllowed) {
+     throw new Error('请在团团通后台打开内部通讯');
+   }
+
+@@ -99,7 +108,7 @@ export function createLiveTransport(orderNo?: string) {
+   const visibility = new EventTarget();
+   let visible = false;
+   let listControlsReady = false;
+-  let openConversation: (id: number) => void;
++  let openConversation: (id: number, messageId?: number) => void;
+   let handleBack: () => boolean;
+   let orderHistoryActionState: (state: OrderHistoryActionState) => void;
+
+@@ -120,8 +129,13 @@ export function createLiveTransport(orderNo?: string) {
+       window.parent.postMessage({type: 'tt:chat.backResult', id: data.id, detail: handleBack()}, parentOrigin);
+     } else if(data?.type === 'tt:chat.requestListControlsReady' && listControlsReady) {
+       reportListControlsReady();
+-    } else if(data?.type === 'tt:chat.openConversation' && Number.isSafeInteger(data.detail) && data.detail > 0) {
+-      openConversation?.(data.detail);
++    } else if(data?.type === 'tt:chat.openConversation') {
++      const conversationId = typeof data.detail === 'number' ? data.detail : data.detail?.conversationId;
++      const messageId = data.detail?.messageId;
++      if(Number.isSafeInteger(conversationId) && conversationId > 0 &&
++         (messageId === undefined || (Number.isSafeInteger(messageId) && messageId > 0))) {
++        openConversation?.(conversationId, messageId);
++      }
+     } else if(orderPath && data?.type === 'tt:order-history.action-state' && typeof data.detail?.busy === 'boolean') {
+       orderHistoryActionState?.({
+         busy: data.detail.busy,
+@@ -169,7 +183,7 @@ export function createLiveTransport(orderNo?: string) {
+       orderHistoryActionState = handler;
+     },
+     visible: () => visible && !document.hidden,
+-    connectNavigation: (handler: (id: number) => void) => {
++    connectNavigation: (handler: (id: number, messageId?: number) => void) => {
+       openConversation = handler;
+       window.parent.postMessage({type: 'tt:chat.navigationReady'}, parentOrigin);
+     },
+diff --git a/vite.config.ts b/vite.config.ts
+index 497c30e..9f88a70 100644
+--- a/vite.config.ts
++++ b/vite.config.ts
+@@ -69,10 +69,11 @@ if(isDEV) {
+
+ const handlebarsPlugin = handlebars({
+   context: {
+-    title: 'Telegram Web',
+-    description: 'Telegram is a cloud-based mobile and desktop messaging app with a focus on security and speed.',
+-    url: 'https://web.telegram.org/k/',
+-    origin: 'https://web.telegram.org/'
++    title: process.env.TT_WEBK_HOSTED ? '团团通内部沟通' : 'Telegram Web',
++    description: process.env.TT_WEBK_HOSTED ? '团团通内部沟通' : 'Telegram is a cloud-based mobile and desktop messaging app with a focus on security and speed.',
++    hostedChat: process.env.TT_WEBK_HOSTED === '1',
++    url: process.env.TT_WEBK_HOSTED ? '/internal-chat-webk/' : 'https://web.telegram.org/k/',
++    origin: process.env.TT_WEBK_HOSTED ? '/internal-chat-webk/' : 'https://web.telegram.org/'
+   }
+ });
+
+diff --git a/vite.ttt-chat.config.ts b/vite.ttt-chat.config.ts
+new file mode 100644
+index 0000000..c1d11ed
+--- /dev/null
++++ b/vite.ttt-chat.config.ts
+@@ -0,0 +1,8 @@
++import {defineConfig, mergeConfig} from 'vite';
++import base from './vite.config';
++
++export default defineConfig(mergeConfig(base, {
++  base: '/internal-chat-webk/',
++  define: {'import.meta.env.VITE_TTT_CHAT_HOSTED': JSON.stringify('1')},
++  build: {sourcemap: false}
++}));

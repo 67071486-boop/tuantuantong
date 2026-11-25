@@ -1,0 +1,483 @@
+<style type="text/css">
+    .xm-form-checkbox > span {
+        display: block;
+        position: relative;
+        height: 100%;
+        font-size: 12px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        color: rgb(102, 102, 102);
+        line-height: 36px;
+        padding: 0px 0px 0px 30px;
+        border-radius: 2px 0px 0px 2px;
+        overflow: hidden;
+        background: 0px 0px;
+    }
+
+    .layui-table-cell {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 4px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        box-sizing: border-box;
+        font-size: 12px;
+    }
+
+    /*  .layui-table td, .layui-table th {
+        padding: 7px 4px;
+        min-height: 30px;
+        line-height: 34px;
+        border: 1px solid #e2e2e2;
+    }*/
+    /*单元格宽度不够时不需要显示下拉*/
+    .layui-table-grid-down {
+        display: none;
+    }
+
+    .lableb {
+        display: inline-block;
+        padding: 2px 4px;
+        font-size: 12px;
+        line-height: 14px;
+        color: #fff;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #999;
+        overflow: hidden;
+        border-radius: 3px;
+        margin-right: 2px;
+    }
+
+    .layui-form-pane .layui-form-label {
+        width: 110px;
+        padding: 8px 8px;
+        height: 38px;
+        line-height: 20px;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: 2px 0 0 2px;
+        text-align: center;
+        background-color: #FBFBFB;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+
+    .larry-btn {
+        margin-bottom: 15px;
+        margin-right: 3px;
+    }
+
+    .layui-btn + .layui-btn {
+        margin-left: 2px;
+    }
+
+    .layui-table-tool {
+        position: relative;
+        z-index: 890;
+        width: 100%;
+        min-height: 40px;
+        padding: 5px 15px;
+        border-width: 0 0 1px;
+    }
+
+    .layui-table-tool-self {
+        position: absolute;
+        right: 17px;
+        top: 5px;
+    }
+
+    .selectTr {
+        background-color: #f2f2f2 !important;
+    }
+</style>
+
+<!--
+  ⚠️ 本文件是**运行时真加载**的证据件（页面 `fetch` 它并塞进 DOM）。
+  2026-09-22 业务方裁定：删掉 7 组筛选（服务器/平台、职业、项目分类、代练项目、备注/机位、
+  订单标签、游戏账号）与 12 颗工具栏按钮（发内部/撤内部/复制/发群聊/打标签/设机位/设标记/
+  加急/发短信/改单号/改项目/备注）。这是**有意偏离对标**（D-0025 §5 的口径是"照渲染+提示尚未开放"），
+  决策号见 docs/DECISIONS.md 的 D-0093。⛔ 不要照对标把删掉的控件"修"回来。
+  2026-09-24（订单删除线的 T7）：再删「阵营」「排团团号」两个筛选块 + 三颗排团按钮（决策 D-0144）。
+  2026-09-24（业务方再裁定，原话「平台单号这个删掉不需要了 派单人也去掉吧」）：再删「派单人」
+  （`operator`）与「平台单号」（`keytid`）两个筛选块——`NOT_OPEN_FILTERS` 随之为空。
+  ⛔ 同理不要照对标把上面这几批删掉的控件"修"回来；`qainput`（搜QA资料）等其余隐藏块不动。
+-->
+
+<div id="root">
+        
+            
+            <div id="LAY_app">
+                <form class="layui-form" action="" lay-filter="form">
+                    <div class="" style="padding-left: 5px;padding-top:10px">
+                        <div class="layui-form-pane">
+                            <div class="layui-inline">
+                                <label class="layui-form-label" style="width: 80px">游戏筛选</label>
+                                <div class="layui-input-inline" style="width: 125px">
+                                    <select id="gameName" name="gameName" lay-filter="selectGame">
+                                    <option value="">请选择</option>
+                                </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <div class="layui-input-inline" style="width: 90px;">
+                                    <select id="dateType" name="dateType" lay-filter="">
+                                        <option value="10">录单时间</option>
+                                        <option value="20">开始时间</option>
+                                        <option value="30">完成时间</option>
+                                        <option value="40">收款时间</option>
+                                        <option value="50">退款时间</option>
+                                    </select>
+                                </div>
+                                <div class="layui-input-inline" style="width:140px">
+                                    <input type="text" name="sDate" id="sDate" lay-verify="datetime" placeholder="" autocomplete="off" class="layui-input" value="2026-06-20 00:00:00">
+                                </div>
+                                <div class="layui-input-inline">-</div>
+                                <div class="layui-input-inline" style="width:140px">
+                                    <input type="text" name="eDate" id="eDate" lay-verify="datetime" placeholder="" autocomplete="off" class="layui-input" value="2026-09-20 23:59:59">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <div class="layui-input-inline" style="width: 100px;">
+                                    <select id="showPriceType" name="showPriceType" lay-filter="showPriceType">
+                                        <option value="0">接单价格</option>
+                                        <option value="1">发单价格</option>
+                                        <option value="2">退款金额</option>
+                                        <option value="3">接发组合</option>
+                                        <option value="4">搜亏本单</option>
+                                    </select>
+                                </div>
+                                <div class="layui-input-inline" style="width:80px">
+                                    <input type="text" name="minPrice" id="minPrice" lay-verify="number" placeholder="" autocomplete="off" class="layui-input" value="-999999">
+                                </div>
+                                <div class="layui-input-inline">-</div>
+                                <div class="layui-input-inline" style="width:80px">
+                                    <input type="text" name="maxPirce" id="maxPirce" lay-verify="number" placeholder="" autocomplete="off" class="layui-input" value="99999999">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label" style="width: 91px">订单来源</label>
+                                <div class="layui-input-inline" style="">
+                                    <select name="orderSoures" id="orderSoures" xm-select-radio lay-search="" xm-select="orderSoures" xm-select-search="" xm-select-search-type="title" xm-select-skin="default" xm-select-height="36px" class="" title=""></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-pane">
+                            <div class="layui-inline">
+                                <label class="layui-form-label" style="width: 80px">订单状态</label>
+                                <div class="layui-input-inline" style="width: 160px">
+                                    <select name="orderSta" xm-select="orderSta" xm-select-skin="default" xm-select-height="36px">
+                                        <option value="">全部</option>
+                                        <optgroup label="以下几个只能单选">
+                                            <option value="抢单中">抢单中</option>
+                                            <option value="已超时">已超时(未完成)</option>
+                                            
+                                        </optgroup>
+                                        <optgroup label="以下几个可多选">
+                                            <option value="待完善">待完善</option>
+                                            <option value="未分配">未分配</option>
+                                            
+                                            <option value="待抢单">待抢单</option>
+                                            <option value="代练中">代练中</option>
+                                            <option value="撤销中">撤销中(交易单)</option>
+                                            <option value="已撤销">已撤销(交易单)</option>
+                                            <option value="仲裁中">仲裁中(交易单)</option>
+                                            <option value="已仲裁">已仲裁(交易单)</option>
+                                            <option value="待验收">待验收</option>
+                                            <option value="已完成">已完成</option>
+                                            <option value="异常中">异常中</option>
+                                            <option value="问题单">问题单</option>
+                                            <option value="已暂停">已暂停</option>
+                                            <option value="已退单">已退单</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <div class="layui-input-inline" style="width: 90px;">
+                                    <select id="recType" name="recType" lay-filter="recType">
+                                        <option value="0">代练打手</option>
+                                        <option value="10">发单人</option>
+                                    </select>
+                                </div>
+                                <div class="layui-input-inline" style="width:140px">
+                                    
+                                    <div id="popgameName" name="popgameName" class="xm-select-demo">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-inline orderTypeDiv" style="">
+                                <label class="layui-form-label" style="width: 80px">订单类型</label>
+                                <div class="layui-input-inline" style="width: 100px;">
+                                    <select id="bussType" name="bussType">
+                                        <option value="0">全部</option>
+                                        <option value="1">代练订单</option>
+                                        <option value="2">陪玩订单</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <div class="layui-input-inline" style="width:90px;">
+                                    <select id="kefuType" name="kefuType" lay-filter="kefuType">
+                                        <option value="0">销售客服</option>
+                                        <option value="5">录单人</option>
+                                        <option value="10">记录退款者</option>
+                                    </select>
+                                </div>
+                                <div class="layui-input-inline" style="width: 140px">
+                                    <select name="inputOrderKefu" id="inputOrderKefu" xm-select-radio xm-select="inputOrderKefu" xm-select-skin="default" xm-select-height="36px" xm-select-search="" class="" title="">
+                                        <option value="">选择或输入</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label" style="width: 80px">收款状态</label>
+                                <div class="layui-input-inline" style="width: 110px">
+                                    <select name="setSta" id="setSta" xm-select-radio xm-select="setSta" xm-select-skin="default" xm-select-height="36px">
+                                        <option value="未结算">未收款</option>
+                                        <option value="结算中">结算中</option>
+                                        <option value="已结算">已结款</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="layui-form-pane">
+
+                            <div class="layui-inline">
+                                <div class="layui-input-inline" style="width: 90px;">
+                                    <select id="selectSeach1" name="selectSeach1" lay-filter="selectSeach1">
+                                        <option value="0">搜索1</option>
+                                        <option value="10">批量搜单号</option>
+                                    </select>
+                                </div>
+                                <div class="layui-input-inline" style="width:200px;">
+                                    <input type="text" name="key1" id="key1" lay-verify="" placeholder="系统订单号/来源单号/角色名/电话" autocomplete="off" class="layui-input larry-input-shadow" value="" title="可以输入系统单号、来源单号、角色名、电话">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label" style="width: 80px">搜索2</label>
+                                    <div class="layui-input-inline" style="width:175px;">
+                                        <input type="text" name="key2" id="key2" lay-verify="" placeholder="项目/标题/微信/旺旺" autocomplete="off" class="layui-input larry-input-shadow" value="" title="可以输入代练项目关键词、微信号、QQ、买家旺旺/YY等">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-inline layui-hide">
+                                <label class="layui-form-label" style="width: 80px">搜QA资料</label>
+                                <div class="layui-input-inline" style="width: 135px;">
+                                    <input type="text" name="qainput" id="qainput" placeholder="可输入QA词条关键词" autocomplete="off" class="layui-input larry-input-shadow" value="">
+                                </div>
+                            </div>
+                            <div class="layui-inline" style="width:75px">
+                                <span id="isJiajiCheck"></span>
+                                <input type="checkbox" name="isJiajiCheck" lay-skin="primary" title="加急单" lay-filter="viewIsJiaJi" lay-tips="勾选后将筛选出加急的订单">
+                            </div>
+                            <div class="layui-inline" style="width:85px">
+                                <span id="viewLeakOrder"></span>
+                                <input type="checkbox" name="viewLeakOrder" lay-skin="primary" title="未安排" lay-filter="viewLeakOrder" lay-tips="勾选后将筛选出状态为未分配或者没有指派过打手陪玩的单子">
+                            </div>
+                            <div class="layui-inline">
+                                <div class="layui-input-inline" style="">
+                                    <button class="layui-btn layui-btn-normal sechbtn" type="button" data-tb="seachBtnOk" style="width: 80px">搜索</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="copyurl" style="display:none"></div>
+                    <div class="layui-btn-group" style="margin-left:10px;background-color:#fff;margin-top:10px;">
+                        <button class="layui-btn layui-btn-sm layui-btn-danger" data-tb="refresh" type="button" lay-tips="刷新当前数据">刷新</button>
+                        <button class="layui-btn layui-btn-sm " data-tb="setRecMan" type="button" lay-tips="批量或单笔将订单指派给接手人">指派打手</button>
+                        <button class="layui-btn layui-btn-sm " data-tb="changeStaBtn" type="button" lay-tips="批量或单笔更改订单状态">改状态</button>
+                        <button class="layui-btn layui-btn-sm " data-tb="changetypesBtn" type="button" lay-tips="批量或单笔更改订单类型">改类型</button>
+                        <button class="layui-btn layui-btn-sm layui-btn-danger" data-tb="refundOrderBtn" type="button" lay-tips="批量或单笔记录要退款的单子，可以用来记录订单退红包、退差价部分">记退款</button>
+                        <button class="layui-btn layui-btn-sm" data-tb="exportBtn" type="button" lay-tips="批量或单笔导出订单">导出</button>
+                        <button class="layui-btn layui-btn-sm" data-tb="changeOrderPriceBtn" type="button" lay-tips="将指定订单批量更改接单价">改接单价</button>
+                        <button class="layui-btn layui-btn-sm layui-btn-warm" data-tb="changeOrderThrowPriceBtn" type="button" lay-tips="将指定订单批量更改发单价">改发单价</button>
+                        <button class="layui-btn layui-btn-sm" data-tb="setOrderJSBtn" type="button" lay-tips="更改指定订单的收款的状态标记">收款状态</button>
+                        <button class="layui-btn layui-btn-sm" data-tb="builderSellEmpOrderBtn" type="button" lay-tips="重新计算你勾选的订单客服销售提成绩效账单。如果该订单的客服销售绩效账单缺失或需要更新，可以点击此按钮重新计算生成">重算客服提成</button>
+                        <button class="layui-btn layui-btn-sm layui-btn-warm" data-tb="delOrderBtn" type="button" lay-tips="将指定订单删除（谨慎操作）">删除</button>
+
+                    </div>
+                    <script type="text/html" id="toolbarDemo">
+                        <div class="layui-inline">
+                            <span style="color:#ff6a00" class="total">本次搜索统计共0笔，预计总发单价0.00元(不含接单提成)，总接单价0.00元，预计差额0.00元。其中：未分配0笔，待抢单0笔，代练中0笔，待验收0笔，已完成0笔，已暂停0笔，问题单0笔，已退单0笔</span>
+                            <span style="" class="selectTotal"></span>
+                            <span lay-tips='点击可查看本次查询所有的职业统计' style="display: none" class="zyTotal">(查看职业统计)</span>
+                        </div>
+                    </script>
+                    <div class="layui-form" style="margin:0 5px;">
+                        <table class="datatable layui-hide" id="datatable" style="table-layout:fixed; " lay-filter="datatable"></table>
+                        <div id="page" class="page_div"></div>
+                    </div>
+
+                    <input type="hidden" name="SeKey" id="SeKey" value="" />
+                    <input type="hidden" name="IsViewServer" id="IsViewServer" value="Y" />
+                    <input type="hidden" id="moreOpenOrderDetails" name="moreOpenOrderDetails" value="N" />
+
+                    <div class="setDiv" style="display:none">
+                        <blockquote class="layui-elem-quote" style="color:#ff0000;padding:8px">
+                            请注意：这里的结算是指和发单方（上家）结算，若需要与接手人（下家）结算，请到财务运营->绩效管理里进行清算
+                        </blockquote>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width:110px;padding:8px 10px">选择收款状态</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="jsst" value="未结算" title="未收款">
+                                <input type="radio" name="jsst" value="结算中" title="收款中">
+                                <input type="radio" name="jsst" value="已结算" title="已收款">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" style="margin-top:20px">
+                            <div class="layui-input-block">
+                                <button class="layui-btn layui-btn-normal" type="button" lay-submit="" lay-filter="saveSettbtn"><i class="layui-icon">&#x1005;</i>保存</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setprice" style="display:none;padding:10px;">
+                        <div class="layui-form-pane">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width:130px;padding:8px 10px">发单价模式</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="pushPriceMode" value="10" title="发单价" lay-filter="pushPriceMode" checked="checked">
+                                    <input type="radio" name="pushPriceMode" value="20" title="按接单价的百分比设定" lay-filter="pushPriceMode">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-form-label setpricelabel" style="width:130px;padding:8px 10px">设定发单价</div>
+                                <div class="layui-input-block" style="margin-left:130px">
+                                    <input type="text" id="setprice" name="setprice" value="" class="layui-input larry-input-shadow" placeholder="输入发单价">
+                                </div>
+                            </div>
+                            <input type="hidden" id="setorderid" value="" />
+                            <div class="layui-form-item" style="margin-bottom:0;">
+                                <label class="layui-form-label" style="width:130px;padding:8px 10px">用户最低缴纳保证金</label>
+                                <div class="layui-input-block" style="margin-left:130px">
+                                    <input type="text" id="setbprice" name="setbprice" value="0" class="layui-input larry-input-shadow" placeholder="输入用户最低缴纳保证金,写0为不限制">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-input-block" style="margin-left:130px;color:red;">填0为不限制</div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-input-block" style="margin-left:130px">
+                                    <button class="layui-btn layui-btn-normal" type="button" lay-submit="" lay-filter="saveSettpricebtn"><i class="layui-icon">&#x1005;</i>保存</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setOrderToGroupMange" style="display:none;padding:10px 10px">
+                        <div class="layui-form-pane">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="padding: 8px 6px;" title="">请选一个团长</label>
+                                <div class="layui-input-block kszp">
+
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="padding: 8px 6px;" title="">给团长的价格</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="groupFee" id="groupFee" lay-verify="number" placeholder="￥" autocomplete="off" class="layui-input" value="0">
+                                </div>
+                                <div style="padding-top:10px;color:#ff0000">请注意：若在此给团长的价格金额大于0，后面再次指派这些订单给其它打手/代练员时将无法设定抛单价（为了防止出现错误的记账）</div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="padding: 8px 6px;" title="">同时改订单状态</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="changeToDSH" value="N" title="不改">
+                                    <input type="radio" name="changeToDSH" value="Y" title="改成待上号" checked="">
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="text-align:center;margin:0 auto">
+                                <a href="javascript:void(0)" class="layui-btn layui-btn-danger clearGroupMange" data-notopen="清除团长" style="margin-top:50px">清除</a>
+                                <a href="javascript:void(0)" class="layui-btn layui-btn-normal saveGroupMange" data-notopen="将订单指定团长" style="margin-top:50px;margin-left:50px; width:150px">保存</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="typebox" style="display:none;">
+                        <div class="layui-form-item" style="padding-top:20px;">
+                            <label class="layui-form-label" style="width:130px;">选择订单类型：</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="selbussType" value="0" title="代练单" />
+                                <input type="radio" name="selbussType" value="1" title="陪玩单" />
+                            </div>
+                        </div>
+                        <div class="layui-form-item" style="text-align:center;margin:0 auto">
+                            <a href="javascript:void(0)" class="layui-btn layui-btn-normal settypes" style="margin-top:50px;margin-bottom:30px; width:150px">保存</a>
+                        </div>
+                    </div>
+
+                    <div class="setrefundOrderLog" style="display:none;padding:10px 10px">
+                        <div class="layui-form-pane">
+                            <blockquote class="layui-elem-quote" style="font-size:16px;color:#ff0000">特别注意：如果接进来的订单出现退款或要退部分红包，就只需要在这里记录累计退款金额就行（填多少就是累计退了多少，可以改小），不要去改接单价，否则会形成又改接单价又记退款，最终导致错账</blockquote>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="padding: 8px 6px;" title="">累计退款金额</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="refundFee" id="refundFee" lay-verify="" placeholder="￥" autocomplete="off" class="layui-input" value="">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="padding: 8px 6px;" title="">备注</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="refundRemark" id="refundRemark" placeholder="" autocomplete="off" class="layui-input" value="" maxlength="100">
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="">
+                                <a href="javascript:void(0)" class="layui-btn layui-btn-normal layui-btn-lg saveReFundOrderBtn" style="margin-left:110px;margin-top:20px">确定记录</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="seachMutPriceDiv" style="display:none;padding:10px;">
+                        <div class="layui-form-pane">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">接单价区间</label>
+                                <div class="layui-input-inline" style="width:110px">
+                                    <input type="text" id="seachMutPrice_p1" name="seachMutPrice_p1" value="-999999" class="layui-input larry-input-shadow" placeholder="接单价最小值">
+                                </div>
+                                <div class="layui-form-mid">-</div>
+                                <div class="layui-input-inline" style="width:110px">
+                                    <input type="text" id="seachMutPrice_p2" name="seachMutPrice_p2" value="99999999" class="layui-input larry-input-shadow" placeholder="接单价最大值">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">发单价区间</label>
+                                <div class="layui-input-inline" style="width:110px">
+                                    <input type="text" id="seachMutPrice_p3" name="seachMutPrice_p3" value="-999999" class="layui-input larry-input-shadow" placeholder="发单价最小值">
+                                </div>
+                                <div class="layui-form-mid">-</div>
+                                <div class="layui-input-inline" style="width:110px">
+                                    <input type="text" id="seachMutPrice_p4" name="seachMutPrice_p4" value="99999999" class="layui-input larry-input-shadow" placeholder="发单价最大值">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-input-block" style="margin-left:110px">
+                                    <div class="layui-btn layui-btn-normal seachMutPriceBtn" data-notopen="接单价+发单价组合查询">搜索</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <input type="hidden" id="isNewPage" name="isNewPage" value="N" />
+                    <input type="hidden" id="isInvoFee" name="isInvoFee" value="Y" />
+                    <input type="hidden" id="remarkLocation" name="remarkLocation" value="N" />
+                    <input type="hidden" id="isEnableServiceAmount" name="isEnableServiceAmount" value="N" />
+                    <input type="hidden" id="isNewTaskModel" name="isNewTaskModel" value="N" />
+                    <input type="hidden" id="rightMenuCopyOrder" name="rightMenuCopyOrder" value="Y" />
+                    <input type="hidden" id="taskPullDownListIsViewAll" name="taskPullDownListIsViewAll" value="N" />
+                    <input type="hidden" id="orderSoureOnlyViewSoure" name="orderSoureOnlyViewSoure" value="N" />
+                    <input type="hidden" id="isViewSoure" name="isViewSoure" value="N" />
+                    <input type="hidden" id="isViewNetReceipts" name="isViewNetReceipts" value="N" />
+                    <input type="hidden" id="pushPlatmMode" name="pushPlatmMode" value="0" />
+                    <div class="copyGetGroupPushOrderMsg" style="display:none;"></div>
+                </form>
+
+            </div>
+
+    </div>

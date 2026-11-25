@@ -1,0 +1,149 @@
+<!-- 复刻证据件：对标物 /System/sourelist 的页内 <style> 段 + 处理过的 body 标记。
+     生成源：.tools/replica-draft/system-sourelist.json（只读 .tools/recon/<对标取数快照>/ 的离线证据）。
+     与对标原文的差异：PII 已清空（见交付报告）、laytpl 表达式已解、非标记 script 元素已删。 -->
+<style>
+
+        body {
+            background-color: #fff
+        } 
+        .layadmin-pagetabs {
+            height: 40px;
+            line-height: 40px;
+            padding: 0 80px 0 40px;
+            background-color: #fafafa;
+            box-sizing: border-box;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+            border-bottom: 1px solid #1AA094;
+        }
+            .layadmin-pagetabs .layui-tab-title li.layui-this, .layadmin-pagetabs .layui-tab-title li:hover {
+                background-color: #009688;
+                color: #fff;
+            }
+    
+
+    .layui-table-cell {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 5px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        box-sizing: border-box;
+        font-size: 12px;
+    }
+
+    .lableb {
+        display: inline-block;
+        padding: 2px 4px;
+        font-size: 12px;
+        line-height: 14px;
+        color: #fff;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #999;
+        overflow: hidden;
+        border-radius: 3px;
+        margin-right: 2px;
+    }
+</style>
+
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      
+      
+    <![endif]-->
+    
+
+
+<style type="text/css">
+    .layui-table-cell {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 5px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        box-sizing: border-box;
+        font-size: 12px;
+    }
+
+    .lableb {
+        display: inline-block;
+        padding: 2px 4px;
+        font-size: 12px;
+        line-height: 14px;
+        color: #fff;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #999;
+        overflow: hidden;
+        border-radius: 3px;
+        margin-right: 2px;
+    }
+</style>
+<form class="layui-form" action="" lay-filter="form">
+    <table class="layui-hide" id="tableList" lay-filter="tableList"></table>
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-xs" lay-event="refresh" type="button" title="刷新当前数据"><i class="layui-icon">&#xe669;</i>刷新列表</button>
+            <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="addBtn" type="button" title="新增一个订单来源"><i class="layui-icon layui-icon-add-1"></i>新增一个订单来源</button>
+        </div>
+    </script>
+    <script type="text/html" id="baroperating">
+        <a class="layui-btn layui-btn-xs layui-btn-warm" style="" lay-event="submitEdit" title="编辑来源"><i class="layui-icon layui-icon-edit"></i>修改</a>
+        <a class="layui-btn layui-btn-xs layui-btn-danger" style="" lay-event="submitDel" title="删除该来源"><i class="layui-icon layui-icon-delete"></i>删除</a>
+    </script>
+    <script type="text/html" id="switchTpl1">
+        <input type="checkbox" name="doNotSendSms" value="{{d.id}}" lay-skin="switch" lay-text="可以发|已禁止发" lay-filter="doNotSendSms" {{ d.doNotSendSms != 'N' ? '' : 'checked' }}>
+    </script>
+
+    <div class="change" style="display:none">
+        <div class="layui-form-pane" style="margin-top:10px;margin-left:10px;margin-right:10px">
+            <div class="layui-form-item">
+                <label class="layui-form-label">来源名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="soureName" id="soureName" lay-verify="" autocomplete="off" placeholder="请输入来源名称" maxlength="10" class="layui-input layui-input-shadow boxshadow-success" value="">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">来源描述</label>
+                <div class="layui-input-block">
+                    <input type="text" name="soureRemark" id="soureRemark" lay-verify="" autocomplete="off" placeholder="对该来源的描述" maxlength="50" class="layui-input layui-input-shadow boxshadow-success" value="">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">排序数值</label>
+                <div class="layui-input-block">
+                    <input type="text" name="soureOrderBy" id="soureOrderBy" lay-verify="" autocomplete="off" placeholder="排序数值，整数，数值越大越排前面" maxlength="3" class="layui-input layui-input-shadow boxshadow-success" value="">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">哪种店铺</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="shopType" value="0" title="淘宝/天猫">
+                    <input type="radio" name="shopType" value="10" title="拼多多">
+                    <input type="radio" name="shopType" value="15" title="京东">
+                    <input type="radio" name="shopType" value="20" title="闲鱼">
+                    <input type="radio" name="shopType" value="30" title="抖音">
+                    <input type="radio" name="shopType" value="40" title="快手">
+                    <input type="radio" name="shopType" value="50" title="唯品会">
+                    <input type="radio" name="shopType" value="60" title="小红书">
+                    <input type="radio" name="shopType" value="70" title="其它平台">
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align:center;align-items:center;margin-top:20px">
+            <div class="layui-input-inline">
+                <button class="layui-btn layui-btn-normal layui-btn-lg w-lg" id="saveBtn" lay-submit="" type="button" lay-filter="savebtn" style="">保存设定</button>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="soureId" name="soureId" value="" />
+</form>  
+
+
+
+

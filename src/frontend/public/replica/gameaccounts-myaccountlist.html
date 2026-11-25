@@ -1,0 +1,253 @@
+<!-- 复刻证据件：对标物 /GameAccounts/myaccountlist 的页内 <style> 段 + 处理过的 body 标记。
+     生成源：.tools/replica-draft/gameaccounts-myaccountlist.json（只读 .tools/recon/<对标取数快照>/ 的离线证据）。
+     与对标原文的差异：非标记 <script> 已删、laytpl 表达式已解；PII 处置：无（该页没有服务端渲染的租户数据值）。 -->
+<style type="text/css">
+    .layui-table-cell {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 5px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        box-sizing: border-box;
+        font-size: 12px;
+    } 
+    .lableb {
+        display: inline-block;
+        padding: 2px 4px;
+        font-size: 12px;
+        line-height: 14px;
+        color: #fff;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #999;
+        overflow: hidden;
+        border-radius: 3px;
+        margin-right: 2px;
+    }
+    .layui-form-pane .layui-form-label {
+        width: 110px;
+        padding: 8px 8px;
+        height: 38px;
+        line-height: 20px;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: 2px 0 0 2px;
+        text-align: center;
+        background-color: #FBFBFB;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+    .layui-btn {
+        margin-bottom: 15px;
+        margin-right: 8px;
+    }
+</style>
+<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      
+      
+    <![endif]-->
+    
+
+
+<style type="text/css">
+    .layui-table-cell {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 5px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        box-sizing: border-box;
+        font-size: 12px;
+    } 
+    .lableb {
+        display: inline-block;
+        padding: 2px 4px;
+        font-size: 12px;
+        line-height: 14px;
+        color: #fff;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #999;
+        overflow: hidden;
+        border-radius: 3px;
+        margin-right: 2px;
+    }
+    .layui-form-pane .layui-form-label {
+        width: 110px;
+        padding: 8px 8px;
+        height: 38px;
+        line-height: 20px;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: 2px 0 0 2px;
+        text-align: center;
+        background-color: #FBFBFB;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+    .layui-btn {
+        margin-bottom: 15px;
+        margin-right: 8px;
+    }
+</style>
+<form class="layui-form" action="">
+    <div class="" style="padding-left: 5px;padding-top:10px">
+
+        <div class="layui-form-pane">
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 80px">账号类型</label>
+                <div class="layui-input-inline">
+                    <select name="accType" xm-select="accType" xm-select-radio xm-select-skin="default" xm-select-height="36px">
+                        <option value="">全部</option>
+                        <option value="A">内部账号</option>
+                        <option value="C">借用账号</option>
+                        <option value="D">临时账号</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 80px">选择游戏</label>
+                <div class="layui-input-inline">
+                    <select id="gameName" name="gameName" lay-filter="selectGame">
+                                    <option value="21714" data-mobliegame="N" data-pw="N">全部游戏</option>
+                                    <option value="21708" data-mobliegame="N" data-pw="N">崩坏：星穹铁道</option>
+                                    <option value="21701" data-mobliegame="Y" data-pw="N">原神</option>
+                                    <option value="21703" data-mobliegame="Y" data-pw="N">三角洲行动</option>
+                                    <option value="21704" data-mobliegame="N" data-pw="N">鸣潮</option>
+                                    <option value="21706" data-mobliegame="Y" data-pw="N">绝区零</option>
+                                    <option value="21707" data-mobliegame="N" data-pw="N">无限暖暖</option>
+                                    <option value="21722" data-mobliegame="N" data-pw="N">遗忘之海</option>
+                                    <option value="21721" data-mobliegame="N" data-pw="N">异环</option>
+                                    <option value="21720" data-mobliegame="N" data-pw="N">王者荣耀世界</option>
+                                    <option value="21719" data-mobliegame="N" data-pw="N">洛克王国：世界</option>
+                                    <option value="21718" data-mobliegame="N" data-pw="N">逆战：未来</option>
+                                    <option value="21717" data-mobliegame="N" data-pw="N">明日方舟：终末地</option>
+                                    <option value="21716" data-mobliegame="N" data-pw="N">燕云十六声</option>
+
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 80px">大区/平台</label>
+                <div class="layui-input-inline">
+                    <select style="" name="gameArea" id="gameArea" xm-select-radio lay-search="" xm-select-create xm-select="gameArea" xm-select-skin="default" xm-select-height="36px" xm-select-search="" xm-select-search-type="title">
+                        <option value="">选择或输入大区/平台</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 80px">服务器</label>
+                <div class="layui-input-inline">
+                    <select name="gameServer" id="gameServer" xm-select-radio lay-search="" xm-select-create xm-select="gameServer" xm-select-skin="default" xm-select-height="36px" xm-select-search="" xm-select-search-type="title">
+                        <option value="">选择或输入服务器</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 80px">阵营门派</label>
+                <div class="layui-input-inline">
+                    <select name="gameGroup" id="gameGroup" xm-select-radio lay-search="" xm-select="gameGroup" xm-select-skin="default" xm-select-height="36px" xm-select-search="" xm-select-search-type="title">
+                        <option value="">选择阵营门派</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 80px">账号状态</label>
+                <div class="layui-input-inline" style="width:160px">
+                    <select id="accStatus" name="accStatus" lay-filter="">
+                        <option value="0">全部</option>
+                        <option value="10">正在使用</option>
+                        <option value="20">库存账号</option>
+                        <option value="30">临时封号</option>
+                        <option value="40">永久封号</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 80px">用途类型</label>
+                <div class="layui-input-inline" style="width:185px">
+                    <select name="useType" id="useType" xm-select-radio lay-search="" xm-select="useType" xm-select-skin="default" xm-select-height="36px" xm-select-search="" xm-select-search-type="title">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 80px">进度状态</label>
+                <div class="layui-input-inline" style="width:160px">
+                    <select id="proStatus" name="proStatus" lay-filter="">
+                        <option value="0">全部</option>
+                        <option value="10">未分配</option>
+                        <option value="20">待上号</option>
+                        <option value="30">代练中</option>
+                        <option value="40">待验收</option>
+                        <option value="50">已完成</option>
+                        <option value="60">已暂停</option>
+                        <option value="70">有问题</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 80px">搜索</label>
+                <div class="layui-input-inline" style="">
+                    <input type="text" name="key1" id="key1" lay-verify="" placeholder="角色名/排团编号/机位" autocomplete="off" class="layui-input layui-input-shadow" value="">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 80px">游戏账号</label>
+                <div class="layui-input-inline" style="">
+                    <input type="text" name="gameAcc" id="gameAcc" lay-verify="" placeholder="可输入游戏账号搜索" autocomplete="off" class="layui-input layui-input-shadow" value="">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="">
+                    <button class="layui-btn layui-btn-normal" lay-submit="" type="button" lay-filter="seachBtn" style="width: 80px">搜索</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="" style="">
+        <table class="layui-hide" id="tableList" lay-filter="tableList"></table>
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="refresh" type="button" title="刷新当前数据">刷新数据</button>
+                <button class="layui-btn layui-btn-xs layui-btn-normal" lay-event="setChangeProStatus" type="button" title="批量或单个更改账号的进度状态">更改进度状态</button>
+                <button class="layui-btn layui-btn-xs " lay-event="setChangeJiWei" type="button" title="批量或单个更改账号的机位">更改机位</button>
+            </div>
+            <div style="color:#ff6a00" id="total"></div>
+        </script>
+    </div>
+
+    <div class="setAccountProStatus" style="display:none;padding:10px 10px">
+        <div class="layui-form-pane">
+            <div class="layui-form-item">
+                <label class="layui-form-label">进度状态</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="accProStatus" value="10" title="未分配" checked="checked" lay-filter="accProStatusRd" />
+                    <input type="radio" name="accProStatus" value="20" title="待上号" lay-filter="accProStatusRd" />
+                    <input type="radio" name="accProStatus" value="30" title="代练中" lay-filter="accProStatusRd" />
+                    <input type="radio" name="accProStatus" value="40" title="待验收" lay-filter="accProStatusRd" />
+                    <input type="radio" name="accProStatus" value="50" title="已完成" lay-filter="accProStatusRd" />
+                    <input type="radio" name="accProStatus" value="60" title="已暂停" lay-filter="accProStatusRd" />
+                    <input type="radio" name="accProStatus" value="70" title="有问题" lay-filter="accProStatusRd" />
+                </div>
+            </div>
+            <div class="layui-form-item yy" style="display:none">
+                <label class="layui-form-label">原因备注</label>
+                <div class="layui-input-block">
+                    <input type="text" name="yytext" id="yytext" autocomplete="off" placeholder="请输入原因或备注" class="layui-input layui-input-shadow boxshadow-success" maxlength="100">
+                </div>
+            </div>
+            <div class="layui-form-item" style="text-align:center;margin:0 auto">
+                <button class="layui-btn layui-btn-normal" type="button" lay-submit="" lay-filter="saveChangeProStatusbtn"><i class="layui-icon">&#x1005;</i>保存</button>
+            </div>
+        </div>
+    </div>
+
+</form>

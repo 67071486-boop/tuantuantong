@@ -1,0 +1,113 @@
+diff --git a/src/components/wrappers/getUserStatusString.ts b/src/components/wrappers/getUserStatusString.ts
+index e0dc5e0..c8a06ce 100644
+--- a/src/components/wrappers/getUserStatusString.ts
++++ b/src/components/wrappers/getUserStatusString.ts
+@@ -3,12 +3,23 @@ import numberThousandSplitter from '@helpers/number/numberThousandSplitter';
+ import {User} from '@layer';
+ import {LangPackKey, i18n} from '@lib/langPack';
+ import {REPLIES_PEER_ID, SERVICE_PEER_ID} from '@appManagers/constants';
++import {IS_LOCAL_CHAT_PREVIEW} from '@config/debug';
++
++const internalLiveChat = IS_LOCAL_CHAT_PREVIEW &&
++  (import.meta.env.VITE_TTT_CHAT_HOSTED === '1' || new URLSearchParams(location.search).get('live') === '1');
+
+ export default function getUserStatusString(user: User.user): HTMLElement {
+   if(!user) {
+     return document.createElement('span');
+   }
+
++  if(internalLiveChat) {
++    if(user.status?._ === 'userStatusOnline') return i18n('Online');
++    const status = document.createElement('span');
++    if(user.status?._ === 'userStatusEmpty') status.textContent = '离线';
++    return status;
++  }
++
+   let key: LangPackKey;
+   let args: any[];
+
+diff --git a/src/pages/localChatPreview/liveChat.ts b/src/pages/localChatPreview/liveChat.ts
+index 4553e3d..e576a65 100644
+--- a/src/pages/localChatPreview/liveChat.ts
++++ b/src/pages/localChatPreview/liveChat.ts
+@@ -171,6 +171,8 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+       first_name: contact.name,
+       photo: {_: 'userProfilePhotoEmpty'}
+     };
++    const previousStatus = peers.get(peer)?.status;
++    if(previousStatus) mapped.status = previousStatus;
+     peers.set(peer, mapped);
+     seedMirror('peers', String(peer), mapped);
+     return mapped;
+@@ -1264,6 +1266,36 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+   installSendRetry((id) => failed.has(id), retryFailed);
+   await bootstrapIm(mockManagers.managers);
+   installConversationLabels(conversations, appImManager, api.openOrder);
++
++  let watchedConversation: number | undefined;
++  function updatePeerStatus(conversationId: number, online: boolean | null) {
++    const peerId = peerByConversation.get(conversationId);
++    const peer = peers.get(peerId);
++    if(!peer) return;
++    if(online === null) delete peer.status;
++    else peer.status = online ? {_: 'userStatusOnline', expires: Math.floor(Date.now() / 1000) + 300} : {_: 'userStatusEmpty'};
++    seedMirror('peers', String(peerId), peer);
++    rootScope.dispatchEvent('user_update', peer.id);
++  }
++  function syncPresenceWatch() {
++    const {peerId} = appImManager.chat;
++    const conversation = conversations.get(peerId);
++    const next = api.visible() && isDisplayedHistory(peerId) && conversation?.kind !== 'order' ? conversation?.id : undefined;
++    if(next === watchedConversation) return;
++    if(watchedConversation !== undefined) updatePeerStatus(watchedConversation, null);
++    watchedConversation = next;
++    api.watchPresence(next ?? null);
++  }
++  api.connectPresence((id, online) => {
++    if(id === watchedConversation && api.visible()) updatePeerStatus(id, online);
++  });
++  appImManager.addEventListener('peer_changed', syncPresenceWatch);
++  appImManager.addEventListener('tab_changing', () => queueMicrotask(syncPresenceWatch));
++  api.visibility.addEventListener('change', syncPresenceWatch);
++  document.addEventListener('visibilitychange', syncPresenceWatch);
++  rootScope.addEventListener('dialogs_multiupdate', syncPresenceWatch);
++  syncPresenceWatch();
++
+   const openWorkerDirectory = workerDirectoryOnly ? () => showWorkerDirectory({
+     contacts: async() => (await api.contacts()).contacts,
+     openContact: async(id) => {
+diff --git a/src/pages/localChatPreview/liveTransport.ts b/src/pages/localChatPreview/liveTransport.ts
+index 69d41ad..57c3012 100644
+--- a/src/pages/localChatPreview/liveTransport.ts
++++ b/src/pages/localChatPreview/liveTransport.ts
+@@ -110,6 +110,7 @@ export function createLiveTransport(orderNo?: string) {
+   let listControlsReady = false;
+   let openConversation: (id: number, messageId?: number) => void;
+   let handleBack: () => boolean;
++  let onPresence: (conversationId: number, online: boolean | null) => void;
+   let orderHistoryActionState: (state: OrderHistoryActionState) => void;
+
+   function reportListControlsReady() {
+@@ -125,6 +126,11 @@ export function createLiveTransport(orderNo?: string) {
+       visibility.dispatchEvent(new Event('change'));
+     } else if(data?.type === 'tt:chat.changed') {
+       changed.dispatchEvent(new Event('change'));
++    } else if(data?.type === 'tt:chat.presence') {
++      const {conversationId, online} = data.detail ?? {};
++      if(Number.isSafeInteger(conversationId) && conversationId > 0 && (typeof online === 'boolean' || online === null)) {
++        onPresence?.(conversationId, online);
++      }
+     } else if(data?.type === 'tt:chat.back' && handleBack && Number.isSafeInteger(data.id) && data.id > 0) {
+       window.parent.postMessage({type: 'tt:chat.backResult', id: data.id, detail: handleBack()}, parentOrigin);
+     } else if(data?.type === 'tt:chat.requestListControlsReady' && listControlsReady) {
+@@ -188,6 +194,10 @@ export function createLiveTransport(orderNo?: string) {
+       window.parent.postMessage({type: 'tt:chat.navigationReady'}, parentOrigin);
+     },
+     connectBack: (handler: () => boolean) => { handleBack = handler; },
++    connectPresence: (handler: typeof onPresence) => { onPresence = handler; },
++    watchPresence: (conversationId: number | null) => {
++      if(!orderPath) window.parent.postMessage({type: 'tt:chat.watchPresence', detail: conversationId}, parentOrigin);
++    },
+     reportListControlsReady,
+     closeFromList: () => window.parent.postMessage({type: 'tt:chat.closeFromList'}, parentOrigin),
+     openOrder: (number: string) => {

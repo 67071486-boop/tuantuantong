@@ -1,0 +1,15 @@
+import Framework7 from 'framework7/lite'
+import Searchbar from 'framework7/components/searchbar'
+import Sheet from 'framework7/components/sheet'
+import Dialog from 'framework7/components/dialog'
+import Input from 'framework7/components/input'
+import PhotoBrowser from 'framework7/components/photo-browser'
+import Popover from 'framework7/components/popover'
+import Popup from 'framework7/components/popup'
+import PullToRefresh from 'framework7/components/pull-to-refresh'
+import Swiper from 'framework7/components/swiper'
+import Toast from 'framework7/components/toast'
+import Toggle from 'framework7/components/toggle'
+import Framework7Vue from 'framework7-vue'
+
+Framework7.use([Framework7Vue, Searchbar, Sheet, Dialog, Input, PhotoBrowser, Popover, Popup, PullToRefresh, Swiper, Toast, Toggle])

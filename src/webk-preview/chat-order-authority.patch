@@ -1,0 +1,446 @@
+diff --git a/src/pages/localChatPreview/conversationLabels.css b/src/pages/localChatPreview/conversationLabels.css
+index e2fbdc3..3d95052 100644
+--- a/src/pages/localChatPreview/conversationLabels.css
++++ b/src/pages/localChatPreview/conversationLabels.css
+@@ -25,3 +25,21 @@
+   margin-inline-end: .25rem;
+   color: var(--primary-color);
+ }
++
++.preview-order-readonly .chat-input { display: none !important; }
++.preview-order-archive {
++  position: absolute;
++  inset-inline: 0;
++  bottom: 0;
++  z-index: 6;
++  display: flex;
++  align-items: center;
++  justify-content: center;
++  min-height: 3.5rem;
++  padding: .75rem;
++  text-align: center;
++  color: var(--secondary-text-color);
++  background: var(--surface-color);
++  pointer-events: auto;
++}
++.preview-order-archive button { margin-inline-start: .5rem; width: auto; padding-inline: .75rem; }
+diff --git a/src/pages/localChatPreview/conversationLabels.ts b/src/pages/localChatPreview/conversationLabels.ts
+index 56b4c9d..91426f8 100644
+--- a/src/pages/localChatPreview/conversationLabels.ts
++++ b/src/pages/localChatPreview/conversationLabels.ts
+@@ -7,7 +7,8 @@ import './conversationLabels.css';
+ export function installConversationLabels(
+   conversations: ReadonlyMap<PeerId, Conversation>,
+   manager: AppImManager,
+-  openOrder: (number: string) => void
++  openOrder: (number: string) => void,
++  reopen: (number: string) => Promise<void>
+ ) {
+   const sidebar = document.getElementById('column-left');
+   if(!sidebar) return;
+@@ -54,6 +55,34 @@ export function installConversationLabels(
+       const actions = chat.container.querySelector('.chat-utils');
+       if(!actions) continue;
+       const number = conversations.get(chat.peerId);
++      const order = number?.kind === 'order' ? number : undefined;
++      chat.container.classList.toggle('preview-order-readonly', !!order && order.can_send === false);
++      let archive = chat.container.querySelector<HTMLElement>('.preview-order-archive');
++      if(!order?.archived) archive?.remove();
++      else {
++        if(!archive) {
++          archive = document.createElement('div');
++          archive.className = 'preview-order-archive';
++          archive.setAttribute('role', 'status');
++          chat.container.append(archive);
++        }
++        const state = String(order.can_reopen);
++        if(archive.dataset.state === state) continue;
++        archive.dataset.state = state;
++        archive.replaceChildren(document.createTextNode('已归档 · 可查看历史消息'));
++        if(order.can_reopen) {
++          const button = document.createElement('button');
++          button.type = 'button';
++          button.className = 'btn-primary btn-transparent';
++          button.textContent = '重开群聊';
++          button.addEventListener('click', async() => {
++            button.disabled = true;
++            try { await reopen(order.local_order_no || order.order_no); }
++            catch(error) { button.disabled = false; button.textContent = error instanceof Error ? error.message : '重开失败，请重试'; }
++          });
++          archive.append(button);
++        }
++      }
+       const orderNo = number?.kind === 'order' ? number.local_order_no : undefined;
+       let button = actions.querySelector<HTMLButtonElement>('.preview-order-link');
+       if(!orderNo || !/^\d{20}$/.test(orderNo)) {
+diff --git a/src/pages/localChatPreview/liveChat.ts b/src/pages/localChatPreview/liveChat.ts
+index f598923..6c1991c 100644
+--- a/src/pages/localChatPreview/liveChat.ts
++++ b/src/pages/localChatPreview/liveChat.ts
+@@ -77,8 +77,8 @@ function firstSendImage(body?: MessageSendBody) {
+ function getOrderMemberTag(member: OrderMember) {
+   const studio = cleanMemberTag(member.studio_name ?? '');
+   const role = member.order_role;
+-  const status = member.left_at ? '已退群' : role && orderRoleLabels[role];
+-  if(!studio) return member.left_at ? status : undefined;
++  const status = member.has_permission === false ? '无权限' : member.left_at ? '已退群' : role && orderRoleLabels[role];
++  if(!studio) return member.has_permission === false || member.left_at ? status : undefined;
+   if(!status) return studio;
+
+   const suffix = ' · ' + status;
+@@ -231,7 +231,7 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+       // Member IDs belong to a single order, so they can't be used as Web K user IDs.
+       const memberId = members.get(member.id) ?? (++nextMemberId).toPeerId(false);
+       members.set(member.id, memberId);
+-      if(member.left_at) formerOrderPeers.add(memberId);
++      if(member.has_permission === false || member.left_at) formerOrderPeers.add(memberId);
+       else formerOrderPeers.delete(memberId);
+       saveUser({...member, id: memberId}, false, false);
+     }
+@@ -395,7 +395,7 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+     if(previous?.kind === 'order' && conversation.kind === 'order') {
+       const rosterChanged = previous.members.length !== conversation.members.length || previous.members.some((member, index) => {
+         const fresh = conversation.members[index];
+-        return member.id !== fresh.id || member.left_at !== fresh.left_at || member.name !== fresh.name;
++        return member.id !== fresh.id || member.left_at !== fresh.left_at || member.name !== fresh.name || member.has_permission !== fresh.has_permission;
+       });
+       const chatId = peerId.toChatId();
+       if(rosterChanged) {
+@@ -452,15 +452,23 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+   };
+   initial.conversations.forEach(setConversation);
+
+-  async function dropOrder(id: number) {
++  async function dropOrder(id: number, reason = '订单权限已撤销') {
+     const peerId = peerByConversation.get(id);
+     const conversation = conversations.get(peerId);
+     if(conversation?.kind !== 'order') return;
+     const dialog = dialogs.get(peerId);
+     conversations.delete(peerId);
++    api.invalidateOrder(id);
+     peerByConversation.delete(id);
+     dialogs.delete(peerId);
++    for(const [mid, raw] of messages) {
++      if(raw.conversation_id === id && raw.image) imageDownloads.forget(mid);
++    }
+     const {default: appImManager} = await import('@lib/appImManager');
++    if(appImManager.chat.peerId === peerId) {
++      document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape', bubbles: true}));
++      toast(reason);
++    }
+   const {default: appSidebarRight} = await import('@components/sidebarRight');
+   renderRevokedAlbumItem = (groupedId, message, remaining) => {
+     const {mid, peerId} = message;
+@@ -495,7 +503,7 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+     for(const [mid, draft] of failed) {
+       if(draft.peerId === peerId) removeFailed(mid);
+     }
+-    for(const memberId of orderMembers.get(peerId).values()) {
++    for(const memberId of orderMembers.get(peerId)?.values() ?? []) {
+       if(memberId === myId) continue;
+       peers.delete(memberId);
+       formerOrderPeers.delete(memberId);
+@@ -508,11 +516,16 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+     seedMirror('peers', String(peerId), undefined);
+   }
+
++  let pausedOrder: string | undefined;
+   async function refreshDialogs() {
+-    const {conversations: fresh} = await api.conversations();
++    const {conversations: fresh, order_permission_unavailable: unavailable} = await api.conversations();
++    if(unavailable) {
++      const current = conversations.get(appImManager.chat.peerId);
++      if(current?.kind === 'order') pausedOrder = current.local_order_no || current.order_no;
++    }
+     const freshIds = new Set(fresh.map(({id}) => id));
+     for(const conversation of conversations.values()) {
+-      if(conversation.kind === 'order' && !freshIds.has(conversation.id)) await dropOrder(conversation.id);
++      if(conversation.kind === 'order' && !freshIds.has(conversation.id)) await dropOrder(conversation.id, unavailable ? '暂时无法确认订单权限，请稍后重试' : '订单权限已撤销');
+     }
+     const changed = new Map<PeerId, {dialog: ChatDialog}>();
+     for(const conversation of fresh) {
+@@ -754,6 +767,7 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+     }
+   }
+
++  let orderVisibilityToken: string | null | undefined;
+   let syncing = false;
+   let pending = false;
+   let refreshConversationsOnSync = false;
+@@ -767,6 +781,13 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+         const forceRefresh = refreshConversationsOnSync;
+         refreshConversationsOnSync = false;
+         const page = await api.sync(cursor);
++        if(page.order_permission_unavailable) {
++          const current = conversations.get(appImManager.chat.peerId);
++          if(current?.kind === 'order') {
++            pausedOrder = current.local_order_no || current.order_no;
++            await dropOrder(current.id, '暂时无法确认订单权限，请稍后重试');
++          }
++        }
+         const revokedAlbums = new Map<number, string>();
+         for(const {kind, message} of page.changes) {
+           if(kind !== 'message.revoked' || !message) continue;
+@@ -776,7 +797,9 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+         for(const change of page.changes) {
+           if(change.kind === 'conversation.removed') await dropOrder(change.conversation_id);
+         }
+-        if(forceRefresh || page.changes.length) await refreshDialogs();
++        const visibilityChanged = page.order_visibility_token !== undefined && page.order_visibility_token !== orderVisibilityToken;
++        if(forceRefresh || page.changes.length || visibilityChanged) await refreshDialogs();
++        orderVisibilityToken = page.order_visibility_token;
+         for(const {message} of page.changes) {
+           if(message?.album_id && !message.revoked) cacheMessage(message);
+         }
+@@ -1054,7 +1077,7 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+     appChatsManager: {
+       getChat: (chatId: ChatId) => groups.get(chatId.toPeerId(true)),
+       isBroadcast: () => false,
+-      hasRights: (chatId: ChatId, action: string) => groups.has(chatId.toPeerId(true)) && (action === 'view_participants' || (!readOnly && action === 'send_photos'))
++      hasRights: (chatId: ChatId, action: string) => groups.has(chatId.toPeerId(true)) && (action === 'view_participants' || (!readOnly && action === 'send_photos' && (conversations.get(chatId.toPeerId(true)) as OrderConversation)?.can_send !== false))
+     },
+     appUsersManager: {
+       getSelf: () => selfUser,
+@@ -1107,6 +1130,7 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+         isPhotoFilter({_: filter} as MessagesFilter) ? mids.map((mid) => apiManagerProxy.getMessageFromStorage(storageKey, mid))
+         .filter((message) => message?._ === 'message' && message.media?._ === 'messageMediaPhoto').slice(0, limit) : [],
+       canSendToPeer: (peerId: PeerId) => !readOnly && peerId !== myId &&
++        (conversations.get(peerId)?.kind !== 'order' || (conversations.get(peerId) as OrderConversation).can_send !== false) &&
+         (conversations.has(peerId) || (!workerDirectoryOnly && contactsByPeer.has(peerId))),
+       getEphemeralHistory: () => [],
+       getSearchCounters: searchCounters,
+@@ -1332,7 +1356,45 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+   };
+   installSendRetry((id) => failed.has(id), retryFailed);
+   await bootstrapIm(mockManagers.managers);
+-  installConversationLabels(conversations, appImManager, api.openOrder);
++  installConversationLabels(conversations, appImManager, api.openOrder, async(number) => {
++    const updated = await api.reopen(number);
++    const dialog = setConversation(updated);
++    rootScope.dispatchEvent('dialogs_multiupdate', new Map([[dialog.peerId, {dialog}]]));
++  });
++  api.authorization.addEventListener('change', (event) => {
++    const {conversationId, message} = (event as CustomEvent<{conversationId: number; message: string}>).detail;
++    const conversation = conversations.get(peerByConversation.get(conversationId));
++    if(conversation?.kind !== 'order') return;
++    pausedOrder = conversation.local_order_no || conversation.order_no;
++    void dropOrder(conversation.id, message);
++  });
++  let checkingOrder = false;
++  async function checkOpenOrder() {
++    if(checkingOrder || !api.visible()) return;
++    const current = conversations.get(appImManager.chat.peerId);
++    const number = current?.kind === 'order' ? current.local_order_no || current.order_no : pausedOrder;
++    if(!number) return;
++    checkingOrder = true;
++    try {
++      const updated = await api.orderSummary(number);
++      const dialog = setConversation(updated);
++      pausedOrder = undefined;
++      rootScope.dispatchEvent('dialogs_multiupdate', new Map([[dialog.peerId, {dialog}]]));
++    } catch(error) {
++      if(current?.kind === 'order' && error instanceof ChatRequestError &&
++          (error.status === 403 || error.status === 503)) {
++        pausedOrder = number;
++        await dropOrder(current.id, error.status === 403 ? '订单权限已撤销' : '暂时无法确认订单权限，请稍后重试');
++      }
++    } finally { checkingOrder = false; }
++  }
++  const authorityTimer = window.setInterval(() => {
++    if(!api.visible()) return;
++    void synchronize();
++    void checkOpenOrder();
++  }, 3000);
++  window.addEventListener('pagehide', () => window.clearInterval(authorityTimer), {once: true});
++  api.visibility.addEventListener('change', checkOpenOrder);
+
+   let watchedConversation: number | undefined;
+   function updatePeerStatus(conversationId: number, online: boolean | null) {
+@@ -1389,7 +1451,7 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+   });
+   if(isH5 && new URLSearchParams(location.search).get('app') === '1') {
+     api.connectBack(() => {
+-      const dialog = [...document.querySelectorAll<HTMLDialogElement>('dialog[open]')].at(-1);
++      const dialog = [...document.querySelectorAll<HTMLDialogElement>('dialog[open]')].slice(-1)[0];
+       if(dialog) {
+         if(typeof dialog.requestClose === 'function') dialog.requestClose();
+         else if(dialog.dispatchEvent(new Event('cancel', {cancelable: true}))) dialog.close();
+diff --git a/src/pages/localChatPreview/liveTransport.ts b/src/pages/localChatPreview/liveTransport.ts
+index 17b6c3e..20331a6 100644
+--- a/src/pages/localChatPreview/liveTransport.ts
++++ b/src/pages/localChatPreview/liveTransport.ts
+@@ -44,6 +44,7 @@ type ConversationSummary = ConversationPreferences & {
+
+ export type OrderMember = Contact & {
+   left_at: string | null;
++  has_permission?: boolean;
+   studio_name?: string;
+   order_role?: 'worker' | 'acceptor' | 'publisher' | 'follower' | 'viewer' | '';
+ };
+@@ -58,6 +59,9 @@ export type OrderConversation = ConversationSummary & {
+   can_join?: boolean;
+   pinned_message_id?: number | null;
+   can_pin_messages?: boolean;
++  archived?: boolean;
++  can_reopen?: boolean;
++  can_send?: boolean;
+ };
+
+ export type OrderHistoryActionState = {busy: boolean; error?: string};
+@@ -109,8 +113,15 @@ export function createLiveTransport(orderNo?: string) {
+     resolve: (data: unknown) => void;
+     reject: (error: Error) => void;
+     timer: number;
++    conversationId?: number;
++    generation: number;
++    orderEpoch: number;
+   }>();
+   const changed = new EventTarget();
++  const authorization = new EventTarget();
++  const generations = new Map<number, number>();
++  const invalidatedAt = new Map<number, number>();
++  let orderEpoch = 0;
+   const visibility = new EventTarget();
+   let visible = false;
+   let listControlsReady = false;
+@@ -119,6 +130,11 @@ export function createLiveTransport(orderNo?: string) {
+   let onPresence: (conversationId: number, online: boolean | null) => void;
+   let orderHistoryActionState: (state: OrderHistoryActionState) => void;
+
++  function invalidateOrder(conversationId: number) {
++    generations.set(conversationId, (generations.get(conversationId) ?? 0) + 1);
++    invalidatedAt.set(conversationId, ++orderEpoch);
++  }
++
+   function reportListControlsReady() {
+     listControlsReady = true;
+     window.parent.postMessage({type: 'tt:chat.listControlsReady'}, parentOrigin);
+@@ -166,10 +182,31 @@ export function createLiveTransport(orderNo?: string) {
+       if(!item) return;
+       pending.delete(data.id);
+       window.clearTimeout(item.timer);
+-      if(typeof data.error === 'string') {
++      const revoked = data.errorStatus === 403 && data.error === '订单权限已撤销';
++      const unavailable = data.errorStatus === 503 && data.error === '暂时无法确认订单权限，请稍后重试';
++      if((revoked || unavailable) && item.conversationId !== undefined) {
++        invalidateOrder(item.conversationId);
++        authorization.dispatchEvent(new CustomEvent('change', {detail: {
++          conversationId: item.conversationId, message: data.error, status: data.errorStatus
++        }}));
++      }
++      if(item.conversationId !== undefined && item.generation !== (generations.get(item.conversationId) ?? 0)) {
++        item.reject(new ChatRequestError(revoked ? '订单权限已撤销' : '暂时无法确认订单权限，请稍后重试', revoked ? 403 : 503));
++      } else if(typeof data.error === 'string') {
+         item.reject(new ChatRequestError(data.error, typeof data.errorStatus === 'number' ? data.errorStatus : undefined));
+       }
+-      else item.resolve(data.result);
++      else {
++        const result = data.result;
++        if(Array.isArray(result?.conversations)) {
++          result.conversations = result.conversations.filter((row: Conversation) =>
++            row.kind !== 'order' || (invalidatedAt.get(row.id) ?? 0) <= item.orderEpoch);
++        }
++        if(Array.isArray(result?.changes)) {
++          result.changes = result.changes.filter((change: Change) =>
++            (invalidatedAt.get(change.conversation_id) ?? 0) <= item.orderEpoch);
++        }
++        item.resolve(result);
++      }
+     }
+   });
+   window.parent.postMessage({type: 'tt:chat.ready'}, parentOrigin);
+@@ -184,7 +221,10 @@ export function createLiveTransport(orderNo?: string) {
+         pending.delete(id);
+         reject(new Error('聊天请求超时'));
+       }, 20_000);
+-      pending.set(id, {resolve: (data) => resolve(data as T), reject, timer});
++      const match = /^\/api\/internal-chat\/conversations\/([1-9]\d*)\//.exec(path);
++      const conversationId = match ? Number(match[1]) : undefined;
++      pending.set(id, {resolve: (data) => resolve(data as T), reject, timer, conversationId,
++        generation: generations.get(conversationId) ?? 0, orderEpoch});
+       window.parent.postMessage({type: 'tt:chat.request', id, method, path, body}, parentOrigin);
+     });
+   }
+@@ -194,7 +234,10 @@ export function createLiveTransport(orderNo?: string) {
+   return {
+     changed,
+     visibility,
+-    orderSummary: () => request<OrderConversation>('get', orderPath),
++    authorization,
++    invalidateOrder,
++    orderSummary: (number?: string) => request<OrderConversation>('get', orderPath || api + `orders/${number}/`),
++    reopen: (number: string) => request<OrderConversation>('post', api + `orders/${number}/reopen/`),
+     reportOrderHistory: (ready: boolean) => window.parent.postMessage(ready ?
+       {type: 'tt:order-history.ready'} :
+       {type: 'tt:order-history.error', detail: '无法加载订单聊天记录'}, parentOrigin),
+@@ -223,7 +266,26 @@ export function createLiveTransport(orderNo?: string) {
+     contacts: (query?: string) => request<ContactDirectory>(
+       'get', api + 'contacts/' + (query ? '?' + new URLSearchParams({q: query}) : '')
+     ),
+-    conversations: () => request<{conversations: Conversation[]; cursor?: number}>('get', api + 'conversations/'),
++    conversations: async() => {
++      const started = orderEpoch;
++      const all = new Map<number, Conversation>();
++      let offset = 0, cursor: number | undefined, unavailable = false;
++      for(;;) {
++        const page = await request<{conversations: Conversation[]; cursor?: number;
++          has_more?: boolean; next_offset?: number | null; order_permission_unavailable?: boolean}>(
++          'get', api + `conversations/?limit=100&offset=${offset}`);
++        if(!Array.isArray(page.conversations)) throw new ChatRequestError('会话分页返回异常');
++        cursor ??= page.cursor;
++        unavailable ||= page.order_permission_unavailable === true;
++        for(const conversation of page.conversations) all.set(conversation.id, conversation);
++        if(!page.has_more) break;
++        if(!Number.isSafeInteger(page.next_offset) || page.next_offset <= offset) throw new ChatRequestError('会话分页返回异常');
++        offset = page.next_offset;
++      }
++      return {conversations: [...all.values()].filter(row => row.kind !== 'order' ||
++        (!unavailable && (invalidatedAt.get(row.id) ?? 0) <= started)), cursor,
++      order_permission_unavailable: unavailable};
++    },
+     start: (peer: number) => request<Conversation>('post', api + 'conversations/', {peer_id: peer}),
+     history: (id: number, query: Record<string, string> = {}) => request<History>(
+       'get', conversationPath(id) + 'messages/' + (Object.keys(query).length ? '?' + new URLSearchParams(query) : '')
+@@ -251,7 +313,7 @@ export function createLiveTransport(orderNo?: string) {
+     read: (id: number, seq: number) => request<{read_seq: number}>('post', conversationPath(id) + 'read/', {seq}),
+     revoke: (id: number, messageId: number) =>
+       request<ChatMessage>('post', conversationPath(id) + `messages/${messageId}/revoke/`),
+-    sync: (after: number) => request<{cursor: number; has_more: boolean; changes: Change[]}>(
++    sync: (after: number) => request<{cursor: number; has_more: boolean; changes: Change[]; order_permission_unavailable?: boolean; order_visibility_token?: string | null}>(
+       'get', api + `sync/?after=${after}`
+     )
+   };
+diff --git a/src/pages/localChatPreview/orderHistoryMode.ts b/src/pages/localChatPreview/orderHistoryMode.ts
+index e87d335..23d2328 100644
+--- a/src/pages/localChatPreview/orderHistoryMode.ts
++++ b/src/pages/localChatPreview/orderHistoryMode.ts
+@@ -139,7 +139,7 @@ function createRoster({members, managers, order, getRoleLabel}: HistoryOptions)
+     getSubtitleForElement: (peerId) => {
+       const member = members.get(peerId);
+       const label = document.createElement('span');
+-      label.textContent = [member.studio_name, getRoleLabel(member), member.left_at && '已退群'].filter(Boolean).join(' · ');
++      label.textContent = [member.studio_name, getRoleLabel(member), member.has_permission === false ? '无权限' : member.left_at && '已退群'].filter(Boolean).join(' · ');
+       label.title = label.textContent;
+       return label;
+     }
+@@ -148,8 +148,8 @@ function createRoster({members, managers, order, getRoleLabel}: HistoryOptions)
+ }
+
+ function createAction({order, activate, subscribeActionState}: HistoryOptions) {
+-  const closed = order.can_join === false;
+   const isMember = order.is_member === true;
++  const closed = !isMember && order.can_join === false;
+   const action = document.createElement('div');
+   action.className = 'tt-order-history-action';
+   const button = document.createElement('button');
+@@ -164,8 +164,9 @@ function createAction({order, activate, subscribeActionState}: HistoryOptions) {
+   let busy = false;
+   function render(state: OrderHistoryActionState) {
+     busy = state.busy;
+-    button.textContent = closed ? '群聊已结束' : isMember ?
++    const label = closed ? (order.archived ? '查看历史' : '群聊已结束') : isMember ?
+       busy ? '正在打开…' : '打开会话' : busy ? '正在加入…' : '加入会话';
++    button.textContent = (order.archived ? '已归档 · ' : '') + label;
+     button.setAttribute('aria-disabled', String(closed || busy));
+     status.textContent = state.error ?? '';
+   }

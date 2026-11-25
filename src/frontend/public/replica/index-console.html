@@ -1,0 +1,450 @@
+<!-- 复刻证据件：对标物 /Index/console（后台首页）的页内样式段 + 处理过的 body 标记。
+     生成源：.tools/replica-draft/index-console.json（只读 .tools/recon/suqing1/ 的离线证据，绝不联网取）。
+     与对标原文的差异（逐条）：
+       1. 非标记脚本元素已删（含 IE 条件注释里的 CDN 引用），laytpl 表达式已解；
+       2. PII 已清空：登录手机号 / 本次·上次登录时间·IP·地点 一律置为「—」（多租户数据不入库）；
+       3. 「游戏权限」那一格的游戏清单置为「—」（对标租户的实际游戏清单，不进仓库）；
+       4. 租户名置为「—」，共 3 处：【…】通知和公告、隐藏域 companyName、「重要提示…本系统为…」那一行；
+       5. 「点击这里可以给系统续费」的外链**去掉了 ?s= 每租户令牌**（只有路径保留）；
+       6. 对标 body 里自带的样式段已并入**文件头部那一个**样式段（草稿的 styles 字段本就含它，
+          规则与顺序都相同），body 内不再重复 —— 见 .tools/convert-page.mjs 的「下游二选一注入」约定；
+       7. 行尾统一为 LF（对标原文是 CRLF）：src/frontend/.gitattributes 写的是「* text=auto eol=lf」，
+          仓库里已提交的证据件（system-systemnotice / order-orderlist / user-myinfo …）在磁盘上也都是 LF，
+          本文件与它们保持一致（否则「磁盘上的那份」与「checkout 出来的那份」不是同一个文件）。
+     除上述 7 条，其余标记与对标原文逐字相同，可直接对拍。 -->
+<style>
+        body {
+            background-color: #fff
+        } 
+        .layadmin-pagetabs {
+            height: 40px;
+            line-height: 40px;
+            padding: 0 80px 0 40px;
+            background-color: #fafafa;
+            box-sizing: border-box;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+            border-bottom: 1px solid #1AA094;
+        }
+            .layadmin-pagetabs .layui-tab-title li.layui-this, .layadmin-pagetabs .layui-tab-title li:hover {
+                background-color: #009688;
+                color: #fff;
+            }
+    
+
+    body {
+        background-color: #f2f2f2;
+    }
+
+    .layui-table-info td {
+        color: #696969;
+        font-size: 12px;
+        line-height: 28px;
+    }
+
+    .qrcode {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .layui-col-xs3 .layui-col-md1 .active {
+        border: 1px solid #4bb2ff;
+        color: #4bb2ff;
+    }
+
+    .reportPanTitle {
+        font-weight: 600;
+        font-size: 16px;
+        margin-left: 3px
+    }
+
+    .rep-title-rigth {
+        display: flex;
+        float: right;
+    }
+
+    .myMessage {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        width: 92px;
+        color: #1E9FFF
+    }
+
+    .rep-title-rigth li {
+        margin: 0px 3px;
+    }
+</style>
+
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      
+      
+    <![endif]-->
+    
+
+
+
+<div id="root">
+    <template id="template">
+        
+        <div id="LAY_app">
+            <div class="layui-fluid">
+                <div class="layui-card">
+                    <div class="layui-card-header">快捷操作</div>
+                    <div class="layui-card-body">
+
+                        <div class="layadmin-shortcut">
+                            <div>
+                                <ul class="layui-row layui-col-space10">
+                                            <li class="layui-col-xs6 layui-col-sm4 layui-col-md2 layui-col-lg2">
+                                                <a lay-href="/Order/addorder" lay-text="录入订单" lay-tips="将订单录入系统">
+                                                    <i class="layui-icon layui-icon-add-1" style="color: #F86738
+"></i>
+                                                    <cite>录入订单</cite>
+                                                </a>
+                                            </li>
+                                            <li class="layui-col-xs6 layui-col-sm4 layui-col-md2 layui-col-lg2">
+                                                <a lay-href="/Order/orderlist" lay-tips="管理所有订单" lay-text="管理订单">
+                                                    <i class="layui-icon layui-icon-form" style="color:#23d4d4"></i>
+                                                    <cite>管理系统内所有订单</cite>
+                                                </a>
+                                            </li>
+                                            <li class="layui-col-xs6 layui-col-sm4 layui-col-md2 layui-col-lg2">
+                                                <a href="https://www.jidanpu.com/html/calculator.html" target="_blank" lay-tips="下载万能游戏报价计算器">
+                                                    <i class="layui-icon layui-icon-dollar" style="color:#C71585"></i>
+                                                    <cite>万能游戏报价算价器</cite>
+                                                </a>
+                                            </li>
+                                            <li class="layui-col-xs6 layui-col-sm4 layui-col-md2 layui-col-lg2 layui-hide">
+                                                <a lay-href="/Group/grouplist2020" lay-tips="管理所有排团" lay-text="魔兽排团">
+                                                    <i class="layui-icon layui-icon-date" style="color:#73D08D"></i>
+                                                    <cite>魔兽排团</cite>
+                                                </a>
+                                            </li>
+                                            <li class="layui-col-xs6 layui-col-sm4 layui-col-md2 layui-col-lg2">
+                                                <a lay-href="/Emp/emplist" lay-text="给打手或客服算账" lay-tips="管理系统所有的代练打手的结算情况">
+                                                    <i class="layui-icon layui-icon-rmb" style="color:#CB5DEF"></i>
+                                                    <cite>给打手或客服算账</cite>
+                                                </a>
+                                            </li>
+                                            <li class="layui-col-xs6 layui-col-sm4 layui-col-md2 layui-col-lg2">
+                                                <a lay-href="/User/userlist" lay-text="用户管理" lay-tips="管理系统内所有的系统子账户">
+                                                    <i class="layui-icon layui-icon-group" style="color:#FFB800"></i>
+                                                    <cite>管理系统子账户</cite>
+                                                </a>
+                                            </li>
+                                            <li class="layui-col-xs6 layui-col-sm4 layui-col-md2 layui-col-lg2">
+                                                <a href="javascript:void(0)" class="rankList">
+                                                    <i class="layui-icon layui-icon-align-left" style="color:#FF5722"></i>
+                                                    接单排行榜
+                                                </a>
+                                            </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-row layui-col-space10" style="margin-left:10px;margin-right:10px">
+                <div class="layui-col-xs12 layui-col-sm6 layui-col-md6 layui-col-lg6">
+                    <div class="layui-card">
+                        <div class="layui-card-header" style="font-weight:600;position:relative">
+                            我的信息
+                            <div class="myMessage">
+                                <i class="layui-icon layui-icon-dialogue"></i>内部沟通
+                            </div>
+                        </div>
+                        <div class="layui-card-body">
+                            <table class="layui-table layui-table-info">
+                                <tbody>
+                                    <tr>
+                                        <td style="width:110px;"><span class="tit">本系统登录账号</span></td>
+                                        <td>
+                                            <span class="info ft14">—</span>
+                                            <span class="layui-btn layui-btn-xs layui-btn-radius layui-btn-warm" style="padding:0px 10px;display:none">
+                                                <a style="color:#fff" lay-href="/User/myinfo#userInfo=1" lay-text="绑定鸡蛋铺账号" lay-tips="绑定鸡蛋铺账号可以获取更多服务">
+                                                    <cite>绑定鸡蛋铺账号获取更多服务</cite>
+                                                </a>
+                                            </span>
+                                            <span class="layui-btn layui-btn-sm layui-btn-warm layui-hide" style="padding:0px 10px;">
+                                                <a style="color:#fff" lay-href="/User/myinfo" lay-text="实名认证" lay-tips="进行实名认证">
+                                                    <cite>开始进行实名认证</cite>
+                                                </a>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="tit">我的职位</span></td>
+                                        <td>
+                                            <span class='' style="margin-top:10px">系统管理员</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="tit">我接手的订单</span></td>
+                                        <td><span class="info ft14 cheng orderCount">0笔</span> / <span class="cheng orderFee">0.00元</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="tit">游戏权限</span></td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="tit">本次登录信息</span></td>
+                                        <td>
+                                                                                        <span class="info ft14">登录时间：— 登录IP：— 登录地点：—</span>
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="tit">上次登录信息</span></td>
+                                        <td>
+                                                                                        <span class="info ft14">登录时间：— 登录IP：— 登录地点：—</span>
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="tit">本系统信息</span></td>
+                                        <td style="word-break:break-all; white-space: normal;">
+                                            <div style="color:#F86738" class="extitle">
+
+                                            </div>
+                                            <div style="" class="">
+                                                <a class="layui-btn layui-btn-normal layui-btn-xs" href="https://www.jidanpu.com/Pay/SystemRenewal" target="_blank">点击这里可以给系统续费</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="tit">本系统版本</span></td>
+                                        <td>
+                                            <div style="font-size:18px">
+                                                工作室旗舰版
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-hide-xs layui-col-sm6 layui-col-md6 layui-col-lg6">
+                    <div class="layui-card">
+                        <div class="layui-card-header" style="font-weight:600">【—】通知和公告</div>
+                        <div class="layui-card-body">
+                            <ul class="systemNoticeUl" style="font-size:14px"></ul>
+                        </div>
+                        <div class="layui-card-header">系统更新公告</div>
+                        <div class="layui-card-body">
+                            <ul class="jdpNews" style="font-size:14px"></ul>
+                            <div class="">
+                            </div>
+                        </div>
+                        <div class="layui-card-header"><a href="https://oss4.jidanpu.com/file/%E9%83%91%E9%87%8D%E5%A3%B0%E6%98%8E1.jpg" target="_blank" style="color:#333" lay-tips="点击可以查看声明">重要提示：本系统为—内部管理系统，与软件开发商鸡蛋铺无关，鸡蛋铺不对该系统内任何业务负责</a></div>
+                        <div class="layui-card-body">
+                            <div class="">
+                                <a href="javascript:void(0)" class="layui-btn layui-btn-xs layui-btn-normal contactDev">购买该同款系统点我</a>
+                                <a href="javascript:void(0)" class="layui-btn layui-btn-xs aboutjdpwxapp">点这里使用微信小程序</a>
+                                <a lay-href="/Helper/index" lay-tips="查看系统帮助文档" lay-text="系统帮助文档" class="layui-btn layui-btn-danger layui-btn-xs">
+                                    系统帮助文档
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-fluid">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        <text>数据概览</text>
+                        <ul class="rep-title-rigth">
+                            <li><a href="javascript:void(0)" title="以录单时间为准" class="layui-btn layui-btn-sm layui-btn-primary layui-border-blue yesterday">昨天</a></li>
+                            <li><a href="javascript:void(0)" title="以录单时间为准" class="layui-btn layui-btn-sm layui-btn-primary today">今天</a></li>
+                            <li><a href="javascript:void(0)" title="以录单时间为准" class="layui-btn layui-btn-sm layui-btn-primary last7days">最近7天</a></li>
+                            <li><a href="javascript:void(0)" title="以录单时间为准" class="layui-btn layui-btn-sm layui-btn-primary last30days">最近30天</a></li>
+                            <li>
+                                <input type="text" autocomplete="off" id="ID-laydate-start-date-1" class="layui-input" placeholder="" style="height: 35px;margin-top: 5px;" value="2026-09-19 ~ 2026-09-19">
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="layui-card-body">
+                        <div class="layui-row layui-col-space10" style="margin:0px 0px;font-size:14px">
+                            <div class="layui-col-xs4 layui-col-md1 layui-col-sm3">
+                                <div class="layui-panel">
+                                    <div style="padding:15px;">
+                                        <span>录单笔数</span><br />
+                                        <span class="reportPanTitle pan1">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs4 layui-col-md1 layui-col-sm3">
+                                <div class="layui-panel">
+                                    <div style="padding:15px;">
+                                        <span>订单总额</span><br />
+                                        <span class="reportPanTitle pan2">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs4 layui-col-md1 layui-col-sm3">
+                                <div class="layui-panel">
+                                    <div style="padding:15px;">
+                                        <span>发单总额</span><br />
+                                        <span class="reportPanTitle pan3">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs4 layui-col-md1 layui-col-sm3">
+                                <div class="layui-panel">
+                                    <div style="padding:15px;" title="该数值已排除已退单的(状态为已退单)">
+                                        <span>预计利润</span><br />
+                                        <span class="reportPanTitle pan4">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs4 layui-col-md1 layui-col-sm3">
+                                <div class="layui-panel">
+                                    <div style="padding:15px;" title="该数值已排除已退单的(状态为已退单)">
+                                        <span>利润率</span><br />
+                                        <span class="reportPanTitle pan5">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs4 layui-col-md1 layui-col-sm3">
+                                <div class="layui-panel">
+                                    <div style="padding:15px;">
+                                        <span>接手数量</span><br />
+                                        <span class="reportPanTitle pan6">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs4 layui-col-md1 layui-col-sm3">
+                                <div class="layui-panel">
+                                    <div style="padding:15px;">
+                                        <span>接手率</span><br />
+                                        <span class="reportPanTitle pan7">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs4 layui-col-md1 layui-col-sm3">
+                                <div class="layui-panel">
+                                    <div style="padding:15px;">
+                                        <span>撤销数量</span><br />
+                                        <span class="reportPanTitle pan8">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs4 layui-col-md1 layui-col-sm3">
+                                <div class="layui-panel">
+                                    <div style="padding:15px;">
+                                        <span>撤销率</span><br />
+                                        <span class="reportPanTitle pan9">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs4 layui-col-md1 layui-col-sm3">
+                                <div class="layui-panel">
+                                    <div style="padding:15px;">
+                                        <span>退单数量</span><br />
+                                        <span class="reportPanTitle pan10">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs4 layui-col-md1 layui-col-sm3">
+                                <div class="layui-panel">
+                                    <div style="padding:15px;">
+                                        <span>完成数量</span><br />
+                                        <span class="reportPanTitle pan12">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs4 layui-col-md1 layui-col-sm3">
+                                <div class="layui-panel">
+                                    <div style="padding:15px;">
+                                        <span>完成率</span><br />
+                                        <span class="reportPanTitle pan13">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        <text>发单概览</text>
+                        <ul class="rep-title-rigth">
+                            <li><a href="javascript:void(0)" title="以发单时间为准" class="layui-btn layui-btn-sm layui-btn-primary layui-border-blue yesterday2">昨天</a></li>
+                            <li><a href="javascript:void(0)" title="以发单时间为准" class="layui-btn layui-btn-sm layui-btn-primary today2">今天</a></li>
+                            <li><a href="javascript:void(0)" title="以发单时间为准" class="layui-btn layui-btn-sm layui-btn-primary last7days2">最近7天</a></li>
+                            <li><a href="javascript:void(0)" title="以发单时间为准" class="layui-btn layui-btn-sm layui-btn-primary last30days2">最近30天</a></li>
+                            <li>
+                                <input type="text" autocomplete="off" id="ID-laydate-start-date-2" class="layui-input" placeholder="" style="height: 35px;margin-top: 5px;" value="2026-09-19 ~ 2026-09-19">
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="layui-card-body">
+                        <div class="layui-row layui-col-space20 pushorderdatadiv" style="margin:0px 0px;font-size:14px">
+                            <div class="layui-col-xs4 layui-col-md1 layui-col-sm3">
+                                <div class="layui-panel">
+                                    <div style="padding:15px;">
+                                        <span>全部发单量</span><br />
+                                        <span class="reportPanTitle pushOrderAllSpan">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs4 layui-col-md1 layui-col-sm3">
+                                <div class="layui-panel">
+                                    <div style="padding:15px;">
+                                        <span>内部接单</span><br />
+                                        <span class="reportPanTitle pushOrderInternalSpan">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-card">
+                    <div class="layui-card-header">今日订单分时数据概览</div>
+                    <div class="layui-card-body">
+                        <div id="Operation" style="width: 100%;height:300px;"></div>
+                    </div>
+                </div>
+
+                <div class="layui-hide" id="qrcodeBox">
+                    <div class="qrcode" id="qrcode">
+                        <img src="https://oss4.jidanpu.com/images/www2025/shouqiankefu.jpg" alt="" height="320" width="320">
+                    </div>
+                </div>
+                <div class="layui-hide" id="jidanpuqrcodeBox">
+                    <div class="qrcode" id="">
+                        <img src="https://oss4.jidanpu.com/images/jidanpuWeChat.jpg" alt="" height="258" width="258">
+                    </div>
+                </div>
+                <div class="layui-hide" id="jidanpuappqrcodeBox">
+                    <div class="qrcode" id="">
+                        <img src="https://oss4.jidanpu.com/images/%E9%B8%A1%E8%9B%8B%E9%93%BA%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%A0%81.jpg" alt="" height="258" width="258">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+</div>
+
+
+
+<input type="hidden" id="isAdmin" name="isAdmin" value="20" />
+<input type="hidden" id="companyName" name="companyName" value="—" />
+<input type="hidden" id="myAlipayAcc" name="myAlipayAcc" value="" />
+<input type="hidden" id="myAlipayName" name="myAlipayName" value="" />
+<input type="hidden" id="isRnameCert" name="isRnameCert" value="N" />
+<input type="hidden" id="certSwicth" name="certSwicth" />
+<input type="hidden" id="settlementModel" name="settlementModel" value="1" />
+
+
+
+
+
+

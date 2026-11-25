@@ -1,0 +1,1459 @@
+{
+ "meta": {
+  "source": "tenant-frontend-js",
+  "note": "从租户前端 JS 精确提取的写接口参数名（只存参数名，不存值）",
+  "count": 201,
+  "extracted_from": "58 个页面 + 63 个 JS"
+ },
+ "endpoints": {
+  "/CommonPermissionAjax/DelSingleImg": {
+   "params": [
+    "imgpath"
+   ],
+   "referer": "/System/wechatappmange"
+  },
+  "/CustomerAjax/DelBack": {
+   "params": [
+    "ids"
+   ],
+   "referer": "/Customer/backlist"
+  },
+  "/EmpAjax/AddBindAlipaySettAuthData": {
+   "params": [
+    "alipayAcc",
+    "alipayAccName",
+    "remark",
+    "channel"
+   ],
+   "referer": "/Emp/bindalipaysettauth"
+  },
+  "/EmpAjax/AddEditQATypeName": {
+   "params": [
+    "id",
+    "value",
+    "type"
+   ],
+   "referer": "/Emp/qacenter"
+  },
+  "/EmpAjax/ApplicationEmp": {
+   "params": [
+    "empId"
+   ],
+   "referer": "/Emp/myemp"
+  },
+  "/EmpAjax/ChangeEmpRemark": {
+   "params": [
+    "idx",
+    "remark"
+   ],
+   "referer": "/Emp/emplist"
+  },
+  "/EmpAjax/ChangeOrderRecPrice": {
+   "params": [
+    "empId",
+    "fee",
+    "type"
+   ],
+   "referer": "/Emp/emplist"
+  },
+  "/EmpAjax/ChangePrivatePhoneCallLogRemark": {
+   "params": [
+    "ids",
+    "remark"
+   ],
+   "referer": "/Emp/privatephonecalllog"
+  },
+  "/EmpAjax/DelBook": {
+   "params": [
+    "bookId"
+   ],
+   "referer": "/Emp/booklist"
+  },
+  "/EmpAjax/DelEmp": {
+   "params": [
+    "empId"
+   ],
+   "referer": "/Emp/emplist"
+  },
+  "/EmpAjax/DelLearmInformation": {
+   "params": [
+    "ids"
+   ],
+   "referer": "/Emp/learminformationlist"
+  },
+  "/EmpAjax/DeleteBindAlipaySettAuth": {
+   "params": [
+    "bid",
+    "channel"
+   ],
+   "referer": "/Emp/bindalipaysettauth"
+  },
+  "/EmpAjax/ModityBindAlipaySettAuthRemarkResetAuth": {
+   "params": [
+    "bid",
+    "modityType",
+    "channel"
+   ],
+   "referer": "/Emp/bindalipaysettauth"
+  },
+  "/EmpAjax/OnlinePaySetRec": {
+   "params": [
+    "ids",
+    "payMode",
+    "authId"
+   ],
+   "referer": "/Emp/emplist"
+  },
+  "/EmpAjax/OnlinePaySetRecGetFailResult": {
+   "params": [
+    "bizId",
+    "payMode"
+   ],
+   "referer": "/Emp/emplist"
+  },
+  "/EmpAjax/SynchEmpOrderToMySystem": {
+   "params": [
+    "empIdx"
+   ],
+   "referer": "/Emp/myemp"
+  },
+  "/GameAccountsAjax/AddEditGameAccount": {
+   "params": [
+    "param",
+    "gameName",
+    "gameArea",
+    "gameServer",
+    "gameJob",
+    "gameGroup"
+   ],
+   "referer": "/GameAccounts/addeditaccount"
+  },
+  "/GameAccountsAjax/ChangeAccRemark": {
+   "params": [
+    "gameAccId",
+    "remark"
+   ],
+   "referer": "/GameAccounts/accountlist"
+  },
+  "/GameAccountsAjax/ChangeGameAccountJiWei": {
+   "params": [
+    "idx",
+    "remark"
+   ],
+   "referer": "/GameAccounts/accountlist"
+  },
+  "/GameAccountsAjax/ChangeGameAccountPrice": {
+   "params": [
+    "idx",
+    "changeType",
+    "fee"
+   ],
+   "referer": "/GameAccounts/accountlist"
+  },
+  "/GameAccountsAjax/ChangeGameAccountProStatus": {
+   "params": [
+    "idx",
+    "status",
+    "remark"
+   ],
+   "referer": "/GameAccounts/accountlist"
+  },
+  "/GameAccountsAjax/ChangeGameAccountUseStatus": {
+   "params": [
+    "idx",
+    "status",
+    "ftime"
+   ],
+   "referer": "/GameAccounts/accountlist"
+  },
+  "/GameAccountsAjax/ChangeGameAccountUseType": {
+   "params": [
+    "idx",
+    "useType"
+   ],
+   "referer": "/GameAccounts/accountlist"
+  },
+  "/GameAccountsAjax/DelGameAccountByIDX": {
+   "params": [
+    "gameAccId"
+   ],
+   "referer": "/GameAccounts/accountlist"
+  },
+  "/GameAccountsAjax/DisAddGameAccountContent": {
+   "params": [
+    "value",
+    "gameName"
+   ],
+   "referer": "/GameAccounts/addeditaccount"
+  },
+  "/GameAccountsAjax/ImputGameAccByExecl": {
+   "params": [
+    "gameName",
+    "option",
+    "formats",
+    "gtype"
+   ],
+   "referer": "/GameAccounts/importacc"
+  },
+  "/GameAccountsAjax/SellAccAction": {
+   "params": [
+    "gid",
+    "sellPrice",
+    "sellChoee",
+    "tradeNo",
+    "changeBindPhone"
+   ],
+   "referer": "/GameAccounts/accountlist"
+  },
+  "/GameAjax/AddEditGame": {
+   "params": [
+    "gameId",
+    "gameName"
+   ],
+   "referer": "/Game/gameserver"
+  },
+  "/GameAjax/AddEditProject": {
+   "params": [
+    "gameId",
+    "pid",
+    "projectName",
+    "orderBy"
+   ],
+   "referer": "/Game/projectsetting"
+  },
+  "/GameAjax/AddModityOrderType": {
+   "params": [
+    "gameId",
+    "pid",
+    "projectName",
+    "orderBy",
+    "before",
+    "after",
+    "platidx"
+   ],
+   "referer": "/Game/OrderTypsSetting"
+  },
+  "/GameAjax/ChangeGameSendSmsSwitch": {
+   "params": [
+    "gameId"
+   ],
+   "referer": "/Game/gameserver"
+  },
+  "/GameAjax/DelGame": {
+   "params": [
+    "gameId"
+   ],
+   "referer": "/Game/gameserver"
+  },
+  "/GameAjax/DelGameItem": {
+   "params": [
+    "itemId"
+   ],
+   "referer": "/Game/gameitemlist"
+  },
+  "/GameAjax/DelOrderType": {
+   "params": [
+    "pid"
+   ],
+   "referer": "/Game/OrderTypsSetting"
+  },
+  "/GameAjax/DelProject": {
+   "params": [
+    "pid"
+   ],
+   "referer": "/Game/projectsetting"
+  },
+  "/GameAjax/SetGameIsMoblieGame": {
+   "params": [
+    "gameId"
+   ],
+   "referer": "/Game/gameserver"
+  },
+  "/GameAjax/UpdateGameOrderNum": {
+   "params": [
+    "gameId"
+   ],
+   "referer": "/Game/gameserver"
+  },
+  "/OrderAjax/AddOrderAjax": {
+   "params": [
+    "strParameter",
+    "gameName",
+    "gameArea",
+    "gameServer",
+    "gameJob",
+    "gameGroup",
+    "emps"
+   ],
+   "referer": "/Order/addorder"
+  },
+  "/OrderAjax/AddOrderAutoDisKeys": {
+   "params": [
+    "content",
+    "gameName"
+   ],
+   "referer": "/Order/addorder"
+  },
+  "/OrderAjax/AddOrderRefundLogs": {
+   "params": [
+    "orderIdx",
+    "refundModel",
+    "fee",
+    "sdate",
+    "tranNo",
+    "remark",
+    "changeOrderStatus"
+   ],
+   "referer": "/Order/orderlist"
+  },
+  "/OrderAjax/AppendTransctionOrderPrice": {
+   "params": [
+    "tid",
+    "fee",
+    "platfromId"
+   ],
+   "referer": "/Order/CoreOrderCenter"
+  },
+  "/OrderAjax/ChangeOrderGameRoleNameByOrderId": {
+   "params": [
+    "orderId",
+    "newRoleName"
+   ],
+   "referer": "/Order/orderlist"
+  },
+  "/OrderAjax/ChangeOrderLock": {
+   "params": [
+    "orderId",
+    "value"
+   ],
+   "referer": "/Order/orderlist"
+  },
+  "/OrderAjax/ChangeOrderNetReceiptsPrice": {
+   "params": [
+    "orderId",
+    "fee"
+   ],
+   "referer": "/Order/orderlist"
+  },
+  "/OrderAjax/ChangeOrderPrice": {
+   "params": [
+    "orderId",
+    "fee"
+   ],
+   "referer": "/Order/orderlist"
+  },
+  "/OrderAjax/ChangeOrderProject": {
+   "params": [
+    "orderId",
+    "newProject"
+   ],
+   "referer": "/Order/orderlist"
+  },
+  "/OrderAjax/ChangeOrderRemark": {
+   "params": [
+    "orderId",
+    "remark"
+   ],
+   "referer": "/Order/orderlist"
+  },
+  "/OrderAjax/ChangeOrderShphone": {
+   "params": [
+    "idx",
+    "sphone"
+   ],
+   "referer": "/Order/orderlist"
+  },
+  "/OrderAjax/ChangeOrderSoureId": {
+   "params": [
+    "orderId",
+    "value"
+   ],
+   "referer": "/Order/orderlist"
+  },
+  "/OrderAjax/ChangeTransctionOrderArbitration": {
+   "params": [
+    "tid",
+    "value",
+    "msgContent"
+   ],
+   "referer": "/Order/CoreOrderCenter"
+  },
+  "/OrderAjax/ChangeTransctionOrderLock": {
+   "params": [
+    "tid",
+    "value",
+    "platfromId"
+   ],
+   "referer": "/Order/orderlist"
+  },
+  "/OrderAjax/ChangeTransctionOrderRevoke": {
+   "params": [
+    "tid",
+    "value",
+    "payAmount",
+    "pcAmount",
+    "remark",
+    "platfromId"
+   ],
+   "referer": "/Order/orderlist"
+  },
+  "/OrderAjax/ClearOrderToGroupManger": {
+   "params": [
+    "orderIdx"
+   ],
+   "referer": "/Order/orderlist"
+  },
+  "/OrderAjax/ConfigmTransctionOrder": {
+   "params": [
+    "tid"
+   ],
+   "referer": "/Order/CoreOrderCenter"
+  },
+  "/OrderAjax/CopyOrderLog": {
+   "params": [
+    "orderId"
+   ],
+   "referer": "/Order/myorderlist"
+  },
+  "/OrderAjax/CopyOrderToNewOrder": {
+   "params": [
+    "orderId"
+   ],
+   "referer": "/Order/orderlist"
+  },
+  "/OrderAjax/DelOrderByIDX": {
+   "params": [
+    "orderID",
+    "isDelEmp"
+   ],
+   "referer": "/Order/orderlist"
+  },
+  "/OrderAjax/DisMissRecPlayerChat": {
+   "params": [
+    "ids"
+   ],
+   "referer": "/Order/RecCustomerChatLog"
+  },
+  "/OrderAjax/EditTransctionOrderPrice": {
+   "params": [
+    "orderId",
+    "tid",
+    "fee",
+    "platfromId"
+   ],
+   "referer": "/Order/orderlist"
+  },
+  "/OrderAjax/ImputAddOrderByFile": {
+   "params": [
+    "gameName",
+    "fileSoure",
+    "throwAction",
+    "filterRepeat"
+   ],
+   "referer": "/Order/addorder"
+  },
+  "/OrderAjax/RecOrderByInternal": {
+   "params": [
+    "orderId",
+    "__RequestVerificationToken"
+   ],
+   "referer": "/Order/insiderecorderlist"
+  },
+  "/OrderAjax/RefOrderRecycle": {
+   "params": [
+    "orderId"
+   ],
+   "referer": "/Order/orderrecycle"
+  },
+  "/OrderAjax/RelesOrderAndTaskByOrderID": {
+   "params": [
+    "orderId"
+   ],
+   "referer": "/Order/orderlist"
+  },
+  "/OrderAjax/RelesOrderToHomeByOrderID": {
+   "params": [
+    "orderId"
+   ],
+   "referer": "/Order/orderlist"
+  },
+  "/OrderAjax/SaveOrderToGroupManger": {
+   "params": [
+    "orderIdx",
+    "uid",
+    "fee",
+    "changeOrderStatus"
+   ],
+   "referer": "/Order/orderlist"
+  },
+  "/OrderAjax/SaveRecPlayerChatMsgFilterKey": {
+   "params": [
+    "key"
+   ],
+   "referer": "/Order/RecCustomerChatLog"
+  },
+  "/OrderAjax/SendAginByTxt": {
+   "params": [
+    "source"
+   ],
+   "referer": "/Order/tbsendrecordlist"
+  },
+  "/OrderAjax/SendOrderToMySystem": {
+   "params": [
+    "orderId"
+   ],
+   "referer": "/Order/myorderlist"
+  },
+  "/OrderAjax/SetOrderJiWei": {
+   "params": [
+    "orderId",
+    "jiwei"
+   ],
+   "referer": "/Order/myorderlist"
+  },
+  "/OrderAjax/SetOrderSta": {
+   "params": [
+    "orderId",
+    "sta",
+    "changeSoureType",
+    "remark",
+    "isSyncTaoBao"
+   ],
+   "referer": "/Order/myorderlist"
+  },
+  "/OrderAjax/SynchTransctionOrderStatus": {
+   "params": [
+    "tid"
+   ],
+   "referer": "/Order/CoreOrderCenter"
+  },
+  "/OrderAjax/UpSettlementOrderByIDX": {
+   "params": [
+    "orderId",
+    "sta"
+   ],
+   "referer": "/Order/orderlist"
+  },
+  "/OrderAjax/UpdateDLOrderRevPriceByOrderID": {
+   "params": [
+    "orderId",
+    "fee",
+    "action",
+    "insureFee",
+    "pushPriceMode"
+   ],
+   "referer": "/Order/orderlist"
+  },
+  "/OrderAjax/UpdateOrderLabel": {
+   "params": [
+    "ids",
+    "label"
+   ],
+   "referer": "/Order/orderlist"
+  },
+  "/OrderAjax/changeOrderJiaji": {
+   "params": [
+    "orderID"
+   ],
+   "referer": "/Order/myorderlist"
+  },
+  "/OrderAjax/upOrderTips": {
+   "params": [
+    "orderId",
+    "content"
+   ],
+   "referer": "/Order/orderlist"
+  },
+  "/PveTaskAjax/AddEditPveTask": {
+   "params": [
+    "param",
+    "jobConfig",
+    "isConfigJob"
+   ],
+   "referer": "/Group/addeditgroup"
+  },
+  "/PveTaskAjax/ChangeGroupPostionOrderBy": {
+   "params": [
+    "ctype",
+    "id",
+    "value"
+   ],
+   "referer": "/Group/grouplist2020"
+  },
+  "/PveTaskAjax/ChangeTaskMainInfo": {
+   "params": [
+    "taskId",
+    "taskName",
+    "groupName",
+    "startDate",
+    "remark",
+    "project",
+    "gameServer",
+    "taskMangeUid"
+   ],
+   "referer": "/Group/grouplist2020"
+  },
+  "/PveTaskAjax/ChangeTaskNeedJobRecUser": {
+   "params": [
+    "pid",
+    "userId"
+   ],
+   "referer": "/Group/grouplist2020"
+  },
+  "/PveTaskAjax/ChangeTaskOrderBy": {
+   "params": [
+    "taskId",
+    "value"
+   ],
+   "referer": "/Group/grouplist"
+  },
+  "/PveTaskAjax/ChangeTaskStrartTime": {
+   "params": [
+    "taskId",
+    "stime"
+   ],
+   "referer": "/Group/grouplist"
+  },
+  "/PveTaskAjax/CopyToNewGroup": {
+   "params": [
+    "taskId",
+    "taskName",
+    "groupName",
+    "startDate",
+    "remark",
+    "project",
+    "gameServer"
+   ],
+   "referer": "/Group/grouplist2020"
+  },
+  "/PveTaskAjax/DelGroupAccByTaskIDAccId": {
+   "params": [
+    "taskId",
+    "accId"
+   ],
+   "referer": "/Group/grouplist2020"
+  },
+  "/PveTaskAjax/DelGroupNeedJobByPid": {
+   "params": [
+    "pid"
+   ],
+   "referer": "/Group/grouplist2020"
+  },
+  "/PveTaskAjax/DelPveTask": {
+   "params": [
+    "taskId"
+   ],
+   "referer": "/Group/grouplist"
+  },
+  "/PveTaskAjax/DelTaskNeedJobTemplateByTid": {
+   "params": [
+    "tid"
+   ],
+   "referer": "/Group/addeditgroup"
+  },
+  "/PveTaskAjax/EditPveTeamPostionAmount": {
+   "params": [
+    "taskId",
+    "amount"
+   ],
+   "referer": "/Group/grouplist"
+  },
+  "/PveTaskAjax/EditPveTeamProject": {
+   "params": [
+    "taskId",
+    "project"
+   ],
+   "referer": "/Group/grouplist"
+  },
+  "/PveTaskAjax/PublicNeedJobPostionCancel": {
+   "params": [
+    "taskId"
+   ],
+   "referer": "/Group/grouplist2020"
+  },
+  "/PveTaskAjax/SaveGroupLevelImg": {
+   "params": [
+    "value"
+   ],
+   "referer": "/Group/grouplist"
+  },
+  "/PveTaskAjax/SaveTaskNeedJobTemplate": {
+   "params": [
+    "title",
+    "param",
+    "tid"
+   ],
+   "referer": "/Group/addeditgroup"
+  },
+  "/PveTaskAjax/SetJobNeedItemLevel": {
+   "params": [
+    "pid",
+    "value",
+    "action"
+   ],
+   "referer": "/Group/grouplist2020"
+  },
+  "/PveTaskAjax/SetPveAccGroup": {
+   "params": [
+    "taskId",
+    "accId",
+    "groupName",
+    "pid"
+   ],
+   "referer": "/Group/grouplist2020"
+  },
+  "/PveTaskAjax/SetTaskAddPostionOrder": {
+   "params": [
+    "currentTaskId",
+    "oid"
+   ],
+   "referer": "/Group/grouplist2020"
+  },
+  "/PveTaskAjax/SetTaskColorValue": {
+   "params": [
+    "taskId",
+    "color"
+   ],
+   "referer": "/Group/grouplist2020"
+  },
+  "/PveTaskAjax/SetTaskPostionMutual": {
+   "params": [
+    "cTaskId",
+    "cpid",
+    "cAccLogId",
+    "toTaskId",
+    "toPid",
+    "toAccLogId",
+    "action"
+   ],
+   "referer": "/Group/grouplist2020"
+  },
+  "/PveTaskAjax/SetTaskPostionOrder": {
+   "params": [
+    "taskId",
+    "pid",
+    "orderId",
+    "throwFee",
+    "oid"
+   ],
+   "referer": "/Group/grouplist2020"
+  },
+  "/PveTaskAjax/SetTaskReplacePostionOrder": {
+   "params": [
+    "oid",
+    "accLogId",
+    "oldTaskId"
+   ],
+   "referer": "/Group/grouplist2020"
+  },
+  "/PveTaskAjax/StartAutoMatchGroup": {
+   "params": [
+    "taskId",
+    "gameServer",
+    "project",
+    "gameGroup",
+    "date",
+    "matchTfMode",
+    "matchSameTips",
+    "matchOrderStatus",
+    "matchAss",
+    "tid",
+    "zacc"
+   ],
+   "referer": "/Group/grouplist2020"
+  },
+  "/PveTaskAjax/UpPveTaskSta": {
+   "params": [
+    "taskId",
+    "sta"
+   ],
+   "referer": "/Group/grouplist"
+  },
+  "/SmsAjax/AddSmsTemplate": {
+   "params": [
+    "smsType",
+    "content"
+   ],
+   "referer": "/Sms/smstemplatelist"
+  },
+  "/SmsAjax/SaveModitySmsApplyAllGame": {
+   "params": [
+    "id"
+   ],
+   "referer": "/System/smssetting"
+  },
+  "/SmsAjax/SaveModitySmsContent": {
+   "params": [
+    "id",
+    "content",
+    "asnyTbSms"
+   ],
+   "referer": "/System/smssetting"
+  },
+  "/SmsAjax/SaveModitySmsSwictht": {
+   "params": [
+    "id"
+   ],
+   "referer": "/System/smssetting"
+  },
+  "/SystemAjax/AddEdiSoure": {
+   "params": [
+    "soureId",
+    "soureName",
+    "remark",
+    "orderBy",
+    "shopType"
+   ],
+   "referer": "/System/sourelist"
+  },
+  "/SystemAjax/AddModityOrderLabel": {
+   "params": [
+    "id",
+    "gameName",
+    "labelName",
+    "remark",
+    "orderBy",
+    "colorValue"
+   ],
+   "referer": "/System/OrderLabelList"
+  },
+  "/SystemAjax/BatchEditReplyContent": {
+   "params": [
+    "ids",
+    "content"
+   ],
+   "referer": "/System/PlatformAutoReply"
+  },
+  "/SystemAjax/ChangePublicSeachOrderQuestionHot": {
+   "params": [
+    "qid",
+    "value"
+   ],
+   "referer": "/System/systemsetting"
+  },
+  "/SystemAjax/ChangePublicSeachOrderQuestionSta": {
+   "params": [
+    "qid"
+   ],
+   "referer": "/System/systemsetting"
+  },
+  "/SystemAjax/ChangeSoureDoNotSendSms": {
+   "params": [
+    "id"
+   ],
+   "referer": "/System/sourelist"
+  },
+  "/SystemAjax/ChangeWehcatAppShopItemIsNeedGroup": {
+   "params": [
+    "shopId"
+   ],
+   "referer": "/System/wechatappmange"
+  },
+  "/SystemAjax/ClearPlatformPushOrderConfig": {
+   "params": [
+    "id"
+   ],
+   "referer": "/System/PlatformPushOrderConfig"
+  },
+  "/SystemAjax/DelAutomaticAdJustPriceSet": {
+   "params": [
+    "id"
+   ],
+   "referer": "/System/AutomaticAdJustPriceSet"
+  },
+  "/SystemAjax/DelAwardByIds": {
+   "params": [
+    "id"
+   ],
+   "referer": "/System/wechatappmange"
+  },
+  "/SystemAjax/DelOrderLabel": {
+   "params": [
+    "id"
+   ],
+   "referer": "/System/OrderLabelList"
+  },
+  "/SystemAjax/DelPlatformAutoReplySet": {
+   "params": [
+    "id"
+   ],
+   "referer": "/System/PlatformAutoReply"
+  },
+  "/SystemAjax/DelPublicNewsByIds": {
+   "params": [
+    "ids"
+   ],
+   "referer": "/System/wechatappmange"
+  },
+  "/SystemAjax/DelPublicSeachOrderQuestion": {
+   "params": [
+    "qid"
+   ],
+   "referer": "/System/systemsetting"
+  },
+  "/SystemAjax/DelPushOrderGroupMsg": {
+   "params": [
+    "id"
+   ],
+   "referer": "/System/OrderPushGroupMsgSet"
+  },
+  "/SystemAjax/DelRole": {
+   "params": [
+    "roleId"
+   ],
+   "referer": "/System/roleauthority"
+  },
+  "/SystemAjax/DelShopItem": {
+   "params": [
+    "id"
+   ],
+   "referer": "/System/wechatappmange"
+  },
+  "/SystemAjax/DelSoure": {
+   "params": [
+    "soureId"
+   ],
+   "referer": "/System/sourelist"
+  },
+  "/SystemAjax/DelSystemNotice": {
+   "params": [
+    "id"
+   ],
+   "referer": "/System/systemnotice"
+  },
+  "/SystemAjax/DelTaobaoInterface": {
+   "params": [
+    "id"
+   ],
+   "referer": "/System/taobaoshipsetting"
+  },
+  "/SystemAjax/DelTransfromInterface": {
+   "params": [
+    "id"
+   ],
+   "referer": "/System/tripartiteplatformsetting"
+  },
+  "/SystemAjax/DelWechatAppShopItemTypeName": {
+   "params": [
+    "typeName"
+   ],
+   "referer": "/System/wechatappmange"
+  },
+  "/SystemAjax/DeldelIntegralItem": {
+   "params": [
+    "id"
+   ],
+   "referer": "/System/wechatappmange"
+  },
+  "/SystemAjax/DeliverAward": {
+   "params": [
+    "id"
+   ],
+   "referer": "/System/wechatappmange"
+  },
+  "/SystemAjax/EditAutoDiscernSet": {
+   "params": [
+    "disId",
+    "key"
+   ],
+   "referer": "/System/autodiscernset"
+  },
+  "/SystemAjax/EditWechatAppShopItemTypeName": {
+   "params": [
+    "yname",
+    "newname"
+   ],
+   "referer": "/System/wechatappmange"
+  },
+  "/SystemAjax/ModifyOnlineConsultationSet": {
+   "params": [
+    "strparameter"
+   ],
+   "referer": "/System/OnlineConsultationSet"
+  },
+  "/SystemAjax/ModifyPlatformAutoReplySetStatus": {
+   "params": [
+    "id"
+   ],
+   "referer": "/System/PlatformAutoReply"
+  },
+  "/SystemAjax/ModifyPlatformPayPassWord": {
+   "params": [
+    "id",
+    "pwd"
+   ],
+   "referer": "/System/tripartiteplatformsetting"
+  },
+  "/SystemAjax/ModifySoureSmsSign": {
+   "params": [
+    "id",
+    "smsSign"
+   ],
+   "referer": "/System/sourelist"
+  },
+  "/SystemAjax/ModifyTransfromInterfaceHelperSwitch": {
+   "params": [
+    "id",
+    "modifyType"
+   ],
+   "referer": "/System/tripartiteplatformsetting"
+  },
+  "/SystemAjax/ModityPushOrderGroupMsgStatus": {
+   "params": [
+    "id"
+   ],
+   "referer": "/System/OrderPushGroupMsgSet"
+  },
+  "/SystemAjax/PddShipSetting": {
+   "params": [
+    "param"
+   ],
+   "referer": "/System/PlatformAutoReply"
+  },
+  "/SystemAjax/QSendSms": {
+   "params": [
+    "gameName",
+    "orderSta",
+    "customerServiceUserName",
+    "orderSoure",
+    "stime",
+    "etime",
+    "key1",
+    "key2",
+    "key3",
+    "smsContent",
+    "soure"
+   ],
+   "referer": "/Sms/smsbulkhair"
+  },
+  "/SystemAjax/SaveAward": {
+   "params": [
+    "id",
+    "title",
+    "atype",
+    "cid",
+    "range",
+    "prizeimg",
+    "prizeValue",
+    "awardunit",
+    "stockNumber"
+   ],
+   "referer": "/System/wechatappmange"
+  },
+  "/SystemAjax/SaveAwardSetting": {
+   "params": [
+    "awardStatus",
+    "awardamount",
+    "awardcount",
+    "awardWay",
+    "awardunit"
+   ],
+   "referer": "/System/wechatappmange"
+  },
+  "/SystemAjax/SaveBindHomeSystemVer": {
+   "params": [
+    "company",
+    "homeHost",
+    "homeAcc",
+    "homePwd"
+   ],
+   "referer": "/System/homesystemsetting"
+  },
+  "/SystemAjax/SaveIntegralCommodity": {
+   "params": [
+    "param",
+    "contentTxt"
+   ],
+   "referer": "/System/wechatappmange"
+  },
+  "/SystemAjax/SaveIntegralExChangeItem": {
+   "params": [
+    "param",
+    "eid"
+   ],
+   "referer": "/System/wechatappmange"
+  },
+  "/SystemAjax/SaveOrderExportPwd": {
+   "params": [
+    "orginpwd",
+    "newpwd"
+   ],
+   "referer": "/System/systemsetting"
+  },
+  "/SystemAjax/SavePrivacyPhoneServiceSetting": {
+   "params": [
+    "privacyPhoneServiceSwicth"
+   ],
+   "referer": "/System/customerphoneprivatesetting"
+  },
+  "/SystemAjax/SavePublicNew": {
+   "params": [
+    "title",
+    "imgUrl",
+    "conetnt",
+    "contentTxt",
+    "id",
+    "newsType"
+   ],
+   "referer": "/System/wechatappmange"
+  },
+  "/SystemAjax/SavePublicSeachOrderQuestion": {
+   "params": [
+    "qid",
+    "title",
+    "content"
+   ],
+   "referer": "/System/systemsetting"
+  },
+  "/SystemAjax/SaveShopItem": {
+   "params": [
+    "param",
+    "contentTxt"
+   ],
+   "referer": "/System/wechatappmange"
+  },
+  "/SystemAjax/SaveSystemNotice": {
+   "params": [
+    "id",
+    "content"
+   ],
+   "referer": "/System/systemnotice"
+  },
+  "/SystemAjax/SaveTripartitlePlatForm": {
+   "params": [
+    "param"
+   ],
+   "referer": "/System/tripartiteplatformsetting"
+  },
+  "/SystemAjax/SaveVerifiAddOrderKeyStr": {
+   "params": [
+    "id",
+    "key",
+    "resultStr"
+   ],
+   "referer": "/System/verifiaddorderkey"
+  },
+  "/SystemAjax/SmsSetting": {
+   "params": [
+    "param"
+   ],
+   "referer": "/System/smssetting"
+  },
+  "/SystemAjax/SystemOrderSetting": {
+   "params": [
+    "param"
+   ],
+   "referer": "/System/systemsetting"
+  },
+  "/SystemAjax/TaobaoShipSetting": {
+   "params": [
+    "param"
+   ],
+   "referer": "/System/taobaoshipsetting"
+  },
+  "/SystemAjax/UnBindHomeSystem": {
+   "params": [
+    "sid"
+   ],
+   "referer": "/System/homesystemsetting"
+  },
+  "/SystemAjax/UpDownIntegralItem": {
+   "params": [
+    "id",
+    "type"
+   ],
+   "referer": "/System/wechatappmange"
+  },
+  "/SystemAjax/UpDownShopItem": {
+   "params": [
+    "id",
+    "type"
+   ],
+   "referer": "/System/wechatappmange"
+  },
+  "/SystemAjax/UpdateAutomaticAdJustPriceSetStatus": {
+   "params": [
+    "id"
+   ],
+   "referer": "/System/AutomaticAdJustPriceSet"
+  },
+  "/SystemAjax/WeChatChangeBind": {
+   "params": [
+    "wechatId",
+    "moblie"
+   ],
+   "referer": "/System/wechartsetting"
+  },
+  "/SystemAjax/WeChatSetting": {
+   "params": [
+    "param"
+   ],
+   "referer": "/System/wechartsetting"
+  },
+  "/SystemAjax/WeChatUnBind": {
+   "params": [
+    "wechatId"
+   ],
+   "referer": "/System/wechartsetting"
+  },
+  "/UserAjax/AddEditUser": {
+   "params": [
+    "strparameter",
+    "games"
+   ],
+   "referer": "/User/adduser"
+  },
+  "/UserAjax/AddModiftySystemUserBackList": {
+   "params": [
+    "bid",
+    "moblie",
+    "wechat",
+    "qq",
+    "remark",
+    "rname",
+    "yy",
+    "alipayacc",
+    "cid"
+   ],
+   "referer": "/User/userlist"
+  },
+  "/UserAjax/AddUserLoginRestrictByIP": {
+   "params": [
+    "id",
+    "ip"
+   ],
+   "referer": "/User/userloginrestrict"
+  },
+  "/UserAjax/ChangeProhibitedViewOrderPhone": {
+   "params": [
+    "uid",
+    "sta"
+   ],
+   "referer": "/User/userlist"
+  },
+  "/UserAjax/ChangeProhibitedViewOrderPwd": {
+   "params": [
+    "uid",
+    "sta"
+   ],
+   "referer": "/User/userlist"
+  },
+  "/UserAjax/ChangeUserBalance": {
+   "params": [
+    "uid",
+    "amount"
+   ],
+   "referer": "/User/userlist"
+  },
+  "/UserAjax/ChangeUserEnsureAmount": {
+   "params": [
+    "uid",
+    "value"
+   ],
+   "referer": "/User/userlist"
+  },
+  "/UserAjax/ChangeUserIsAutoSett": {
+   "params": [
+    "uid"
+   ],
+   "referer": "/User/userlist"
+  },
+  "/UserAjax/ChangeUserOrderBy": {
+   "params": [
+    "uid",
+    "by"
+   ],
+   "referer": "/User/userlist"
+  },
+  "/UserAjax/CheckAddUserIsContainsBlack": {
+   "params": [
+    "acc",
+    "phone",
+    "qq",
+    "wx",
+    "rname"
+   ],
+   "referer": "/User/adduser"
+  },
+  "/UserAjax/DelSystemUserBackListByID": {
+   "params": [
+    "ids"
+   ],
+   "referer": "/User/BackUserList"
+  },
+  "/UserAjax/DelUser": {
+   "params": [
+    "uid"
+   ],
+   "referer": "/User/userlist"
+  },
+  "/UserAjax/DelUserLoginRestrict": {
+   "params": [
+    "idx"
+   ],
+   "referer": "/User/userloginrestrict"
+  },
+  "/UserAjax/EditUserMark": {
+   "params": [
+    "uid",
+    "tag"
+   ],
+   "referer": "/User/userlist"
+  },
+  "/UserAjax/RefChangePwd": {
+   "params": [
+    "uid"
+   ],
+   "referer": "/User/userlist"
+  },
+  "/UserAjax/ResetRnameCert": {
+   "params": [
+    "uid"
+   ],
+   "referer": "/User/adduser"
+  },
+  "/UserAjax/RnameCertInit": {
+   "params": [
+    "rname",
+    "sid"
+   ],
+   "referer": "/User/myinfo"
+  },
+  "/UserAjax/SaveCertSetting": {
+   "params": [
+    "param"
+   ],
+   "referer": "/User/RnameCertLogAndSetting"
+  },
+  "/UserAjax/SaveTaskListSeachConfigConfig": {
+   "params": [
+    "config"
+   ],
+   "referer": "/Group/grouplist"
+  },
+  "/UserAjax/SaveUserConfigForAssOrderByUserId": {
+   "params": [
+    "orderBy"
+   ],
+   "referer": "/Order/addorder"
+  },
+  "/UserAjax/SaveUserConfigForMsgSoundSoureByUserId": {
+   "params": [
+    "value"
+   ],
+   "referer": "/User/mymessage"
+  },
+  "/UserAjax/SaveUserConfigForMsgSoundSwichtByUserId": {
+   "params": [
+    "status"
+   ],
+   "referer": "/User/mymessage"
+  },
+  "/UserAjax/SetForbidViewOrderContent": {
+   "params": [
+    "uid"
+   ],
+   "referer": "/User/userlist"
+  },
+  "/UserAjax/SetIsProhibitPublicRecOrder": {
+   "params": [
+    "uid"
+   ],
+   "referer": "/User/userlist"
+  },
+  "/UserAjax/SetMyMessageRead": {
+   "params": [
+    "msgId"
+   ],
+   "referer": "/User/mymessage"
+  },
+  "/UserAjax/SetUserPrivatePhone": {
+   "params": [
+    "uid"
+   ],
+   "referer": "/User/userlist"
+  },
+  "/UserAjax/SetUserProhibitedViewOrderPwd": {
+   "params": [
+    "uid"
+   ],
+   "referer": "/User/userlist"
+  },
+  "/UserAjax/SetUserSelfRecOrderMaxCount": {
+   "params": [
+    "uid",
+    "count"
+   ],
+   "referer": "/User/userlist"
+  },
+  "/UserAjax/UpUserDisSettSta": {
+   "params": [
+    "uid"
+   ],
+   "referer": "/User/userlist"
+  },
+  "/UserAjax/UpUserLoginRestrictStatus": {
+   "params": [
+    "userLoginRestrictId",
+    "status"
+   ],
+   "referer": "/User/userloginrestrict"
+  },
+  "/UserAjax/UpUserSta": {
+   "params": [
+    "uid"
+   ],
+   "referer": "/User/userlist"
+  },
+  "/UserAjax/UpUserStaBatch": {
+   "params": [
+    "uid"
+   ],
+   "referer": "/User/userlist"
+  },
+  "/UserAjax/UpUserVerSta": {
+   "params": [
+    "uid"
+   ],
+   "referer": "/User/userlist"
+  },
+  "/UserAjax/saveMyFeaturesMyJdpSet": {
+   "params": [
+    "paramStr"
+   ],
+   "referer": "/User/myinfo"
+  },
+  "/UserAjax/saveMyFeaturesMySystemSet": {
+   "params": [
+    "paramStr"
+   ],
+   "referer": "/User/myinfo"
+  },
+  "/UserAjax/saveMyInfo": {
+   "params": [
+    "paramStr"
+   ],
+   "referer": "/User/myinfo"
+  },
+  "/UserAjax/saveMyLoginPwd": {
+   "params": [
+    "paramStr"
+   ],
+   "referer": "/User/myinfo"
+  },
+  "/systemAjax/AddEditLearmInformation": {
+   "params": [
+    "id",
+    "conent",
+    "title"
+   ],
+   "referer": "/Order/ClientOrderGenerate"
+  },
+  "/systemAjax/delOrderGuideTemplate": {
+   "params": [
+    "id"
+   ],
+   "referer": "/Order/ClientOrderGenerate"
+  }
+ }
+}

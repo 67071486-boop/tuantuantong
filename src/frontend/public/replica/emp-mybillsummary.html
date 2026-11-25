@@ -1,0 +1,185 @@
+<!-- 复刻证据件：对标物 /Emp/mybillsummary（结算记录）的页内 <style> 段 + 处理过的 body 标记。
+     生成源：.tools/recon/<对标取数快照>/html/Emp__mybillsummary.html + .tools/replica-draft/emp-mybillsummary.json。
+     与对标原文的差异：
+       1. 非标记 <script> 已删；laytpl `{{ const i18n … }}` 代码块已删；
+       2. `{{= i18n.$t('k') }}` 全部按该页 JS 内联 i18nData.messages['zh-CN'] 解出
+          （assets/JS2019/Emp/mybillsummary.js L206-244）；
+       3. PII：无（该页没有服务端渲染的租户数据值；日期输入的 value 与 myemp 同口径保留）；
+       4. `#tableList2` 的标记保留（对标初始态也没渲染它——它的 `table.render` 写在
+          `.viewbilldetail` 的点击回调里；且它引用的 `#toolbarDemo2` 在 HTML 里**不存在**，
+          是对标自己的悬空引用，我们照抄不修）。
+     ⚠️ 该页 i18n 字典里 `realAmount` 定义了**两次**（'实到账金额' 后被 '实际结算金额' 覆盖），
+        后者生效——实测对标表头就是「实际结算金额」。 -->
+<style>
+        body {
+            background-color: #fff
+        } 
+        .layadmin-pagetabs {
+            height: 40px;
+            line-height: 40px;
+            padding: 0 80px 0 40px;
+            background-color: #fafafa;
+            box-sizing: border-box;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+            border-bottom: 1px solid #1AA094;
+        }
+            .layadmin-pagetabs .layui-tab-title li.layui-this, .layadmin-pagetabs .layui-tab-title li:hover {
+                background-color: #009688;
+                color: #fff;
+            }
+    
+
+    .layui-table-cell {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 5px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        box-sizing: border-box;
+        font-size: 12px;
+    }
+
+    .lableb {
+        display: inline-block;
+        padding: 2px 4px;
+        font-size: 12px;
+        line-height: 14px;
+        color: #fff;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #999;
+        overflow: hidden;
+        border-radius: 3px;
+        margin-right: 2px;
+    }
+
+    .paySpan {
+        line-height: 40px;
+        color: #ff0000;
+        font-weight: 600
+    }
+
+    .layui-form .layui-form-item label.layui-form-label {
+        width: 120px;
+        font-family: "Microsoft YaHei";
+    }
+</style>
+
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      
+      
+    <![endif]-->
+    
+
+
+<style type="text/css">
+    .layui-table-cell {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 5px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        box-sizing: border-box;
+        font-size: 12px;
+    }
+
+    .lableb {
+        display: inline-block;
+        padding: 2px 4px;
+        font-size: 12px;
+        line-height: 14px;
+        color: #fff;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #999;
+        overflow: hidden;
+        border-radius: 3px;
+        margin-right: 2px;
+    }
+
+    .paySpan {
+        line-height: 40px;
+        color: #ff0000;
+        font-weight: 600
+    }
+
+    .layui-form .layui-form-item label.layui-form-label {
+        width: 120px;
+        font-family: "Microsoft YaHei";
+    }
+</style>
+<!--[if lt IE 9]>
+  
+  
+<![endif]-->
+
+        
+        <div id="LAY_app">
+            <form class="layui-form" action="">
+                <div class="" style="padding-left: 5px;padding-top:10px">
+                    <div class="layui-form-pane">
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 100px">结算时间</label>
+                            <div class="layui-input-inline" style="width:140px">
+                                <input type="text" name="sDate" id="sDate" lay-verify="datetime" placeholder="" autocomplete="off" class="layui-input" value="2026-03-20 00:00:00">
+                            </div>
+                            <div class="layui-input-inline">-</div>
+                            <div class="layui-input-inline" style="width:140px">
+                                <input type="text" name="eDate" id="eDate" lay-verify="datetime" placeholder="" autocomplete="off" class="layui-input" value="2026-09-20 23:59:59">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width: 100px">订单号搜索</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="key1" id="key1" lay-verify="" placeholder="单号" autocomplete="off" class="layui-input" value="">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline" style="">
+                                <button class="layui-btn layui-btn-normal" lay-submit="" type="button" lay-filter="seachBtn" style="width: 100px">搜索</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="total1" style="padding:10px;font-size:14px;color:#ff0000">
+                    在线结算记录汇总(不包含线下结算)
+                </div>
+
+                <div class="layui-row layui-col-space10">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md7 layui-col-lg7">
+                        <section class="layui-card">
+                            <div class="layui-card-body">
+                                <table class="layui-hide" id="tableList" lay-filter="tableList"></table>
+                                <script type="text/html" id="toolbarDemo">
+                                    <div class="layui-btn-container">
+                                        <button class="layui-btn layui-btn-xs" lay-event="refresh" type="button" title="刷新当前数据"><i class="layui-icon">&#xe669;</i>刷新数据</button>
+                                    </div>
+                                </script>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md5 layui-col-lg5">
+                        <section class="layui-card">
+                            <div class="layui-card-header total2" style="color:#ff6a00">
+
+                            </div>
+                            <div class="layui-card-body">
+                                <table class="layui-hide" id="tableList2" lay-filter="tableList2"></table>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    
+
+
+
+
+

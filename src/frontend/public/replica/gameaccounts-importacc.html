@@ -1,0 +1,96 @@
+<!-- 复刻证据件：对标物 /GameAccounts/importacc 的页内 <style> 段 + 处理过的 body 标记。
+     生成源：.tools/replica-draft/gameaccounts-importacc.json（只读 .tools/recon/<对标取数快照>/ 的离线证据）。
+     与对标原文的差异：非标记 <script> 已删、laytpl 表达式已解；PII 处置：无（该页没有服务端渲染的租户数据值）。 -->
+
+<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      
+      
+    <![endif]-->
+    
+
+
+<form class="layui-form" action="" style="margin-left:10px;">
+
+    <div class="layui-form-pane" style="color:#444; padding-top:10px">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">选择游戏</label>
+            <div class="layui-input-inline">
+                <select id="gameName" name="gameName" lay-filter="selectGame">
+                                <option value="全部游戏">全部游戏</option>
+                                <option value="崩坏：星穹铁道">崩坏：星穹铁道</option>
+                                <option value="原神">原神</option>
+                                <option value="三角洲行动">三角洲行动</option>
+                                <option value="鸣潮">鸣潮</option>
+                                <option value="绝区零">绝区零</option>
+                                <option value="无限暖暖">无限暖暖</option>
+                                <option value="遗忘之海">遗忘之海</option>
+                                <option value="异环">异环</option>
+                                <option value="王者荣耀世界">王者荣耀世界</option>
+                                <option value="洛克王国：世界">洛克王国：世界</option>
+                                <option value="逆战：未来">逆战：未来</option>
+                                <option value="明日方舟：终末地">明日方舟：终末地</option>
+                                <option value="燕云十六声">燕云十六声</option>
+
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">账号类型：</label>
+            <div class="layui-inline">
+                <input type="radio" name="AccTypes" value="A" title="内部库存" checked="checked" lay-filter="accTypesRd">
+            </div>
+                        <div class="layui-inline">
+                            <input type="radio" name="AccTypes" value="E" title="" lay-filter="accTypesRd">
+                            <div lay-radio><span lay-tips="用于出售的游戏号，会展示在外部自助选号页面，允许外部用户挑选。如果您需要让外部购买游戏号的用户自助挑选，请选这个类型">售卖账号</span></div>
+                        </div>
+                        <div class="layui-inline">
+                            <input type="radio" name="AccTypes" value="Z" title="" lay-filter="accTypesRd">
+                            <div lay-radio><span lay-tips="用于出租的游戏号，会展示在外部自助选号页面，允许外部用户挑选。如果您需要让外面租游戏号的用户自助挑选，可以选这个类型">出租账号</span></div>
+                        </div>
+
+
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">导入格式：</label>
+            <div class="layui-inline">
+                <input type="radio" name="Itypes" value="1" title="格式1（库存号Excel表格）" checked="checked" lay-filter="accTypeRd">
+            </div>
+            <div class="layui-inline">
+                <input type="radio" name="Itypes" value="2" title="格式2（库存号txt文本）" lay-filter="accTypeRd">
+            </div>
+            <div class="layui-inline">
+                <input type="radio" name="Itypes" value="3" title="格式3（标准卖号模式Excel表格）" lay-filter="accTypeRd">
+            </div>
+            <div class="layui-inline loldiv" style="display:none">
+                <input type="radio" name="Itypes" value="4" title="格式4（租号模式txt文本）" lay-filter="accTypeRd">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">格式要求：</label>
+            <div class="layui-inline ge1" style="height:25px;padding-top:9px;margin-left:10px">
+                <a href="https://oss4.jidanpu.com/file/%E8%B4%A6%E5%8F%B7%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF1.xls" style="color:#28b779" target="_blank" title="点击下载账号导入模板">下载格式1模板</a><i class="layui-icon">&#xe63c;</i>
+            </div>
+            <div class="layui-inline ge2" style="display:none; height:25px;padding-top:9px;margin-left:10px">
+                <a href="https://oss4.jidanpu.com/file/%E5%86%85%E9%83%A8%E8%B4%A6%E5%8F%B7%E5%AF%BC%E5%85%A5%E6%A0%BC%E5%BC%8F2.rar" style="color:#28b779" target="_blank" title="点击下载账号导入模板">下载格式2模板</a><i class="layui-icon">&#xe63c;</i>
+            </div>
+            <div class="layui-inline ge3" style="display: none; height: 25px; padding-top: 9px; margin-left: 10px">
+                <a href="https://oss4.jidanpu.com/file/%E5%8F%B7%E5%BA%93%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF3.xls" style="color:#28b779" target="_blank" title="点击下载账号导入模板">下载格式3模板</a><i class="layui-icon">&#xe63c;</i>
+            </div>
+            <div class="layui-inline ge4" style="display: none; height: 25px; padding-top: 9px; margin-left: 10px">
+                <a href="https://jidanpuwebfiles.oss-cn-hangzhou.aliyuncs.com/file/%E8%8B%B1%E9%9B%84%E8%81%94%E7%9B%9F%E5%8F%B7%E5%BA%93%E5%AF%BC%E5%85%A5%E6%A0%BC%E5%BC%8F4%E6%A0%B7%E4%BE%8B_%E8%A7%A3%E5%8E%8B%E5%87%BA%E6%9D%A5%E7%9C%8B.rar" style="color:#28b779" target="_blank" title="点击下载账号导入模板">参考格式4模板</a><i class="layui-icon">&#xe63c;</i>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">文件选择：</label>
+            <div class="layui-input-block" style="margin-left:120px">
+                <button type="button" class="layui-btn" id="upmypic" lay-title="点击选择要导入的文件">点击我选择导入文件</button>
+            </div>
+        </div>
+    </div> 
+</form>

@@ -1,0 +1,490 @@
+<!-- 复刻证据件：对标物 /System/pddshipsetting 的页内 <style> 段 + 处理过的 body 标记。
+     生成源：.tools/replica-draft/system-pddshipsetting.json（只读 .tools/recon/<对标取数快照>/ 的离线证据）。
+     与对标原文的差异：PII 已清空（见交付报告）、laytpl 表达式已解、非标记 script 元素已删。 -->
+<style>
+
+        body {
+            background-color: #fff
+        } 
+        .layadmin-pagetabs {
+            height: 40px;
+            line-height: 40px;
+            padding: 0 80px 0 40px;
+            background-color: #fafafa;
+            box-sizing: border-box;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+            border-bottom: 1px solid #1AA094;
+        }
+            .layadmin-pagetabs .layui-tab-title li.layui-this, .layadmin-pagetabs .layui-tab-title li:hover {
+                background-color: #009688;
+                color: #fff;
+            }
+    
+
+    .layui-form-pane .layui-form-label {
+        width: 110px;
+        padding: 8px 8px;
+        height: 38px;
+        line-height: 20px;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: 2px 0 0 2px;
+        text-align: center;
+        background-color: #FBFBFB;
+        overflow: hidden;
+        box-sizing: border-box;
+    } 
+</style>
+
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      
+      
+    <![endif]-->
+    
+
+
+<style>
+    .layui-form-pane .layui-form-label {
+        width: 110px;
+        padding: 8px 8px;
+        height: 38px;
+        line-height: 20px;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: 2px 0 0 2px;
+        text-align: center;
+        background-color: #FBFBFB;
+        overflow: hidden;
+        box-sizing: border-box;
+    } 
+</style>
+<form class="layui-form" action="" lay-filter="form">
+    <blockquote class="layui-elem-quote">
+        <p>功能介绍：</p>
+        <p>录单时自动读取拼多多/闲鱼/京东/抖音/快手等店铺的订单价格和买家留言，减少价格输入，也避免出现订单价出错；</p>
+    </blockquote> 
+    <fieldset class="layui-elem-field">
+        <legend>接口量</legend>
+        <div class="layui-field-box">
+            <div class="" style="margin-bottom:15px"><a class="payBtn" href="https://www.jidanpu.com/buy/buytaobaoservice?u=" target="_blank" style="font-size:16px; color:#ff6a00" title="点击这里购买接口调用量">点击这里购买接口调用量（当前系统接口剩余调用量：，接口读取订单会消耗调用量）</a></div>
+        </div>
+    </fieldset>
+
+    <fieldset class="layui-elem-field">
+        <legend>店铺对接设置</legend>
+        <div class="layui-field-box">
+            <table class="layui-hide" id="tableList" lay-filter="tableList"></table>
+            <script type="text/html" id="toolbarDemo">
+                <div class="layui-btn-container">
+                    <button class="layui-btn layui-btn-xs" lay-event="refresh" type="button" title="刷新当前数据"><i class="layui-icon">&#xe669;</i>刷新列表</button>
+                    <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="addBtn" type="button" title="新增一个订单来源"><i class="layui-icon layui-icon-add-1"></i>新增一个店铺对接</button>
+                </div>
+            </script>
+            <script type="text/html" id="baroperating">
+                <a class="layui-btn layui-btn-xs layui-btn-warm" style="" lay-event="submitEdit" title="编辑对接参数"><i class="layui-icon layui-icon-edit"></i>修改</a>
+                <a class="layui-btn layui-btn-xs layui-btn-danger" style="" lay-event="submitDel" title="删除该店铺的对接"><i class="layui-icon layui-icon-delete"></i>删除</a>
+            </script>
+        </div>
+    </fieldset>
+     
+    <div class="modifyParamDiv" style="display:none">
+        <blockquote class="layui-elem-quote">
+            <span style="font-size:14px">请在下面填上对接参数，如何对接请联系我们售后客服</span>
+        </blockquote>
+        <div class="layui-form-pane" style="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">哪个平台的店铺</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="platforms" value="10" title="拼多多" lay-filter="platforms">
+                    
+                    <input type="radio" name="platforms" value="20" title="闲鱼" lay-filter="platforms">
+                    <input type="radio" name="platforms" value="30" title="抖音" lay-filter="platforms">
+                    <input type="radio" name="platforms" value="40" title="快手" lay-filter="platforms">
+                    
+                    <input type="radio" name="platforms" value="60" title="小红书" lay-filter="platforms">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">AppId</label>
+                <div class="layui-input-block">
+                    <input type="text" name="appId" id="appId" lay-verify="" autocomplete="off" placeholder="请填写AppID" maxlength="20" class="layui-input layui-input-shadow boxshadow-success appId">
+                </div>
+            </div>
+            <div class="layui-form-item appSecretDiv">
+                <label class="layui-form-label">AppSecret</label>
+                <div class="layui-input-block">
+                    <input type="text" name="appSecret" id="appSecret" lay-verify="" autocomplete="off" placeholder="" maxlength="100" class="layui-input layui-input-shadow boxshadow-success">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">授权码</label>
+                <div class="layui-input-inline layui-input-wrap" style="width:62%">
+                    <input type="text" name="accessToken" id="accessToken" lay-verify="" autocomplete="off" placeholder="请将授权码复制到此处" maxlength="100" class="layui-input layui-input-shadow boxshadow-success">
+                </div>
+                <div class="layui-form-mid" style="padding: 0!important;">
+                    <a href="javascript:void(0)" class="layui-btn layui-btn-primary getAuth">获取授权</a>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">店铺或商家ID</label>
+                <div class="layui-input-block">
+                    <input type="text" name="shopSellerNick" id="shopSellerNick" lay-verify="" autocomplete="off" placeholder="如果您对接了多个店铺并启用了下单推送，请在这里填上该店铺的ID" maxlength="50" class="layui-input layui-input-shadow boxshadow-success">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">备注说明</label>
+                <div class="layui-input-block">
+                    <input type="text" name="remark" id="remark" lay-verify="" autocomplete="off" placeholder="" maxlength="50" class="layui-input layui-input-shadow boxshadow-success">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">对应订单来源</label>
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        <select name="tbsoure" id="tbsoure" lay-filter="">
+                            <option value="">不设置</option>
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div style="text-align:center;align-items:center">
+            <a class="layui-btn layui-btn-normal layui-btn-lg w-lg saveInterfaceBtn">保存设置</a>
+        </div>
+    </div>
+
+    <fieldset class="layui-elem-field">
+        <legend>闲鱼店铺功能设置</legend>
+        <div class="layui-field-box">
+            <div class="layui-form-pane" style="margin-top:10px;margin-left:10px">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="min-height:0px;margin-left:10px;margin-top:10px">
+                        功能总开关(如果关闭，则该对接功能将全部失败)
+                    </div>
+                    <div class="layui-input-block" style="min-height:0px;margin-left:5px">
+                        <input type="radio" name="Xianyu_AutoDeliverSwitch" value="N" title="关闭" >
+                        <input type="radio" name="Xianyu_AutoDeliverSwitch" value="Y" title="打开" checked=&#39;checked&#39;>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="min-height:0px;margin-left:10px;margin-top:10px">
+                        闲鱼的订单改成什么状态下能自动发货(默认不发货)
+                    </div>
+                    <div class="layui-input-block" style="min-height:0px;margin-left:5px">
+                        <input type="radio" name="XianyuOrderAutoDummySend" value="N" title="不发" >
+                        <input type="radio" name="XianyuOrderAutoDummySend" value="D" title="待验收" >
+                        <input type="radio" name="XianyuOrderAutoDummySend" value="Y" title="已完成" checked=&#39;checked&#39;>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="min-height:0px;margin-left:10px;margin-top:10px">
+                        闲鱼的订单改成已退单时是否需要同步执行闲鱼同意退款--(默认不执行|<span class="layui-font-red">开启前需要确认授权页面的权限是否打开</span>)
+                    </div>
+                    <div class="layui-input-block" style="min-height:0px;margin-left:5px">
+                        <input type="radio" name="XianyuRefundAction" value="N" title="不执行" checked=&#39;checked&#39;>
+                        <input type="radio" name="XianyuRefundAction" value="Y" title="执行" >
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="min-height: 0px; margin-left: 10px; margin-top: 10px; font-weight: 600">
+                        闲鱼订单<span style="color:#ff0000">发货成功后</span>发送闲鱼消息给买家(下面留空代表不发，要发消息请在下面输入)
+                    </div>
+                    <div class="layui-input-block" style="margin-top:10px;margin-left:10px">
+                        <input type="text" name="XianyuSendMsg" value="" lay-verify="" autocomplete="off" placeholder="" maxlength="500" class="layui-input layui-input-shadow">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="min-height:0px;margin-left:10px;margin-top:20px;font-weight:600">
+                        闲鱼订单<span style="color:#ff0000">状态改成已退单时</span>发送闲鱼消息给买家(下面留空代表不发，要发消息请在下面输入)
+                    </div>
+                    <div class="layui-input-block" style="margin-top:10px;margin-left:10px">
+                        <input type="text" name="XianyuRefundSendMsg" value="" lay-verify="" autocomplete="off" placeholder="" maxlength="500" class="layui-input layui-input-shadow">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="layui-elem-field">
+        <legend>拼多多功能设置</legend>
+        <div class="layui-field-box">
+            <div class="layui-form-pane" style="margin-top:10px;margin-left:10px">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="min-height:0px;margin-left:10px;margin-top:10px">
+                        功能总开关(如果关闭，则该对接功能将全部失败)
+                    </div>
+                    <div class="layui-input-block" style="min-height:0px;margin-left:5px">
+                        <input type="radio" name="Pdd_AutoDeliverSwitch" value="N" title="关闭" checked=&#39;checked&#39;>
+                        <input type="radio" name="Pdd_AutoDeliverSwitch" value="Y" title="打开" >
+                    </div>
+                </div>
+                <div class="layui-form-item autoCreateOrderSet" style="">
+                    <div class="layui-input-block" style="min-height:0px;margin-left:10px;margin-top:10px">
+                        买家付款后是否需要自动创建系统订单（创建的订单包含拼多多单号、价格、留言），注意：该功能需要联系我们技术人确认是否可用
+                    </div>
+                    <div class="layui-input-block" style="min-height:0px;margin-left:5px">
+                        <input type="radio" name="PddAutoCreateOrderSwith" value="N" title="否" checked=&#39;checked&#39; lay-filter="PddAutoCreateOrderSwith">
+                        <input type="radio" name="PddAutoCreateOrderSwith" value="Y" title="是"  lay-filter="PddAutoCreateOrderSwith">
+                    </div>
+                </div>
+                <div class="PddAutoCreateOrderDiv" style="margin-left: 10px; display:none">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block" style="min-height:0px;margin-left:10px;margin-top:10px">
+                            请设置包含以下关键词的商品标题的订单才允许自动录单，多个关键词用英文逗号分隔，如果不设置，将不会自动录单。注意：该功能需要联系我们技术人确认是否可用
+                        </div>
+                        <div class="layui-input-block" style="min-height:0px;margin-left:5px;margin-top:10px">
+                            <input type="text" name="PddShopItemKey" id="PddShopItemKey" lay-verify="" autocomplete="off" placeholder="请在这里设置商品标题关键词，用英文逗号分隔" maxlength="200" class="layui-input layui-input-shadow boxshadow-success" value="">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block" style="min-height:0px;margin-left:10px;margin-top:10px">
+                            自动创建的订单以什么作为订单项目？（默认代练项目为空，3选1），注意：该功能需要联系我们技术人确认是否可用
+                        </div>
+                        <div class="layui-input-block" style="min-height:0px;margin-left:5px">
+                            <input type="radio" name="PddAddOrderProject" value="N" title="空" checked=&#39;checked&#39;>
+                            <input type="radio" name="PddAddOrderProject" value="T" title="商品名" >
+                            <input type="radio" name="PddAddOrderProject" value="S" title="SKU名" >
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block" style="min-height:0px;margin-left:10px;margin-top:10px">
+                            自动创建订单时的默认订单状态是什么？默认是待完善状态
+                        </div>
+                        <div class="layui-input-block" style="min-height:0px;margin-left:5px">
+                            <input type="radio" name="PddAddOrderDefStatus" value="N" title="待完善" checked=&#39;checked&#39;>
+                            <input type="radio" name="PddAddOrderDefStatus" value="W" title="未分配" >
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="min-height: 0px; margin-left: 10px; margin-top: 10px; font-weight: 600">
+                        拼多多订单状态改<span style="color:#ff0000">撤销中</span>时发送消息给买家(下面留空代表不发，要发消息请在下面输入)，注意：需要开拼多多助手
+                    </div>
+                    <div class="layui-input-block" style="margin-top:10px;margin-left:10px">
+                        <input type="text" name="PddSendMsgCXZ" value="" lay-verify="" autocomplete="off" placeholder="" maxlength="500" class="layui-input layui-input-shadow">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="min-height:0px;margin-left:10px;margin-top:20px;font-weight:600">
+                        拼多多订单状态改<span style="color:#ff0000">已完成</span>时发送消息给买家(下面留空代表不发，要发消息请在下面输入)，<span style="color:#ff0000">注意：需要开拼多多助手，每笔订单30天内只能发送两条消息</span>
+                    </div>
+                    <div class="layui-input-block" style="margin-top:10px;margin-left:10px">
+                        <input type="text" name="PddSendMsgYWC" value="" lay-verify="" autocomplete="off" placeholder="" maxlength="500" class="layui-input layui-input-shadow">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="layui-elem-field">
+        <legend>抖音店铺功能设置</legend>
+        <div class="layui-field-box">
+            <div class="layui-form-pane" style="margin-top:10px;margin-left:10px">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="min-height:0px;margin-left:10px;margin-top:10px">
+                        功能总开关(如果关闭，则该对接功能将全部失败)
+                    </div>
+                    <div class="layui-input-block" style="min-height:0px;margin-left:5px">
+                        <input type="radio" name="Dyin_AutoDeliverSwitch" value="N" title="关闭" checked=&#39;checked&#39;>
+                        <input type="radio" name="Dyin_AutoDeliverSwitch" value="Y" title="打开" >
+                    </div>
+                </div>
+                <div class="layui-form-item autoCreateOrderSet" style="">
+                    <div class="layui-input-block" style="min-height:0px;margin-left:10px;margin-top:10px">
+                        买家付款后是否需要自动创建系统订单（创建的订单包含单号、价格、留言），注意：该功能需要联系我们技术人确认是否可用
+                    </div>
+                    <div class="layui-input-block" style="min-height:0px;margin-left:5px">
+                        <input type="radio" name="DyinAutoCreateOrderSwith" value="N" title="否" checked=&#39;checked&#39; lay-filter="DyinAutoCreateOrderSwith">
+                        <input type="radio" name="DyinAutoCreateOrderSwith" value="Y" title="是"  lay-filter="DyinAutoCreateOrderSwith">
+                    </div>
+                </div>
+                <div class="DyinAutoCreateOrderDiv" style="margin-left: 10px; display:none">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block" style="min-height:0px;margin-left:10px;margin-top:10px">
+                            设置包含以下关键词的商品标题的订单才允许自动录单，多个关键词用英文逗号分隔，如果不设置，将不会自动录单。注意：该功能需要联系我们技术人确认是否可用
+                        </div>
+                        <div class="layui-input-block" style="min-height:0px;margin-left:5px;margin-top:10px">
+                            <input type="text" name="DyinShopItemKey" id="DyinShopItemKey" lay-verify="" autocomplete="off" placeholder="请在这里设置商品标题关键词，用英文逗号分隔" maxlength="200" class="layui-input layui-input-shadow boxshadow-success" value="">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block" style="min-height:0px;margin-left:10px;margin-top:10px">
+                            自动创建的订单以什么作为订单项目？（默认代练项目为空，3选1），注意：该功能需要联系我们技术人确认是否可用
+                        </div>
+                        <div class="layui-input-block" style="min-height:0px;margin-left:5px">
+                            <input type="radio" name="DyinAddOrderProject" value="N" title="空" checked=&#39;checked&#39;>
+                            <input type="radio" name="DyinAddOrderProject" value="T" title="商品名" >
+                            <input type="radio" name="DyinAddOrderProject" value="S" title="SKU名" >
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block" style="min-height:0px;margin-left:10px;margin-top:10px">
+                            自动创建订单时的默认订单状态是什么？默认是待完善状态
+                        </div>
+                        <div class="layui-input-block" style="min-height:0px;margin-left:5px">
+                            <input type="radio" name="DyinAddOrderDefStatus" value="N" title="待完善" checked=&#39;checked&#39;>
+                            <input type="radio" name="DyinAddOrderDefStatus" value="W" title="未分配" >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="layui-elem-field">
+        <legend>快手店铺功能设置</legend>
+        <div class="layui-field-box">
+            <div class="layui-form-pane" style="margin-top:10px;margin-left:10px">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="min-height:0px;margin-left:10px;margin-top:10px">
+                        功能总开关(如果关闭，则该对接功能将全部失败)
+                    </div>
+                    <div class="layui-input-block" style="min-height:0px;margin-left:5px">
+                        <input type="radio" name="Kshou_AutoDeliverSwitch" value="N" title="关闭" checked=&#39;checked&#39;>
+                        <input type="radio" name="Kshou_AutoDeliverSwitch" value="Y" title="打开" >
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="min-height:0px;margin-left:10px;margin-top:10px">
+                        快手的订单是否改成已完成时就自动发货(默认不发货)
+                    </div>
+                    <div class="layui-input-block" style="min-height:0px;margin-left:5px">
+                        <input type="radio" name="KshouOrderAutoDummySend" value="N" title="不发" checked=&#39;checked&#39;>
+                        <input type="radio" name="KshouOrderAutoDummySend" value="Y" title="发货" >
+                    </div>
+                </div>
+                <div class="layui-form-item autoCreateOrderSet" style="">
+                    <div class="layui-input-block" style="min-height:0px;margin-left:10px;margin-top:10px">
+                        买家付款后是否需要自动创建系统订单（创建的订单包含单号、价格、留言），注意：该功能需要联系我们技术人确认是否可用
+                    </div>
+                    <div class="layui-input-block" style="min-height:0px;margin-left:5px">
+                        <input type="radio" name="KshouAutoCreateOrderSwith" value="N" title="否" checked=&#39;checked&#39; lay-filter="KshouAutoCreateOrderSwith">
+                        <input type="radio" name="KshouAutoCreateOrderSwith" value="Y" title="是"  lay-filter="KshouAutoCreateOrderSwith">
+                    </div>
+                </div>
+                <div class="KshouAutoCreateOrderDiv" style="margin-left: 10px; display:none">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block" style="min-height:0px;margin-left:10px;margin-top:10px">
+                            设置包含以下关键词的商品标题的订单才允许自动录单，多个关键词用英文逗号分隔，如果不设置，将不会自动录单。注意：该功能需要联系我们技术人确认是否可用
+                        </div>
+                        <div class="layui-input-block" style="min-height:0px;margin-left:5px;margin-top:10px">
+                            <input type="text" name="KshouShopItemKey" id="KshouShopItemKey" lay-verify="" autocomplete="off" placeholder="请在这里设置商品标题关键词，用英文逗号分隔" maxlength="200" class="layui-input layui-input-shadow boxshadow-success" value="">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block" style="min-height:0px;margin-left:10px;margin-top:10px">
+                            自动创建的订单以什么作为订单项目？（默认代练项目为空，3选1），注意：该功能需要联系我们技术人确认是否可用
+                        </div>
+                        <div class="layui-input-block" style="min-height:0px;margin-left:5px">
+                            <input type="radio" name="KshouAddOrderProject" value="N" title="空" checked=&#39;checked&#39;>
+                            <input type="radio" name="KshouAddOrderProject" value="T" title="商品名" >
+                            <input type="radio" name="KshouAddOrderProject" value="S" title="SKU名" >
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block" style="min-height:0px;margin-left:10px;margin-top:10px">
+                            自动创建订单时的默认订单状态是什么？默认是待完善状态
+                        </div>
+                        <div class="layui-input-block" style="min-height:0px;margin-left:5px">
+                            <input type="radio" name="KshouAddOrderDefStatus" value="N" title="待完善" checked=&#39;checked&#39;>
+                            <input type="radio" name="KshouAddOrderDefStatus" value="W" title="未分配" >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="layui-elem-field">
+        <legend>小红书店铺功能设置</legend>
+        <div class="layui-field-box">
+            <div class="layui-form-pane" style="margin-top:10px;margin-left:10px">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="min-height:0px;margin-left:10px;margin-top:10px">
+                        功能总开关(如果关闭，则该对接功能将全部失败)
+                    </div>
+                    <div class="layui-input-block" style="min-height:0px;margin-left:5px">
+                        <input type="radio" name="Xhs_AutoDeliverSwitch" value="N" title="关闭" checked=&#39;checked&#39;>
+                        <input type="radio" name="Xhs_AutoDeliverSwitch" value="Y" title="打开" >
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="min-height:0px;margin-left:10px;margin-top:10px">
+                        订单改成已完成时是否自动发货(默认不发货)
+                    </div>
+                    <div class="layui-input-block" style="min-height:0px;margin-left:5px">
+                        <input type="radio" name="XhsOrderAutoDummySend" value="N" title="不发" checked=&#39;checked&#39;>
+                        <input type="radio" name="XhsOrderAutoDummySend" value="Y" title="发货" >
+                    </div>
+                </div>
+                <div class="layui-form-item autoCreateOrderSet" style="">
+                    <div class="layui-input-block" style="min-height:0px;margin-left:10px;margin-top:10px">
+                        买家付款后是否需要自动创建系统订单（创建的订单包含单号、价格、留言），注意：该功能需要联系我们技术人确认是否可用
+                    </div>
+                    <div class="layui-input-block" style="min-height:0px;margin-left:5px">
+                        <input type="radio" name="XhsAutoCreateOrderSwith" value="N" title="否" checked=&#39;checked&#39; lay-filter="XhsAutoCreateOrderSwith">
+                        <input type="radio" name="XhsAutoCreateOrderSwith" value="Y" title="是"  lay-filter="XhsAutoCreateOrderSwith">
+                    </div>
+                </div>
+                <div class="XhsAutoCreateOrderDiv" style="margin-left: 10px; display:none">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block" style="min-height:0px;margin-left:10px;margin-top:10px">
+                            设置包含以下关键词的商品标题的订单才允许自动录单，多个关键词用英文逗号分隔，如果不设置，将不会自动录单。注意：该功能需要联系我们技术人确认是否可用
+                        </div>
+                        <div class="layui-input-block" style="min-height:0px;margin-left:5px;margin-top:10px">
+                            <input type="text" name="XhsShopItemKey" id="XhsShopItemKey" lay-verify="" autocomplete="off" placeholder="请在这里设置商品标题关键词，用英文逗号分隔" maxlength="200" class="layui-input layui-input-shadow boxshadow-success">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block" style="min-height:0px;margin-left:10px;margin-top:10px">
+                            自动创建的订单以什么作为订单项目？（默认代练项目为空，3选1），注意：该功能需要联系我们技术人确认是否可用
+                        </div>
+                        <div class="layui-input-block" style="min-height:0px;margin-left:5px">
+                            <input type="radio" name="XhsAddOrderProject" value="N" title="空" checked=&#39;checked&#39;>
+                            <input type="radio" name="XhsAddOrderProject" value="T" title="商品名" >
+                            <input type="radio" name="XhsAddOrderProject" value="S" title="SKU名" >
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block" style="min-height:0px;margin-left:10px;margin-top:10px">
+                            自动创建订单时的默认订单状态是什么？默认是待完善状态
+                        </div>
+                        <div class="layui-input-block" style="min-height:0px;margin-left:5px">
+                            <input type="radio" name="XhsAddOrderDefStatus" value="N" title="待完善" checked=&#39;checked&#39;>
+                            <input type="radio" name="XhsAddOrderDefStatus" value="W" title="未分配" >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <div style="text-align:center;align-items:center">
+        <button type="button" class="layui-btn layui-btn-normal layui-btn-lg w-lg" lay-submit="" lay-filter="savebtn">保存以上设置</button>
+    </div>
+
+    <input type="hidden" name="ptid" id="ptid" />
+</form>
+
+
+
+

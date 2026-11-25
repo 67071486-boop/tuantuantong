@@ -1,0 +1,88 @@
+<!-- 复刻证据件：对标物 /Emp/bindalipaysettauth（绑定用于结算打款的支付宝管理列表）的页内 <style> 段 + 处理过的 body 标记。
+     生成源：.tools/replica-draft/emp-bindalipaysettauth.json（只读 .tools/recon/<对标取数快照>/ 的离线证据，绝不联网取）。
+     与对标原文的差异：非标记 <script> 已删（含 IE 条件注释里的 2 个 CDN 引用；保留
+     type="text/html" 的 #toolbarDemo / #baroperating 两个标记模板）；
+     该页 laytpl 无未解析表达式。
+     PII：对标模板里所有账号/实名输入框的 value 本来就是空串（无服务端渲染的真实支付宝账号）；
+     「新增绑定」表单（.newBindDiv）的静态文案里那处示例「XXX县XXX网络科技（个体工商户）」
+     是对标自带的**脱敏示例**（原文即为 XXX），逐字保留、非租户数据。 -->
+<style>
+
+        body {
+            background-color: #fff
+        } 
+        .layadmin-pagetabs {
+            height: 40px;
+            line-height: 40px;
+            padding: 0 80px 0 40px;
+            background-color: #fafafa;
+            box-sizing: border-box;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+            border-bottom: 1px solid #1AA094;
+        }
+            .layadmin-pagetabs .layui-tab-title li.layui-this, .layadmin-pagetabs .layui-tab-title li:hover {
+                background-color: #009688;
+                color: #fff;
+            }
+    
+</style>
+<form class="layui-form" action="">
+    <fieldset class="layui-elem-field layui-field-title">
+        <div style="padding:10px 10px;border:1px solid  #f5c553;margin-top:5px">
+            您可以绑定一个用来支付结算的支付宝账号，用于通过本系统给打手们在线批量结算。请尽量绑定企业/个体户类型的支付宝！
+        </div>
+    </fieldset>
+    <div class="layui-form-pane newBindDiv" style="margin-top: 10px; margin-left: 10px; display: none">
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="padding:8px 5px">结算用支付宝账号</label>
+            <div class="layui-input-block">
+                <input type="text" name="newPayAlipayAcc" id="newPayAlipayAcc" lay-verify="required" autocomplete="off" placeholder="用于结算的支付宝账号" maxlength="32" class="layui-input layui-input-shadow boxshadow-success" value="">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">重复一遍账号</label>
+            <div class="layui-input-block">
+                <input type="text" name="reNewPayAlipayAcc" id="reNewPayAlipayAcc" lay-verify="required" autocomplete="off" placeholder="再次输入支付宝账号" maxlength="32" class="layui-input layui-input-shadow boxshadow-success" value="">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="padding:8px 5px">支付宝实名</label>
+            <div class="layui-input-block">
+                <input type="text" name="newPayAlipayName" id="newPayAlipayName" autocomplete="off" placeholder="" maxlength="32" class="layui-input layui-input-shadow boxshadow-success" value="" lay-tips="如果是个人账户，就填真实姓名。如果是企业就填企业完整名称。个体工商户请填完整的名称，例如：XXX县XXX网络科技（个体工商户）">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">通道</label>
+            <div class="layui-input-block">
+                <input type="radio" name="channel" value="0" title="通道1">
+                <div lay-radio><span lay-tips="绝大部分情况下请选择默认通道1">通道1</span></div>
+                <input type="radio" name="channel" value="1" title="通道2">
+                <div lay-radio><span lay-tips="请先咨询鸡蛋铺客服是否需要用通道2">通道2</span></div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">备注说明</label>
+            <div class="layui-input-block">
+                <input type="text" name="remark" id="remark" autocomplete="off" placeholder="" maxlength="50" class="layui-input layui-input-shadow boxshadow-success" value="">
+            </div>
+        </div>
+        <div style="text-align:center;align-items:center">
+            <button type="button" class="layui-btn   layui-btn-normal w-lg" lay-submit="" lay-filter="savebtn">开始签约</button>
+        </div>
+    </div>
+
+    <div class="" style="">
+        <table class="layui-hide" id="tableList" lay-filter="tableList"></table>
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-xs" lay-event="refresh" type="button" title="刷新当前数据">刷新列表</button>
+                <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="addBookBtn" type="button" title="增加一个用于付款的支付宝账号">增加一个用于付款的支付宝账号</button>
+            </div>
+        </script>
+        <script type="text/html" id="baroperating">
+            <a class="layui-btn layui-btn-xs layui-btn-normal" style="" lay-event="submitReAuth" lay-tips="服务签约失效时可以点此重新签约">重新签约服务</a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger" style="" lay-event="submitDel" lay-tips="删除此绑定记录">删除此签约</a>
+        </script>
+    </div>
+
+</form> 

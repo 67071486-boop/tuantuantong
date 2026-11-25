@@ -1,0 +1,152 @@
+
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      
+      
+    <![endif]-->
+    
+
+
+<style>
+    .layui-form-pane .layui-form-label {
+        width: 110px;
+        padding: 8px 8px;
+        height: 38px;
+        line-height: 20px;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: 2px 0 0 2px;
+        text-align: center;
+        background-color: #FBFBFB;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+    .linkUrl {
+        cursor: pointer;
+        color: #1485EE;
+    }
+</style>
+<form class="layui-form" action="" lay-filter="form">
+    <blockquote class="layui-elem-quote" style="font-size:14px">
+        <p style="font-weight:600">功能介绍：</p>
+        <p>应用场景：当把订单发到外部交易平台或内部抢单大厅时，可自动将接单消息推送到指定企业微信群（内部群）或钉钉群里，提高大神接单响应效率</p>
+        <p style="font-weight:600">前提条件：</p>
+        <p style="font-weight:600">一、企业微信</p>
+        <p>1、开通企业微信，需要创建内部群聊（不支持外部群聊）；</p>
+        <p>2、在企业微信内部群属性里有一个消息推送菜单，点击去新建推送，就可以看到一个属性里的WebHookUrl链接，复制它到这里来；</p>
+        <p style="font-weight:600">二、钉钉</p>
+        <p>1、开通钉钉并认证，创建钉钉群；</p>
+        <p>2、在钉钉群里创建自定义类型的机器人，复制机器人属性里的Webhook链接，详细步骤可<a target="_blank" href="https://www.jidanpu.com/news/details?nid=11433" class="linkUrl">点击这里</a>查看；</p>
+        <p style="font-weight:600">三、鸡蛋铺内部沟通</p>
+        <p>1、开通鸡蛋铺内部沟通，创建内部群聊；</p>
+        <p>2、查看群聊的群聊号，复制到内部抢单群聊ID中。</p>
+    </blockquote>
+
+    <div class="layui-elem-field">
+        <legend style="margin-top:10px">企业微信群消息推送设置</legend>
+        <div class="layui-field-box">
+            <table class="layui-hide" id="tableList" lay-filter="tableList"></table>
+            <script type="text/html" id="switchTpl1">
+                <input type="checkbox" name="status" value="{{d.id}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="staChecked" {{ d.switchStatus == 0 ? 'checked' : '' }}>
+            </script>
+            <script type="text/html" id="toolbarDemo">
+                <div class="layui-btn-container">
+                    <button class="layui-btn layui-btn-xs" lay-event="refresh" type="button" title="刷新当前数据"><i class="layui-icon">&#xe669;</i>刷新列表</button>
+                    <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="addBtn" type="button" title="新增一个自动发消息到群"><i class="layui-icon layui-icon-add-1"></i>新增一个</button>
+                </div>
+            </script>
+            <script type="text/html" id="baroperating">
+                <a class="layui-btn layui-btn-xs layui-btn-warm" style="" lay-event="submitEdit" title="编辑参数"><i class="layui-icon layui-icon-edit"></i>修改</a>
+                <a class="layui-btn layui-btn-xs layui-btn-danger" style="" lay-event="submitDel" title="删除该条"><i class="layui-icon layui-icon-delete"></i>删除</a>
+            </script>
+        </div>
+    </div>
+
+
+    <div class="modifyParamDiv" style="display:none">
+        <blockquote class="layui-elem-quote">
+            <span>根据实际需要，请在下面配置</span>
+        </blockquote>
+        <div class="layui-form-pane" style="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">限定游戏</label>
+                <div class="layui-input-block">
+                                <input type="checkbox" name="gameName" value="崩坏：星穹铁道" title="崩坏：星穹铁道" />
+                                <input type="checkbox" name="gameName" value="原神" title="原神" />
+                                <input type="checkbox" name="gameName" value="三角洲行动" title="三角洲行动" />
+                                <input type="checkbox" name="gameName" value="鸣潮" title="鸣潮" />
+                                <input type="checkbox" name="gameName" value="绝区零" title="绝区零" />
+                                <input type="checkbox" name="gameName" value="无限暖暖" title="无限暖暖" />
+                                <input type="checkbox" name="gameName" value="伊莫" title="伊莫" />
+                                <input type="checkbox" name="gameName" value="遗忘之海" title="遗忘之海" />
+                                <input type="checkbox" name="gameName" value="异环" title="异环" />
+                                <input type="checkbox" name="gameName" value="王者荣耀世界" title="王者荣耀世界" />
+                                <input type="checkbox" name="gameName" value="洛克王国：世界" title="洛克王国：世界" />
+                                <input type="checkbox" name="gameName" value="逆战：未来" title="逆战：未来" />
+                                <input type="checkbox" name="gameName" value="明日方舟：终末地" title="明日方舟：终末地" />
+                                <input type="checkbox" name="gameName" value="燕云十六声" title="燕云十六声" />
+
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">WebhookUrl</label>
+                <div class="layui-input-block">
+                    <input type="text" name="webhookUrl" id="webhookUrl" lay-verify="" autocomplete="off" placeholder="请在这里粘贴拿到的webhookUrl" maxlength="300" class="layui-input layui-input-shadow boxshadow-success" value="">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">内部抢单群聊ID</label>
+                <div class="layui-input-block">
+                    <input type="text" name="groupId" id="groupId" lay-verify="" autocomplete="off" placeholder="请输入鸡蛋铺聊天系统内部抢单群聊ID" maxlength="30" class="layui-input layui-input-shadow boxshadow-success" value="">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">发送时机</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="replyOcc" value="0" title="发内部抢单大厅+交易平台时">
+                    <input type="radio" name="replyOcc" value="10" title="只发内部抢单大厅时">
+                    <input type="radio" name="replyOcc" value="20" title="发交易平台时">
+                    <input type="radio" name="replyOcc" value="30" title="交易订单产生重要变化时">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">是否@全员</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="callAll" value="0" title="需要">
+                    <input type="radio" name="callAll" value="10" title="不需要">
+                </div>
+            </div>
+            <div class="layui-form-item layui-hide">
+                <label class="layui-form-label">快捷抢单链接</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="kurl" value="0" title="不需要" checked="checked">
+                    <input type="radio" name="kurl" value="10" title="<span lay-tips='在消息末尾追加此单抢单URL地址'>需要</span>">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">消息类型</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="msgType" value="0" title="MarkDown模式" checked="checked">
+                    <div lay-radio><span lay-tips="默认情况下请选这个">MarkDown模式</span></div>
+                    <input type="radio" name="msgType" value="1" title="文本模式">
+                    <div lay-radio><span lay-tips="特殊情况下选这个">文本模式</span></div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">追加备注</label>
+                <div class="layui-input-block">
+                    <input type="text" name="remark" id="remark" lay-verify="" autocomplete="off" placeholder="" maxlength="100" class="layui-input layui-input-shadow boxshadow-success" value="">
+                </div>
+            </div>
+        </div>
+        <div style="text-align:center;align-items:center">
+            <a class="layui-btn layui-btn-normal layui-btn-lg w-lg saveBtn">保存设置</a>
+        </div>
+    </div>
+
+    <input type="hidden" name="ptid" id="ptid" />
+</form>
+
+
+
+

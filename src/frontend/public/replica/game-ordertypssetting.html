@@ -1,0 +1,131 @@
+<style type="text/css">
+    .layui-table-cell {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 5px;
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        box-sizing: border-box;
+        font-size: 12px;
+    }
+
+    .lableb {
+        display: inline-block;
+        padding: 2px 4px;
+        font-size: 12px;
+        line-height: 14px;
+        color: #fff;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #999;
+        overflow: hidden;
+        border-radius: 3px;
+        margin-right: 2px;
+    }
+
+    .layui-form-pane .layui-form-label {
+        width: 110px;
+        padding: 8px 8px;
+        height: 38px;
+        line-height: 20px;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: 2px 0 0 2px;
+        text-align: center;
+        background-color: #FBFBFB;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+
+    .layui-btn {
+        margin-bottom: 15px;
+        margin-right: 8px;
+    }
+</style>
+
+<form class="layui-form" action="" lay-filter="pro" onsubmit="return false">
+    <div class="" style="padding-left: 5px;padding-top:10px">
+        <div class="layui-form-pane">
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 80px">选择游戏</label>
+                <div class="layui-input-inline">
+                    <select id="gameName" name="gameName" lay-filter="selectGame">
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="" style="">
+        <table class="layui-hide" id="tableList" lay-filter="tableList"></table>
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-xs" lay-event="refresh" type="button" title="刷新当前数据"><i class="layui-icon layui-refresh2"></i>刷新数据</button>
+                <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="addProjectBtn" type="button" title="新增一个项目分类"><i class="layui-icon layui-tianjiazujian"></i>新增项目分类</button>
+                <button class="layui-btn layui-btn-xs " lay-event="delProject" type="button" title="删除"><i class="layui-icon layui-shanchu"></i>删除</button>
+                <!-- ⚠️ **我方新增的按钮**（对标工具栏只有上面三颗）：删除改成软删除之后
+                     （D-0085），得有个地方能看/恢复已删除的记录；对标没有这个功能。 -->
+                <button class="layui-btn layui-btn-xs" lay-event="deletedBtn" type="button" title="查看并恢复已删除的项目分类"><i class="layui-icon layui-icon-return"></i>已删除</button>
+            </div>
+            <div style="color:#ff6a00" id="total"></div>
+        </script>
+
+        <script type="text/html" id="baroperating">
+            <a class="layui-btn layui-btn-xs layui-btn-warm" style="" lay-event="submitEdit" title="编辑分类名称"><i class="layui-icon layui-icon-edit"></i></a>
+        </script>
+    </div>
+
+    <div class="addeditDiv" style="display:none">
+        <div class="layui-form-pane" style="margin-top:10px;margin-right:10px">
+            <div class="layui-form-item">
+                <label class="layui-form-label">分类名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="project" id="project" lay-verify="required" autocomplete="off" placeholder="请输入一个分类名称" maxlength="50" class="layui-input layui-input-shadow boxshadow-success">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">排序值</label>
+                <div class="layui-input-block">
+                    <input type="text" name="orderby" id="orderby" lay-verify="required|number" autocomplete="off" placeholder="数字越大越排在前面，例如1" maxlength="4" class="layui-input layui-input-shadow boxshadow-success">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">追加到标题前</label>
+                <div class="layui-input-block">
+                    <input type="text" name="before" id="before"  autocomplete="off" placeholder="请输入追加到标题前字段" title="此功能仅限于在发单到交易平台时有效" maxlength="50" class="layui-input layui-input-shadow boxshadow-success">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">追加到标题后</label>
+                <div class="layui-input-block">
+                    <input type="text" name="after" id="after"  autocomplete="off" placeholder="请输入追加到标题后字段" title="此功能仅限于在发单到交易平台时有效" maxlength="50" class="layui-input layui-input-shadow boxshadow-success">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" lay-tips="勾选后此分类的订单将只会发指定的平台">指定发平台</label>
+                <div class="layui-input-block">
+                            <input type="checkbox" name="platformIds" value="8" title="全能代" lay-filter="platforms">
+                            <input type="checkbox" name="platformIds" value="10" title="代练通" lay-filter="platforms">
+                            <input type="checkbox" name="platformIds" value="30" title="代练妈妈" lay-filter="platforms">
+                            <input type="checkbox" name="platformIds" value="50" title="咕噜代练" lay-filter="platforms">
+                            <input type="checkbox" name="platformIds" value="60" title="易代练" lay-filter="platforms">
+                            <input type="checkbox" name="platformIds" value="70" title="代练宝" lay-filter="platforms">
+                            <input type="checkbox" name="platformIds" value="80" title="代练丸子" lay-filter="platforms">
+                            <input type="checkbox" name="platformIds" value="90" title="趣代练" lay-filter="platforms">
+                            <input type="checkbox" name="platformIds" value="91" title="代练多" lay-filter="platforms">
+                            <input type="checkbox" name="platformIds" value="92" title="代游通" lay-filter="platforms">
+                            <input type="checkbox" name="platformIds" value="93" title="天玩代练" lay-filter="platforms">
+                            <input type="checkbox" name="platformIds" value="94" title="通天代练" lay-filter="platforms">
+                            <input type="checkbox" name="platformIds" value="95" title="享代练" lay-filter="platforms">
+
+                </div>
+            </div>
+            <div style="text-align:center;align-items:center">
+                <button type="button" class="layui-btn   layui-btn-normal w-lg" data-act="save">保存</button>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name="pid" id="pid"/>
+</form>

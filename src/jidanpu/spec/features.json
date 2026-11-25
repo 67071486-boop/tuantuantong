@@ -1,0 +1,4305 @@
+{
+ "meta": {
+  "source": "spec/endpoints.json + spec/page_titles.json（形状来自两份实测产物）",
+  "pages": 77,
+  "pages_without_title": [
+   "/Customer/hyanalysisreport",
+   "/Emp/billsummary",
+   "/Emp/dayoperation",
+   "/Emp/funddetailslist",
+   "/Emp/mybillsummary",
+   "/Emp/onlinepaytorecdetail",
+   "/Emp/salesmanstatistics",
+   "/Game/pricecalculator",
+   "/GameAccounts/myaccountlist",
+   "/GameAccounts/sellaccpreview",
+   "/Group/jdppublictask",
+   "/Index/console",
+   "/Order/SoureOrderChangePriceLog",
+   "/Order/TradingOrderActionLogList",
+   "/SMS/smslogslist",
+   "/System/systemlog",
+   "/User/ApplyOnboardingMange",
+   "/User/checkinlog",
+   "/User/checkinstatic",
+   "/User/usergroup"
+  ],
+  "endpoints_with_page": 350,
+  "endpoints_without_page": 10,
+  "with_model": 51
+ },
+ "pages": {
+  "/Customer/backlist": {
+   "title": "黑名单管理",
+   "endpoints": [
+    {
+     "path": "/CustomerAjax/GetCustomerBackList",
+     "method": "GET",
+     "name": "获取客户黑名单列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/CustomerAjax/DelBack",
+     "method": "POST",
+     "name": "删除黑名单",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "ids"
+     ]
+    }
+   ]
+  },
+  "/Customer/hyanalysisreport": {
+   "title": "",
+   "endpoints": [
+    {
+     "path": "/CustomerAjax/GetConseReport",
+     "method": "GET",
+     "name": "获取Conse报表",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/CustomerAjax/GetHyRaiseReporyYears",
+     "method": "GET",
+     "name": "获取会员RaiseReporyYears",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/CustomerAjax/GetSourTypeReport",
+     "method": "GET",
+     "name": "获取Sour类型报表",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    }
+   ]
+  },
+  "/Customer/hylevelsetting": {
+   "title": "会员等级设置",
+   "endpoints": [
+    {
+     "path": "/CustomerAjax/SaveIntervalLevel",
+     "method": "POST",
+     "name": "保存Interval等级",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": []
+    }
+   ]
+  },
+  "/Emp/billsummary": {
+   "title": "",
+   "endpoints": [
+    {
+     "path": "/EmpAjax/GetBillSummaryList",
+     "method": "GET",
+     "name": "获取账单汇总列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    }
+   ]
+  },
+  "/Emp/bindalipaysettauth": {
+   "title": "绑定用于结算打款的支付宝管理列表",
+   "endpoints": [
+    {
+     "path": "/EmpAjax/GetBindAlipaySettAuthList",
+     "method": "GET",
+     "name": "获取绑定支付宝结算授权列表",
+     "note": "；实测返回列表(count=1，字段: id,id2,id3,id4,id5,id6,id7,id8,id9,id10,company,str1,str2,str3)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/EmpAjax/AddBindAlipaySettAuthData",
+     "method": "POST",
+     "name": "新增绑定支付宝结算授权数据",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "alipayAcc",
+      "alipayAccName",
+      "remark",
+      "channel"
+     ]
+    },
+    {
+     "path": "/EmpAjax/DeleteBindAlipaySettAuth",
+     "method": "POST",
+     "name": "删除绑定支付宝结算授权",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "bid",
+      "channel"
+     ]
+    },
+    {
+     "path": "/EmpAjax/ModityBindAlipaySettAuthRemarkResetAuth",
+     "method": "POST",
+     "name": "Modity绑定支付宝结算授权Remark重置授权",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "bid",
+      "modityType",
+      "channel"
+     ]
+    }
+   ]
+  },
+  "/Emp/booklist": {
+   "title": "日常账本",
+   "endpoints": [
+    {
+     "path": "/EmpAjax/GetBookList",
+     "method": "GET",
+     "name": "获取账本列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/EmpAjax/DelBook",
+     "method": "POST",
+     "name": "删除账本",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "bookId"
+     ]
+    }
+   ]
+  },
+  "/Emp/dayoperation": {
+   "title": "",
+   "endpoints": [
+    {
+     "path": "/EmpAjax/GetKeFuOperationData",
+     "method": "GET",
+     "name": "获取KeFu运营数据",
+     "note": "；实测返回JSON对象",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/EmpAjax/GetOperationData",
+     "method": "GET",
+     "name": "获取运营数据",
+     "note": "；实测返回JSON对象",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/EmpAjax/GetOrderConseTypeByCondition",
+     "method": "POST",
+     "name": "获取订单Conse类型ByCondition",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/EmpAjax/GetTotalPriceTrendReport",
+     "method": "GET",
+     "name": "获取Total价格Trend报表",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    }
+   ]
+  },
+  "/Emp/emplist": {
+   "title": "绩效管理",
+   "endpoints": [
+    {
+     "path": "/EmpAjax/GetEmpList",
+     "method": "GET",
+     "name": "获取接单员列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/EmpAjax/GetJdpBalance",
+     "method": "GET",
+     "name": "获取鸡蛋铺Balance",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/EmpAjax/GetLingyuefangzhouSystemSettleBalance",
+     "method": "GET",
+     "name": "获取LingyuefangzhouSystem结算Balance",
+     "note": "；实测返回JSON对象",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/EmpAjax/AcceptSettAgreenMent",
+     "method": "POST",
+     "name": "Accept结算AgreenMent",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/EmpAjax/BatchDeductFee",
+     "method": "GET",
+     "name": "BatchDeduct费用",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/EmpAjax/ChangeEmpRemark",
+     "method": "POST",
+     "name": "变更接单员Remark",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "idx",
+      "remark"
+     ]
+    },
+    {
+     "path": "/EmpAjax/ChangeOrderRecPrice",
+     "method": "POST",
+     "name": "变更订单接单价格",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "empId",
+      "fee",
+      "type"
+     ]
+    },
+    {
+     "path": "/EmpAjax/DelEmp",
+     "method": "POST",
+     "name": "删除接单员",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "empId"
+     ]
+    },
+    {
+     "path": "/EmpAjax/OnlinePaySetRec",
+     "method": "POST",
+     "name": "在线支付设置接单",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "ids",
+      "payMode",
+      "authId"
+     ]
+    },
+    {
+     "path": "/EmpAjax/OnlinePaySetRecGetFailResult",
+     "method": "POST",
+     "name": "在线支付设置接单获取失败Result",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "bizId",
+      "payMode"
+     ]
+    }
+   ]
+  },
+  "/Emp/funddetailslist": {
+   "title": "",
+   "endpoints": [
+    {
+     "path": "/EmpAjax/GetBalanceAndFreeAmount",
+     "method": "GET",
+     "name": "获取BalanceAndFreeAmount",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    }
+   ]
+  },
+  "/Emp/learminformationlist": {
+   "title": "内部学习资料",
+   "endpoints": [
+    {
+     "path": "/EmpAjax/GetLearmInformationList",
+     "method": "GET",
+     "name": "获取学习Information列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/EmpAjax/DelLearmInformation",
+     "method": "POST",
+     "name": "删除学习Information",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "ids"
+     ]
+    }
+   ]
+  },
+  "/Emp/mybillsummary": {
+   "title": "",
+   "endpoints": [
+    {
+     "path": "/EmpAjax/GetMyOnLineBillSummaryList",
+     "method": "GET",
+     "name": "获取我的OnLine账单汇总列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    }
+   ]
+  },
+  "/Emp/myemp": {
+   "title": "我的收入",
+   "endpoints": [
+    {
+     "path": "/EmpAjax/GetMyEmp",
+     "method": "GET",
+     "name": "获取我的接单员",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/EmpAjax/ApplicationEmp",
+     "method": "POST",
+     "name": "Application接单员",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "empId"
+     ]
+    },
+    {
+     "path": "/EmpAjax/SynchEmpOrderToMySystem",
+     "method": "POST",
+     "name": "Synch接单员订单To我的System",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "empIdx"
+     ]
+    }
+   ]
+  },
+  "/Emp/onlinepaytorecdetail": {
+   "title": "",
+   "endpoints": [
+    {
+     "path": "/EmpAjax/GetOnLineBillSummaryList",
+     "method": "GET",
+     "name": "获取OnLine账单汇总列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    }
+   ]
+  },
+  "/Emp/privatephonecalllog": {
+   "title": "客户号码隐私保护呼叫记录",
+   "endpoints": [
+    {
+     "path": "/EmpAjax/GetPrivatePhoneCallLogList",
+     "method": "GET",
+     "name": "获取私密电话通话日志列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/EmpAjax/ChangePrivatePhoneCallLogRemark",
+     "method": "POST",
+     "name": "变更私密电话通话日志Remark",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "ids",
+      "remark"
+     ]
+    }
+   ]
+  },
+  "/Emp/qacenter": {
+   "title": "内部QA中心",
+   "endpoints": [
+    {
+     "path": "/EmpAjax/AddEditQATypeName",
+     "method": "POST",
+     "name": "新增编辑问答类型名称",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id",
+      "value",
+      "type"
+     ]
+    }
+   ]
+  },
+  "/Emp/salesmanstatistics": {
+   "title": "",
+   "endpoints": [
+    {
+     "path": "/EmpAjax/GetSalesmanStatistics",
+     "method": "GET",
+     "name": "获取客服Statistics",
+     "note": "；实测返回列表(count=37，字段: Kefu,TotalCount,TotalPrice,WFP,WFPAmount,DSH,DSHAmount,DLZ,DLZAmount,DYS,DYSAmount,YWC,YWCAmount,YZT)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    }
+   ]
+  },
+  "/Game/OrderTypsSetting": {
+   "title": "订单项目分类管理",
+   "endpoints": [
+    {
+     "path": "/GameAjax/GetAllOrderTypeList",
+     "method": "GET",
+     "name": "获取全部订单类型列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/GameAjax/AddModityOrderType",
+     "method": "POST",
+     "name": "新增Modity订单类型",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "gameId",
+      "pid",
+      "projectName",
+      "orderBy",
+      "before",
+      "after",
+      "platidx"
+     ]
+    },
+    {
+     "path": "/GameAjax/DelOrderType",
+     "method": "POST",
+     "name": "删除订单类型",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "pid"
+     ]
+    }
+   ]
+  },
+  "/Game/gameitemlist": {
+   "title": "游戏物品管理",
+   "endpoints": [
+    {
+     "path": "/GameAjax/DelGameItem",
+     "method": "POST",
+     "name": "删除游戏商品",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "itemId"
+     ]
+    }
+   ]
+  },
+  "/Game/gameserver": {
+   "title": "游戏区服",
+   "endpoints": [
+    {
+     "path": "/GameAjax/GetGameServerMangeList",
+     "method": "GET",
+     "name": "获取游戏服务器管理列表",
+     "note": "；实测返回列表(count=14，字段: gameId,gameName,isPw,isMoblieGame,isDefulat,isNotAccPwd,isDisbleSendSms,orderNum)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/GameAjax/getGameData",
+     "method": "GET",
+     "name": "获取游戏数据",
+     "note": "；实测返回JSON对象",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/GameAjax/AddEditGame",
+     "method": "POST",
+     "name": "新增编辑游戏",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "gameId",
+      "gameName"
+     ]
+    },
+    {
+     "path": "/GameAjax/ChangeGameSendSmsSwitch",
+     "method": "POST",
+     "name": "变更游戏发送短信Switch",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "gameId"
+     ]
+    },
+    {
+     "path": "/GameAjax/DelGame",
+     "method": "POST",
+     "name": "删除游戏",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "gameId"
+     ]
+    },
+    {
+     "path": "/GameAjax/ReshrefGameServerCache",
+     "method": "GET",
+     "name": "Reshref游戏服务器Cache",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/GameAjax/SetGameIsMoblieGame",
+     "method": "POST",
+     "name": "设置游戏IsMoblie游戏",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "gameId"
+     ]
+    },
+    {
+     "path": "/GameAjax/UpdateGameOrderNum",
+     "method": "POST",
+     "name": "更新游戏订单数量",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "gameId"
+     ]
+    }
+   ]
+  },
+  "/Game/pricecalculator": {
+   "title": "",
+   "endpoints": [
+    {
+     "path": "/GameAjax/GetCalculationPrice",
+     "method": "GET",
+     "name": "获取Calculation价格",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/GameAjax/GetLolJinjiDataList",
+     "method": "GET",
+     "name": "获取LolJinji数据列表",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/GameAjax/GetPriceCalculatorSettingPriceDW",
+     "method": "POST",
+     "name": "获取价格计算器设置价格DW",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/GameAjax/GetPriceSettPackgeName",
+     "method": "POST",
+     "name": "获取价格结算Packge名称",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    }
+   ]
+  },
+  "/Game/projectsetting": {
+   "title": "项目维护",
+   "endpoints": [
+    {
+     "path": "/GameAjax/GetProjectList",
+     "method": "GET",
+     "name": "获取项目列表",
+     "note": "；实测返回列表(count=2，字段: id,gameName,projectName,orderBy)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/GameAjax/AddEditProject",
+     "method": "POST",
+     "name": "新增编辑项目",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "gameId",
+      "pid",
+      "projectName",
+      "orderBy"
+     ]
+    },
+    {
+     "path": "/GameAjax/DelProject",
+     "method": "POST",
+     "name": "删除项目",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "pid"
+     ]
+    }
+   ]
+  },
+  "/GameAccounts/accountlist": {
+   "title": "账号管理中心",
+   "endpoints": [
+    {
+     "path": "/GameAccountsAjax/GetGameAccList",
+     "method": "GET",
+     "name": "获取游戏账号列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/GameAccountsAjax/ChangeAccRemark",
+     "method": "POST",
+     "name": "变更账号Remark",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "gameAccId",
+      "remark"
+     ]
+    },
+    {
+     "path": "/GameAccountsAjax/ChangeGameAccountJiWei",
+     "method": "POST",
+     "name": "变更游戏账号JiWei",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "idx",
+      "remark"
+     ]
+    },
+    {
+     "path": "/GameAccountsAjax/ChangeGameAccountPrice",
+     "method": "POST",
+     "name": "变更游戏账号价格",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "idx",
+      "changeType",
+      "fee"
+     ]
+    },
+    {
+     "path": "/GameAccountsAjax/ChangeGameAccountProStatus",
+     "method": "POST",
+     "name": "变更游戏账号Pro状态",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "idx",
+      "status",
+      "remark"
+     ]
+    },
+    {
+     "path": "/GameAccountsAjax/ChangeGameAccountUseStatus",
+     "method": "POST",
+     "name": "变更游戏账号Use状态",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "idx",
+      "status",
+      "ftime"
+     ]
+    },
+    {
+     "path": "/GameAccountsAjax/ChangeGameAccountUseType",
+     "method": "POST",
+     "name": "变更游戏账号Use类型",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "idx",
+      "useType"
+     ]
+    },
+    {
+     "path": "/GameAccountsAjax/DelGameAccountByIDX",
+     "method": "POST",
+     "name": "删除游戏账号ByIDX",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "gameAccId"
+     ]
+    },
+    {
+     "path": "/GameAccountsAjax/SellAccAction",
+     "method": "GET",
+     "name": "出售账号Action",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "gid",
+      "sellPrice",
+      "sellChoee",
+      "tradeNo",
+      "changeBindPhone"
+     ]
+    }
+   ]
+  },
+  "/GameAccounts/addeditaccount": {
+   "title": "新增/编辑账号",
+   "endpoints": [
+    {
+     "path": "/GameAccountsAjax/GetAccTipsList",
+     "method": "GET",
+     "name": "获取账号Tips列表",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/GameAccountsAjax/GetAllGameAccountUseTypeSelect",
+     "method": "GET",
+     "name": "获取全部游戏账号Use类型选择",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/GameAccountsAjax/AddEditGameAccount",
+     "method": "POST",
+     "name": "新增编辑游戏账号",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "param",
+      "gameName",
+      "gameArea",
+      "gameServer",
+      "gameJob",
+      "gameGroup"
+     ]
+    },
+    {
+     "path": "/GameAccountsAjax/DisAddGameAccountContent",
+     "method": "POST",
+     "name": "Dis新增游戏账号内容",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "value",
+      "gameName"
+     ]
+    }
+   ]
+  },
+  "/GameAccounts/importacc": {
+   "title": "导入账号",
+   "endpoints": [
+    {
+     "path": "/GameAccountsAjax/ImputGameAccByExecl",
+     "method": "GET",
+     "name": "Imput游戏账号ByExecl",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "gameName",
+      "option",
+      "formats",
+      "gtype"
+     ]
+    }
+   ]
+  },
+  "/GameAccounts/myaccountlist": {
+   "title": "",
+   "endpoints": [
+    {
+     "path": "/GameAccountsAjax/GetMyGameAccList",
+     "method": "GET",
+     "name": "获取我的游戏账号列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    }
+   ]
+  },
+  "/GameAccounts/sellaccpreview": {
+   "title": "",
+   "endpoints": [
+    {
+     "path": "/GameAccountsAjax/GetSellAccListByPreview",
+     "method": "GET",
+     "name": "获取出售账号列表By预览",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/GameAccountsAjax/GetSellAccTipsList",
+     "method": "GET",
+     "name": "获取出售账号Tips列表",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    }
+   ]
+  },
+  "/Group/addeditgroup": {
+   "title": "新增编辑排团",
+   "endpoints": [
+    {
+     "path": "/PveTaskAjax/GetTaskNeedJobTemplate",
+     "method": "GET",
+     "name": "获取任务Need职位模板",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/UserAjax/GetAllUserTableByGameName",
+     "method": "GET",
+     "name": "获取全部人员TableBy游戏名称",
+     "note": "；实测返回列表(count=80，字段: id,userName,loginAcc,roleName,userType,recOrderMaxCount,qq,moblie,inputJobDate,outJobDate,remark,isValid,isAbsolveLoginVer,tips)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/PveTaskAjax/AddEditPveTask",
+     "method": "POST",
+     "name": "新增编辑Pve任务",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "param",
+      "jobConfig",
+      "isConfigJob"
+     ]
+    },
+    {
+     "path": "/PveTaskAjax/DelTaskNeedJobTemplateByTid",
+     "method": "POST",
+     "name": "删除任务Need职位模板ByTid",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "tid"
+     ]
+    },
+    {
+     "path": "/PveTaskAjax/SaveTaskNeedJobTemplate",
+     "method": "POST",
+     "name": "保存任务Need职位模板",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "title",
+      "param",
+      "tid"
+     ]
+    }
+   ]
+  },
+  "/Group/grouplist": {
+   "title": "排团管理",
+   "endpoints": [
+    {
+     "path": "/PveTaskAjax/ChangeTaskOrderBy",
+     "method": "POST",
+     "name": "变更任务订单By",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "taskId",
+      "value"
+     ]
+    },
+    {
+     "path": "/PveTaskAjax/ChangeTaskStrartTime",
+     "method": "POST",
+     "name": "变更任务Strart时间",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "taskId",
+      "stime"
+     ]
+    },
+    {
+     "path": "/PveTaskAjax/DelPveTask",
+     "method": "POST",
+     "name": "删除Pve任务",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "taskId"
+     ]
+    },
+    {
+     "path": "/PveTaskAjax/EditPveTeamPostionAmount",
+     "method": "POST",
+     "name": "编辑PveTeamPostionAmount",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "taskId",
+      "amount"
+     ]
+    },
+    {
+     "path": "/PveTaskAjax/EditPveTeamProject",
+     "method": "POST",
+     "name": "编辑PveTeam项目",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "taskId",
+      "project"
+     ]
+    },
+    {
+     "path": "/PveTaskAjax/SaveGroupLevelImg",
+     "method": "POST",
+     "name": "保存分组等级Img",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "value"
+     ]
+    },
+    {
+     "path": "/PveTaskAjax/UpPveTaskSta",
+     "method": "GET",
+     "name": "更新Pve任务状态",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "taskId",
+      "sta"
+     ]
+    },
+    {
+     "path": "/UserAjax/SaveTaskListSeachConfigConfig",
+     "method": "POST",
+     "name": "保存任务列表搜索配置配置",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "config"
+     ]
+    }
+   ]
+  },
+  "/Group/grouplist2020": {
+   "title": "新版排团",
+   "endpoints": [
+    {
+     "path": "/PveTaskAjax/GetCurrentWeekDayTaskGrapNeedJob",
+     "method": "GET",
+     "name": "获取CurrentWeek日任务GrapNeed职位",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/PveTaskAjax/GetNewsGroupList",
+     "method": "POST",
+     "name": "获取News分组列表",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/PveTaskAjax/GetNewsGroupOrderList",
+     "method": "GET",
+     "name": "获取News分组订单列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/PveTaskAjax/ChangeGroupPostionOrderBy",
+     "method": "POST",
+     "name": "变更分组Postion订单By",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "ctype",
+      "id",
+      "value"
+     ]
+    },
+    {
+     "path": "/PveTaskAjax/ChangeTaskMainInfo",
+     "method": "POST",
+     "name": "变更任务Main信息",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "taskId",
+      "taskName",
+      "groupName",
+      "startDate",
+      "remark",
+      "project",
+      "gameServer",
+      "taskMangeUid"
+     ]
+    },
+    {
+     "path": "/PveTaskAjax/ChangeTaskNeedJobRecUser",
+     "method": "POST",
+     "name": "变更任务Need职位接单人员",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "pid",
+      "userId"
+     ]
+    },
+    {
+     "path": "/PveTaskAjax/CopyToNewGroup",
+     "method": "GET",
+     "name": "复制To新分组",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "taskId",
+      "taskName",
+      "groupName",
+      "startDate",
+      "remark",
+      "project",
+      "gameServer"
+     ]
+    },
+    {
+     "path": "/PveTaskAjax/DelGroupAccByTaskIDAccId",
+     "method": "POST",
+     "name": "删除分组账号By任务ID账号Id",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "taskId",
+      "accId"
+     ]
+    },
+    {
+     "path": "/PveTaskAjax/DelGroupNeedJobByPid",
+     "method": "POST",
+     "name": "删除分组Need职位ByPid",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "pid"
+     ]
+    },
+    {
+     "path": "/PveTaskAjax/PublicNeedJobPostionCancel",
+     "method": "POST",
+     "name": "公开Need职位Postion取消",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "taskId"
+     ]
+    },
+    {
+     "path": "/PveTaskAjax/SetJobNeedItemLevel",
+     "method": "POST",
+     "name": "设置职位Need商品等级",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "pid",
+      "value",
+      "action"
+     ]
+    },
+    {
+     "path": "/PveTaskAjax/SetPveAccGroup",
+     "method": "POST",
+     "name": "设置Pve账号分组",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "taskId",
+      "accId",
+      "groupName",
+      "pid"
+     ]
+    },
+    {
+     "path": "/PveTaskAjax/SetTaskAddPostionOrder",
+     "method": "POST",
+     "name": "设置任务新增Postion订单",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "currentTaskId",
+      "oid"
+     ]
+    },
+    {
+     "path": "/PveTaskAjax/SetTaskColorValue",
+     "method": "POST",
+     "name": "设置任务ColorValue",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "taskId",
+      "color"
+     ]
+    },
+    {
+     "path": "/PveTaskAjax/SetTaskPostionMutual",
+     "method": "POST",
+     "name": "设置任务PostionMutual",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "cTaskId",
+      "cpid",
+      "cAccLogId",
+      "toTaskId",
+      "toPid",
+      "toAccLogId",
+      "action"
+     ]
+    },
+    {
+     "path": "/PveTaskAjax/SetTaskPostionOrder",
+     "method": "POST",
+     "name": "设置任务Postion订单",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "taskId",
+      "pid",
+      "orderId",
+      "throwFee",
+      "oid"
+     ]
+    },
+    {
+     "path": "/PveTaskAjax/SetTaskReplacePostionOrder",
+     "method": "POST",
+     "name": "设置任务ReplacePostion订单",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "oid",
+      "accLogId",
+      "oldTaskId"
+     ]
+    },
+    {
+     "path": "/PveTaskAjax/StartAutoMatchGroup",
+     "method": "GET",
+     "name": "Start自动Match分组",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "taskId",
+      "gameServer",
+      "project",
+      "gameGroup",
+      "date",
+      "matchTfMode",
+      "matchSameTips",
+      "matchOrderStatus",
+      "matchAss",
+      "tid",
+      "zacc"
+     ]
+    }
+   ]
+  },
+  "/Group/jdppublictask": {
+   "title": "",
+   "endpoints": [
+    {
+     "path": "/PveTaskAjax/GetJdpPublicTaskData",
+     "method": "GET",
+     "name": "获取鸡蛋铺公开任务数据",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    }
+   ]
+  },
+  "/Index/console": {
+   "title": "",
+   "endpoints": [
+    {
+     "path": "/EmpAjax/GetSystemBuessionOperationData",
+     "method": "GET",
+     "name": "获取SystemBuession运营数据",
+     "note": "；实测返回对象(字段: totalOrderCount,totalPrice,totalReturnOrderCount,totalReturnOrderPrice,totalThrowCount,totalThrowAmount,totalEmpSettCount,totalEmpSettAmount,totalEmpNotSettCount,totalEmpNotSettAmount,totalProfit,totalReFundAmount)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    }
+   ]
+  },
+  "/Order/ClientOrderGenerate": {
+   "title": "订单生成成功",
+   "endpoints": [
+    {
+     "path": "/OrderAjax/GetGeneRateCustomerOrderLogList",
+     "method": "GET",
+     "name": "获取GeneRate客户订单日志列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/systemAjax/getOrderGuideTemplateList",
+     "method": "GET",
+     "name": "获取订单Guide模板列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/OrderAjax/GeneRateCustomerOrderAjax",
+     "method": "POST",
+     "name": "GeneRate客户订单Ajax",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/SaveClientWriteOrderSetting",
+     "method": "POST",
+     "name": "保存客户端Write订单设置",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/systemAjax/AddEditLearmInformation",
+     "method": "POST",
+     "name": "新增编辑学习Information",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id",
+      "conent",
+      "title"
+     ]
+    },
+    {
+     "path": "/systemAjax/delOrderGuideTemplate",
+     "method": "GET",
+     "name": "删除订单Guide模板",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id"
+     ]
+    }
+   ]
+  },
+  "/Order/CoreOrderCenter": {
+   "title": "交易平台订单处理",
+   "endpoints": [
+    {
+     "path": "/OrderAjax/GetPlatformOrderList",
+     "method": "GET",
+     "name": "获取平台订单列表",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/OrderAjax/GetPlatmPushOperateReport",
+     "method": "GET",
+     "name": "获取Platm推送Operate报表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/OrderAjax/AppendTransctionOrderPrice",
+     "method": "GET",
+     "name": "AppendTransction订单价格",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "tid",
+      "fee",
+      "platfromId"
+     ]
+    },
+    {
+     "path": "/OrderAjax/ChangeTransctionOrderArbitration",
+     "method": "POST",
+     "name": "变更Transction订单Arbitration",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "tid",
+      "value",
+      "msgContent"
+     ]
+    },
+    {
+     "path": "/OrderAjax/ConfigmTransctionOrder",
+     "method": "GET",
+     "name": "ConfigmTransction订单",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "tid"
+     ]
+    },
+    {
+     "path": "/OrderAjax/SynchTransctionOrderStatus",
+     "method": "GET",
+     "name": "SynchTransction订单状态",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "tid"
+     ]
+    }
+   ]
+  },
+  "/Order/RecCustomerChatLog": {
+   "title": "打手玩家对聊管理",
+   "endpoints": [
+    {
+     "path": "/OrderAjax/GetRecPlayerChatMsgDetailsList",
+     "method": "GET",
+     "name": "获取接单Player聊天消息明细列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/OrderAjax/GetRecPlayerChatMsgFilterKey",
+     "method": "GET",
+     "name": "获取接单Player聊天消息Filter关键字",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/OrderAjax/GetRecPlayerChatMsgList",
+     "method": "GET",
+     "name": "获取接单Player聊天消息列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/OrderAjax/DisMissRecPlayerChat",
+     "method": "POST",
+     "name": "DisMiss接单Player聊天",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "ids"
+     ]
+    },
+    {
+     "path": "/OrderAjax/SaveRecPlayerChatMsgFilterKey",
+     "method": "POST",
+     "name": "保存接单Player聊天消息Filter关键字",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "key"
+     ]
+    }
+   ]
+  },
+  "/Order/SoureOrderChangePriceLog": {
+   "title": "",
+   "endpoints": [
+    {
+     "path": "/OrderAjax/GetSoureOrderChangePriceLogList",
+     "method": "GET",
+     "name": "获取上家订单变更价格日志列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    }
+   ]
+  },
+  "/Order/TradingOrderActionLogList": {
+   "title": "",
+   "endpoints": [
+    {
+     "path": "/OrderAjax/GetPushPlatfromOrderActionLogMangeList",
+     "method": "GET",
+     "name": "获取推送平台订单Action日志管理列表",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    }
+   ]
+  },
+  "/Order/addorder": {
+   "title": "录入订单",
+   "endpoints": [
+    {
+     "path": "/CustomerAjax/GetMemberAddOrderSimpInfo",
+     "method": "GET",
+     "name": "获取Member新增订单Simp信息",
+     "note": "；实测返回对象(字段: hid,balance,totalConsuAmount,membersLevelName,membersLevelColorStr,firstOrderTime,lastOrderTime,remark,blackCount)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/CustomerAjax/GetMemberBalance",
+     "method": "GET",
+     "name": "获取MemberBalance",
+     "note": "；实测返回对象(字段: data,defDec)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/GameAjax/GetGameAttrInfoTitle",
+     "method": "GET",
+     "name": "获取游戏Attr信息Title",
+     "note": "；实测返回对象(字段: id,id2,id3,id4,id5,id6,id7,id8,id9,id10,company,str1,str2,str3)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/OrderAjax/DisGameNameByContent",
+     "method": "GET",
+     "name": "Dis游戏名称By内容",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/OrderAjax/ReadTaoBaoOrderData",
+     "method": "GET",
+     "name": "已读TaoBao订单数据",
+     "note": "；实测返回对象(字段: data,pdd_phone,orderSoure,remark,rolName,gameArea,gameServer,payTime)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/GetPlatformPushOrderConfig",
+     "method": "GET",
+     "name": "获取平台推送订单配置",
+     "note": "；实测返回对象(字段: data)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/GetPushJdp_TemplateList",
+     "method": "GET",
+     "name": "获取推送鸡蛋铺模板列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/OrderAjax/AddOrderAjax",
+     "method": "POST",
+     "name": "新增订单Ajax",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "strParameter",
+      "gameName",
+      "gameArea",
+      "gameServer",
+      "gameJob",
+      "gameGroup",
+      "emps"
+     ]
+    },
+    {
+     "path": "/OrderAjax/AddOrderAutoDisKeys",
+     "method": "POST",
+     "name": "新增订单自动DisKeys",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "content",
+      "gameName"
+     ]
+    },
+    {
+     "path": "/OrderAjax/ImputAddOrderByFile",
+     "method": "POST",
+     "name": "Imput新增订单ByFile",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "gameName",
+      "fileSoure",
+      "throwAction",
+      "filterRepeat"
+     ]
+    },
+    {
+     "path": "/UserAjax/SaveUserConfigForAssOrderByUserId",
+     "method": "POST",
+     "name": "保存人员配置ForAss订单By人员Id",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "orderBy"
+     ]
+    }
+   ]
+  },
+  "/Order/insiderecorderlist": {
+   "title": "内部接单大厅",
+   "endpoints": [
+    {
+     "path": "/OrderAjax/GetInternalOrderGrabbingList",
+     "method": "GET",
+     "name": "接口清单与 SDK 都没有",
+     "note": "；本次实测发现的端点（疑似替代了已 404 的旧端点）",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/OrderAjax/RecOrderByInternal",
+     "method": "POST",
+     "name": "接单订单By内部",
+     "note": "（写操作；2026-09-28 真机实测：orderId 为表单必填参数，成功 code=1）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "orderId",
+      "__RequestVerificationToken"
+     ]
+    }
+   ]
+  },
+  "/Order/myorderlist": {
+   "title": "我的订单",
+   "endpoints": [
+    {
+     "path": "/OrderAjax/GetMyOrderList",
+     "method": "GET",
+     "name": "获取我的订单列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/OrderAjax/GetOrderContentById",
+     "method": "GET",
+     "name": "获取订单内容ById",
+     "note": "；实测返回JSON对象",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/OrderAjax/CopyOrderLog",
+     "method": "GET",
+     "name": "复制订单日志",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "orderId"
+     ]
+    },
+    {
+     "path": "/OrderAjax/SendOrderToMySystem",
+     "method": "POST",
+     "name": "发送订单To我的System",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "orderId"
+     ]
+    },
+    {
+     "path": "/OrderAjax/SetOrderJiWei",
+     "method": "POST",
+     "name": "设置订单JiWei",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "orderId",
+      "jiwei"
+     ]
+    },
+    {
+     "path": "/OrderAjax/SetOrderSta",
+     "method": "POST",
+     "name": "设置订单状态",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "orderId",
+      "sta",
+      "changeSoureType",
+      "remark",
+      "isSyncTaoBao"
+     ]
+    },
+    {
+     "path": "/OrderAjax/changeOrderJiaji",
+     "method": "GET",
+     "name": "变更订单加急",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "orderID"
+     ]
+    }
+   ]
+  },
+  "/Order/orderlist": {
+   "title": "订单管理中心",
+   "endpoints": [
+    {
+     "path": "/CommonPermissionAjax/GetAliOssPolicy",
+     "method": "GET",
+     "name": "获取阿里OSS凭证",
+     "note": "；实测返回对象(字段: accessid,host,policy,signature,expire)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/OrderAjax/GetBuiderGameScanQrCode",
+     "method": "GET",
+     "name": "获取Buider游戏ScanQrCode",
+     "note": "；实测返回对象(字段: data,hour)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/OrderAjax/GetOrderClientOrderUrlLink",
+     "method": "GET",
+     "name": "获取订单客户端订单UrlLink",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/OrderAjax/GetOrderList",
+     "method": "POST",
+     "name": "获取订单列表",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/OrderAjax/GetSendGroupNewOrderMsg",
+     "method": "POST",
+     "name": "获取发送分组新订单消息",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/OrderAjax/GetTransactionOrderByOrderIdFunc",
+     "method": "GET",
+     "name": "获取Transaction订单By订单IdFunc",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/OrderAjax/GetUserQQByOrderId",
+     "method": "GET",
+     "name": "获取人员QQBy订单Id",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/GetOrderLabelList",
+     "method": "GET",
+     "name": "获取订单标签列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/UserAjax/GetGroupMangeList",
+     "method": "POST",
+     "name": "获取分组管理列表",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/UserAjax/GetGroupUserSelect",
+     "method": "GET",
+     "name": "获取分组人员选择",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/UserAjax/GetZpRootUsers",
+     "method": "GET",
+     "name": "获取ZpRoot人员",
+     "note": "；实测返回列表(count=77，字段: name,value,selected,disabled,type,tichen,brokerageType,tips,info1,info2,optgroup,click,children)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/OrderAjax/AddOrderRefundLogs",
+     "method": "POST",
+     "name": "新增订单退款日志",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "orderIdx",
+      "refundModel",
+      "fee",
+      "sdate",
+      "tranNo",
+      "remark",
+      "changeOrderStatus"
+     ]
+    },
+    {
+     "path": "/OrderAjax/ChangeOrderGameRoleNameByOrderId",
+     "method": "POST",
+     "name": "变更订单游戏角色名称By订单Id",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "orderId",
+      "newRoleName"
+     ]
+    },
+    {
+     "path": "/OrderAjax/ChangeOrderLock",
+     "method": "POST",
+     "name": "变更订单Lock",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "orderId",
+      "value"
+     ]
+    },
+    {
+     "path": "/OrderAjax/ChangeOrderNetReceiptsPrice",
+     "method": "POST",
+     "name": "变更订单NetReceipts价格",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "orderId",
+      "fee"
+     ]
+    },
+    {
+     "path": "/OrderAjax/ChangeOrderPrice",
+     "method": "POST",
+     "name": "变更订单价格",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "orderId",
+      "fee"
+     ]
+    },
+    {
+     "path": "/OrderAjax/ChangeOrderProject",
+     "method": "POST",
+     "name": "变更订单项目",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "orderId",
+      "newProject"
+     ]
+    },
+    {
+     "path": "/OrderAjax/ChangeOrderRemark",
+     "method": "POST",
+     "name": "变更订单Remark",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "orderId",
+      "remark"
+     ]
+    },
+    {
+     "path": "/OrderAjax/ChangeOrderShphone",
+     "method": "POST",
+     "name": "变更订单Shphone",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "idx",
+      "sphone"
+     ]
+    },
+    {
+     "path": "/OrderAjax/ChangeOrderSoureId",
+     "method": "POST",
+     "name": "变更订单上家Id",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "orderId",
+      "value"
+     ]
+    },
+    {
+     "path": "/OrderAjax/ChangeTransctionOrderLock",
+     "method": "POST",
+     "name": "变更Transction订单Lock",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "tid",
+      "value",
+      "platfromId"
+     ]
+    },
+    {
+     "path": "/OrderAjax/ChangeTransctionOrderRevoke",
+     "method": "POST",
+     "name": "变更Transction订单Revoke",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "tid",
+      "value",
+      "payAmount",
+      "pcAmount",
+      "remark",
+      "platfromId"
+     ]
+    },
+    {
+     "path": "/OrderAjax/ClearOrderToGroupManger",
+     "method": "GET",
+     "name": "Clear订单To分组Manger",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "orderIdx"
+     ]
+    },
+    {
+     "path": "/OrderAjax/CopyOrderToNewOrder",
+     "method": "GET",
+     "name": "复制订单To新订单",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "orderId"
+     ]
+    },
+    {
+     "path": "/OrderAjax/DelOrderByIDX",
+     "method": "POST",
+     "name": "删除订单ByIDX",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "orderID",
+      "isDelEmp"
+     ]
+    },
+    {
+     "path": "/OrderAjax/EditTransctionOrderPrice",
+     "method": "POST",
+     "name": "编辑Transction订单价格",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "orderId",
+      "tid",
+      "fee",
+      "platfromId"
+     ]
+    },
+    {
+     "path": "/OrderAjax/RelesOrderAndTaskByOrderID",
+     "method": "POST",
+     "name": "撤回订单And任务By订单ID",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "orderId"
+     ]
+    },
+    {
+     "path": "/OrderAjax/RelesOrderToHomeByOrderID",
+     "method": "POST",
+     "name": "撤回订单To首页By订单ID",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "orderId"
+     ]
+    },
+    {
+     "path": "/OrderAjax/SaveOrderToGroupManger",
+     "method": "POST",
+     "name": "保存订单To分组Manger",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "orderIdx",
+      "uid",
+      "fee",
+      "changeOrderStatus"
+     ]
+    },
+    {
+     "path": "/OrderAjax/UpSettlementOrderByIDX",
+     "method": "POST",
+     "name": "更新结算订单ByIDX",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "orderId",
+      "sta"
+     ]
+    },
+    {
+     "path": "/OrderAjax/UpdateDLOrderRevPriceByOrderID",
+     "method": "POST",
+     "name": "更新代练订单Rev价格By订单ID",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "orderId",
+      "fee",
+      "action",
+      "insureFee",
+      "pushPriceMode"
+     ]
+    },
+    {
+     "path": "/OrderAjax/UpdateOrderLabel",
+     "method": "POST",
+     "name": "更新订单标签",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "ids",
+      "label"
+     ]
+    },
+    {
+     "path": "/OrderAjax/sendDLOrderRevPriceByOrderID",
+     "method": "POST",
+     "name": "发送代练订单Rev价格By订单ID",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/OrderAjax/upOrderTips",
+     "method": "GET",
+     "name": "更新订单Tips",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "orderId",
+      "content"
+     ]
+    }
+   ]
+  },
+  "/Order/orderrecycle": {
+   "title": "已删除的订单",
+   "endpoints": [
+    {
+     "path": "/OrderAjax/GetOrderRecycleList",
+     "method": "GET",
+     "name": "获取订单回收站列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/OrderAjax/RefOrderRecycle",
+     "method": "POST",
+     "name": "Ref订单回收站",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "orderId"
+     ]
+    }
+   ]
+  },
+  "/Order/tbsendrecordlist": {
+   "title": "淘宝发货记录",
+   "endpoints": [
+    {
+     "path": "/OrderAjax/SendAgin",
+     "method": "POST",
+     "name": "发送Agin",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/OrderAjax/SendAginByTxt",
+     "method": "POST",
+     "name": "发送AginByTxt",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "source"
+     ]
+    }
+   ]
+  },
+  "/SMS/smslogslist": {
+   "title": "",
+   "endpoints": [
+    {
+     "path": "/SmsAjax/GetSmsSendLogList",
+     "method": "GET",
+     "name": "获取短信发送日志列表",
+     "note": "；实测返回列表(count=393，字段: moblie,smsContent,isSucess,sendTime,sendCount,fee,Msg)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    }
+   ]
+  },
+  "/Sms/smsbulkhair": {
+   "title": "我要群发短信",
+   "endpoints": [
+    {
+     "path": "/SmsAjax/GetSmsBulkHairMoblieCount",
+     "method": "GET",
+     "name": "获取短信批量发送Moblie统计",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SmsAjax/UploadMoblieTxt",
+     "method": "POST",
+     "name": "上传MoblieTxt",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/QSendSms",
+     "method": "POST",
+     "name": "Q发送短信",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "gameName",
+      "orderSta",
+      "customerServiceUserName",
+      "orderSoure",
+      "stime",
+      "etime",
+      "key1",
+      "key2",
+      "key3",
+      "smsContent",
+      "soure"
+     ]
+    }
+   ]
+  },
+  "/Sms/smstemplatelist": {
+   "title": "群发短信模板",
+   "endpoints": [
+    {
+     "path": "/SmsAjax/GetSmsTemplateList",
+     "method": "GET",
+     "name": "获取短信模板列表",
+     "note": "；实测返回列表(count=2，字段: tempID,content,tempType,createTime,reviewSta,reviewRemark)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SmsAjax/AddSmsTemplate",
+     "method": "POST",
+     "name": "新增短信模板",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "smsType",
+      "content"
+     ]
+    }
+   ]
+  },
+  "/System/AutomaticAdJustPriceSet": {
+   "title": "交易订单自动调价机制设置",
+   "endpoints": [
+    {
+     "path": "/SystemAjax/GetAutomaticAdJustPriceSetList",
+     "method": "GET",
+     "name": "获取自动AdJust价格设置列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/DelAutomaticAdJustPriceSet",
+     "method": "POST",
+     "name": "删除自动AdJust价格设置",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id"
+     ]
+    },
+    {
+     "path": "/SystemAjax/UpdateAutomaticAdJustPriceSetStatus",
+     "method": "POST",
+     "name": "更新自动AdJust价格设置状态",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id"
+     ]
+    }
+   ]
+  },
+  "/System/OnlineConsultationSet": {
+   "title": "在线咨询相关设置",
+   "endpoints": [
+    {
+     "path": "/SystemAjax/GetOnlineConsultationSetList",
+     "method": "GET",
+     "name": "获取在线咨询设置列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/GetUserListByOnlineConsultationSet",
+     "method": "GET",
+     "name": "获取人员列表By在线咨询设置",
+     "note": "；实测返回对象(字段: data1,data2,data3,data4)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/ModifyOnlineConsultationSet",
+     "method": "POST",
+     "name": "Modify在线咨询设置",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "strparameter"
+     ]
+    }
+   ]
+  },
+  "/System/OrderLabelList": {
+   "title": "订单标签维护管理",
+   "endpoints": [
+    {
+     "path": "/SystemAjax/AddModityOrderLabel",
+     "method": "POST",
+     "name": "新增Modity订单标签",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id",
+      "gameName",
+      "labelName",
+      "remark",
+      "orderBy",
+      "colorValue"
+     ]
+    },
+    {
+     "path": "/SystemAjax/DelOrderLabel",
+     "method": "POST",
+     "name": "删除订单标签",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id"
+     ]
+    }
+   ]
+  },
+  "/System/OrderPushGroupMsgSet": {
+   "title": "发单消息推送微信群设置",
+   "endpoints": [
+    {
+     "path": "/SystemAjax/GetPushOrderGroupMsgSetList",
+     "method": "GET",
+     "name": "获取推送订单分组消息设置列表",
+     "note": "；实测返回列表(count=1，字段: id,webhookUrl,gameName,replyOcc,kurl,switchStatus,callAll,remark,msgType)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/DelPushOrderGroupMsg",
+     "method": "POST",
+     "name": "删除推送订单分组消息",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id"
+     ]
+    },
+    {
+     "path": "/SystemAjax/ModityPushOrderGroupMsgStatus",
+     "method": "POST",
+     "name": "Modity推送订单分组消息状态",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id"
+     ]
+    }
+   ]
+  },
+  "/System/PlatformAutoReply": {
+   "title": "平台消息自动回复打手设置",
+   "endpoints": [
+    {
+     "path": "/SystemAjax/GetPlatformAutoReplySetList",
+     "method": "GET",
+     "name": "获取平台自动回复设置列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/BatchEditReplyContent",
+     "method": "POST",
+     "name": "Batch编辑回复内容",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "ids",
+      "content"
+     ]
+    },
+    {
+     "path": "/SystemAjax/DelPlatformAutoReplySet",
+     "method": "POST",
+     "name": "删除平台自动回复设置",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id"
+     ]
+    },
+    {
+     "path": "/SystemAjax/ModifyPlatformAutoReplySetStatus",
+     "method": "POST",
+     "name": "Modify平台自动回复设置状态",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id"
+     ]
+    },
+    {
+     "path": "/SystemAjax/PddShipSetting",
+     "method": "POST",
+     "name": "拼多多发货设置",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "param"
+     ]
+    }
+   ]
+  },
+  "/System/PlatformPushOrderConfig": {
+   "title": "交易平台发单配置",
+   "endpoints": [
+    {
+     "path": "/SystemAjax/GetPlatformPushOrderConfigList",
+     "method": "GET",
+     "name": "获取平台推送订单配置列表",
+     "note": "；实测返回列表(count=13，字段: id,gameName,pushPlatformPhone,pushPlatformQQ,pushPlatformSafeAmount,pushPlatformEffAmount,pushPlatfromBuilderPrivePhone,pushPlatformRequire,pushPlatformIds,pushPlatformNames,pushPlatfromPriceScale,isAutoWritePhone)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/ClearPlatformPushOrderConfig",
+     "method": "POST",
+     "name": "Clear平台推送订单配置",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id"
+     ]
+    }
+   ]
+  },
+  "/System/autodiscernset": {
+   "title": "录单自动识别设置",
+   "endpoints": [
+    {
+     "path": "/SystemAjax/GetAutoDiscernSetList",
+     "method": "GET",
+     "name": "获取自动识别设置列表",
+     "note": "；实测返回列表(count=18，字段: disId,typeName,disKey)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/EditAutoDiscernSet",
+     "method": "POST",
+     "name": "编辑自动识别设置",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "disId",
+      "key"
+     ]
+    }
+   ]
+  },
+  "/System/customerphoneprivatesetting": {
+   "title": "订单虚拟号设置",
+   "endpoints": [
+    {
+     "path": "/SystemAjax/SavePrivacyPhoneServiceSetting",
+     "method": "POST",
+     "name": "保存Privacy电话Service设置",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "privacyPhoneServiceSwicth"
+     ]
+    }
+   ]
+  },
+  "/System/homesystemsetting": {
+   "title": "绑定上家系统管理",
+   "endpoints": [
+    {
+     "path": "/SystemAjax/GetMyBindHomeSystemList",
+     "method": "GET",
+     "name": "获取我的绑定首页System列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/SaveBindHomeSystemVer",
+     "method": "POST",
+     "name": "保存绑定首页SystemVer",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "company",
+      "homeHost",
+      "homeAcc",
+      "homePwd"
+     ]
+    },
+    {
+     "path": "/SystemAjax/UnBindHomeSystem",
+     "method": "POST",
+     "name": "Un绑定首页System",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "sid"
+     ]
+    }
+   ]
+  },
+  "/System/roleauthority": {
+   "title": "角色职位权限",
+   "endpoints": [
+    {
+     "path": "/SystemAjax/GetAllRoleJobList",
+     "method": "GET",
+     "name": "获取全部角色职位列表",
+     "note": "；实测返回列表(count=9，字段: roleId,roleName,remark)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/GetAllRoleList",
+     "method": "GET",
+     "name": "获取全部角色列表",
+     "note": "；实测返回列表(count=9，字段: name,value,selected,disabled,type,tichen,brokerageType,tips,info1,info2,optgroup,click,children)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/CopyRoelNewJob",
+     "method": "GET",
+     "name": "复制Roel新职位",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/DelRole",
+     "method": "POST",
+     "name": "删除角色",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "roleId"
+     ]
+    }
+   ]
+  },
+  "/System/smssetting": {
+   "title": "短信业务设置",
+   "endpoints": [
+    {
+     "path": "/SmsAjax/GetSmsSettingMangeList",
+     "method": "GET",
+     "name": "获取短信设置管理列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/SmsAjax/SaveModitySmsApplyAllGame",
+     "method": "POST",
+     "name": "保存Modity短信申请全部游戏",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id"
+     ]
+    },
+    {
+     "path": "/SmsAjax/SaveModitySmsContent",
+     "method": "POST",
+     "name": "保存Modity短信内容",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id",
+      "content",
+      "asnyTbSms"
+     ]
+    },
+    {
+     "path": "/SmsAjax/SaveModitySmsSwictht",
+     "method": "POST",
+     "name": "保存Modity短信Swictht",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id"
+     ]
+    },
+    {
+     "path": "/SystemAjax/SmsSetting",
+     "method": "POST",
+     "name": "短信设置",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "param"
+     ]
+    }
+   ]
+  },
+  "/System/sourelist": {
+   "title": "订单来源管理",
+   "endpoints": [
+    {
+     "path": "/SystemAjax/GetOrderSoureList",
+     "method": "GET",
+     "name": "获取订单上家列表",
+     "note": "；实测返回列表(count=13，字段: name,value,selected,disabled,type,tichen,brokerageType,tips,info1,info2,optgroup,click,children)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/GetOrderSoureMangeList",
+     "method": "GET",
+     "name": "获取订单上家管理列表",
+     "note": "；实测返回列表(count=13，字段: id,soureName,remark,orderBy,doNotSendSms,smsSign,shopType)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/AddEdiSoure",
+     "method": "POST",
+     "name": "新增Edi上家",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "soureId",
+      "soureName",
+      "remark",
+      "orderBy",
+      "shopType"
+     ]
+    },
+    {
+     "path": "/SystemAjax/ChangeSoureDoNotSendSms",
+     "method": "POST",
+     "name": "变更上家执行Not发送短信",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id"
+     ]
+    },
+    {
+     "path": "/SystemAjax/DelSoure",
+     "method": "POST",
+     "name": "删除上家",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "soureId"
+     ]
+    },
+    {
+     "path": "/SystemAjax/ModifySoureSmsSign",
+     "method": "POST",
+     "name": "Modify上家短信签约",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id",
+      "smsSign"
+     ]
+    }
+   ]
+  },
+  "/System/systemlog": {
+   "title": "",
+   "endpoints": [
+    {
+     "path": "/SystemAjax/GetSysmteLogList",
+     "method": "GET",
+     "name": "获取Sysmte日志列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    }
+   ]
+  },
+  "/System/systemnotice": {
+   "title": "系统内部公告",
+   "endpoints": [
+    {
+     "path": "/SystemAjax/GetSystemNoticeList",
+     "method": "GET",
+     "name": "获取System公告列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/DelSystemNotice",
+     "method": "POST",
+     "name": "删除System公告",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id"
+     ]
+    },
+    {
+     "path": "/SystemAjax/SaveSystemNotice",
+     "method": "POST",
+     "name": "保存System公告",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id",
+      "content"
+     ]
+    }
+   ]
+  },
+  "/System/systemsetting": {
+   "title": "系统设置",
+   "endpoints": [
+    {
+     "path": "/SystemAjax/GetPublicSeachOrderQuestionMList",
+     "method": "GET",
+     "name": "获取公开搜索订单QuestionM列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/VeryJdpAcc",
+     "method": "POST",
+     "name": "Very鸡蛋铺账号",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/ChangePublicSeachOrderQuestionHot",
+     "method": "POST",
+     "name": "变更公开搜索订单QuestionHot",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "qid",
+      "value"
+     ]
+    },
+    {
+     "path": "/SystemAjax/ChangePublicSeachOrderQuestionSta",
+     "method": "POST",
+     "name": "变更公开搜索订单Question状态",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "qid"
+     ]
+    },
+    {
+     "path": "/SystemAjax/ClearSystemJdpBind",
+     "method": "POST",
+     "name": "ClearSystem鸡蛋铺绑定",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/DelPublicSeachOrderQuestion",
+     "method": "POST",
+     "name": "删除公开搜索订单Question",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "qid"
+     ]
+    },
+    {
+     "path": "/SystemAjax/SaveOrderExportPwd",
+     "method": "POST",
+     "name": "保存订单导出Pwd",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "orginpwd",
+      "newpwd"
+     ]
+    },
+    {
+     "path": "/SystemAjax/SavePublicSeachOrderQuestion",
+     "method": "POST",
+     "name": "保存公开搜索订单Question",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "qid",
+      "title",
+      "content"
+     ]
+    },
+    {
+     "path": "/SystemAjax/SystemOrderSetting",
+     "method": "POST",
+     "name": "System订单设置",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "param"
+     ]
+    }
+   ]
+  },
+  "/System/taobaoshipsetting": {
+   "title": "淘宝发货对接",
+   "endpoints": [
+    {
+     "path": "/SystemAjax/GetTaoBaoInterfaceList",
+     "method": "GET",
+     "name": "获取TaoBaoInterface列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/DelTaobaoInterface",
+     "method": "POST",
+     "name": "删除淘宝Interface",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id"
+     ]
+    },
+    {
+     "path": "/SystemAjax/TaobaoShipSetting",
+     "method": "POST",
+     "name": "淘宝发货设置",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "param"
+     ]
+    }
+   ]
+  },
+  "/System/tripartiteplatformsetting": {
+   "title": "设置第三方交易平台接",
+   "endpoints": [
+    {
+     "path": "/SystemAjax/GetTransfromInterfaceList",
+     "method": "GET",
+     "name": "获取TransfromInterface列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/DelTransfromInterface",
+     "method": "POST",
+     "name": "删除TransfromInterface",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id"
+     ]
+    },
+    {
+     "path": "/SystemAjax/ModifyPlatformPayPassWord",
+     "method": "POST",
+     "name": "Modify平台支付PassWord",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id",
+      "pwd"
+     ]
+    },
+    {
+     "path": "/SystemAjax/ModifyTransfromInterfaceHelperSwitch",
+     "method": "GET",
+     "name": "ModifyTransfromInterfaceHelperSwitch",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id",
+      "modifyType"
+     ]
+    },
+    {
+     "path": "/SystemAjax/SaveTripartitlePlatForm",
+     "method": "POST",
+     "name": "保存TripartitlePlatForm",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "param"
+     ]
+    }
+   ]
+  },
+  "/System/verifiaddorderkey": {
+   "title": "录单自动校验修正设置",
+   "endpoints": [
+    {
+     "path": "/SystemAjax/GetVerifiAddOrderKeyStrByGameList",
+     "method": "GET",
+     "name": "获取校验新增订单关键字StrBy游戏列表",
+     "note": "；实测返回列表(count=25，字段: id,gameName,veriType,key,resultStr)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/ResetVerifiAddOrderKeyStr",
+     "method": "POST",
+     "name": "重置校验新增订单关键字Str",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/SaveVerifiAddOrderKeyStr",
+     "method": "POST",
+     "name": "保存校验新增订单关键字Str",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id",
+      "key",
+      "resultStr"
+     ]
+    }
+   ]
+  },
+  "/System/wechartsetting": {
+   "title": "微信公众号对接",
+   "endpoints": [
+    {
+     "path": "/SystemAjax/GetWeChatCustomerList",
+     "method": "GET",
+     "name": "获取We聊天客户列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/CommonPermissionAjax/UploadSingleTxtToRoot",
+     "method": "POST",
+     "name": "上传SingleTxtToRoot",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/WeChatChangeBind",
+     "method": "POST",
+     "name": "We聊天变更绑定",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "wechatId",
+      "moblie"
+     ]
+    },
+    {
+     "path": "/SystemAjax/WeChatSetting",
+     "method": "POST",
+     "name": "We聊天设置",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "param"
+     ]
+    },
+    {
+     "path": "/SystemAjax/WeChatUnBind",
+     "method": "POST",
+     "name": "We聊天Un绑定",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "wechatId"
+     ]
+    }
+   ]
+  },
+  "/System/wechatappmange": {
+   "title": "微信小程序管理",
+   "endpoints": [
+    {
+     "path": "/CustomerAjax/GetIntervalLevel",
+     "method": "GET",
+     "name": "获取Interval等级",
+     "note": "；实测返回列表(count=7，字段: BusinessTypeId,IntervalName,StartValue,EndValue,ExtensionStr,IntervalLevelID,LevelDiscount,LevelNote)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/GetAllLotteryAwardList",
+     "method": "GET",
+     "name": "获取全部LotteryAward列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/GetIntegralCommodityByTypeList",
+     "method": "GET",
+     "name": "获取IntegralCommodityBy类型列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/GetIntegralCommodityExchangeList",
+     "method": "GET",
+     "name": "获取IntegralCommodityExchange列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/GetIntegralCommodityList",
+     "method": "GET",
+     "name": "获取IntegralCommodity列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/GetLotteryAwardGrantList",
+     "method": "GET",
+     "name": "获取LotteryAwardGrant列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/GetPublicNewsList",
+     "method": "GET",
+     "name": "获取公开News列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/GetShopItemList",
+     "method": "GET",
+     "name": "获取商铺商品列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/GetWechatAppShopFulDecList",
+     "method": "GET",
+     "name": "获取微信小程序商铺FulDec列表",
+     "note": "；实测返回对象(字段: fullDecData,hyDisCData)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/GetWechatAppShopItemTypeList",
+     "method": "GET",
+     "name": "获取微信小程序商铺商品类型列表",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/CommonPermissionAjax/DelSingleImg",
+     "method": "POST",
+     "name": "删除SingleImg",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "imgpath"
+     ]
+    },
+    {
+     "path": "/CommonPermissionAjax/UploadSingleImg",
+     "method": "POST",
+     "name": "上传SingleImg",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/ChangeWehcatAppShopItemIsNeedGroup",
+     "method": "POST",
+     "name": "变更Wehcat小程序商铺商品IsNeed分组",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "shopId"
+     ]
+    },
+    {
+     "path": "/SystemAjax/DelAwardByIds",
+     "method": "POST",
+     "name": "删除AwardByIds",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id"
+     ]
+    },
+    {
+     "path": "/SystemAjax/DelPublicNewsByIds",
+     "method": "POST",
+     "name": "删除公开NewsByIds",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "ids"
+     ]
+    },
+    {
+     "path": "/SystemAjax/DelShopItem",
+     "method": "POST",
+     "name": "删除商铺商品",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id"
+     ]
+    },
+    {
+     "path": "/SystemAjax/DelWechatAppHyDisc",
+     "method": "POST",
+     "name": "删除微信小程序会员Disc",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/DelWechatAppShopFulDec",
+     "method": "POST",
+     "name": "删除微信小程序商铺FulDec",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/DelWechatAppShopItemTypeName",
+     "method": "POST",
+     "name": "删除微信小程序商铺商品类型名称",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "typeName"
+     ]
+    },
+    {
+     "path": "/SystemAjax/DeldelIntegralItem",
+     "method": "POST",
+     "name": "DeldelIntegral商品",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id"
+     ]
+    },
+    {
+     "path": "/SystemAjax/DeliverAward",
+     "method": "POST",
+     "name": "DeliverAward",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id"
+     ]
+    },
+    {
+     "path": "/SystemAjax/EditWechatAppShopItemTypeName",
+     "method": "POST",
+     "name": "编辑微信小程序商铺商品类型名称",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "yname",
+      "newname"
+     ]
+    },
+    {
+     "path": "/SystemAjax/SaveAward",
+     "method": "POST",
+     "name": "保存Award",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id",
+      "title",
+      "atype",
+      "cid",
+      "range",
+      "prizeimg",
+      "prizeValue",
+      "awardunit",
+      "stockNumber"
+     ]
+    },
+    {
+     "path": "/SystemAjax/SaveAwardSetting",
+     "method": "POST",
+     "name": "保存Award设置",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "awardStatus",
+      "awardamount",
+      "awardcount",
+      "awardWay",
+      "awardunit"
+     ]
+    },
+    {
+     "path": "/SystemAjax/SaveIntegralCommodity",
+     "method": "POST",
+     "name": "保存IntegralCommodity",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "param",
+      "contentTxt"
+     ]
+    },
+    {
+     "path": "/SystemAjax/SaveIntegralExChangeItem",
+     "method": "POST",
+     "name": "保存IntegralEx变更商品",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "param",
+      "eid"
+     ]
+    },
+    {
+     "path": "/SystemAjax/SavePublicNew",
+     "method": "POST",
+     "name": "保存公开新",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "title",
+      "imgUrl",
+      "conetnt",
+      "contentTxt",
+      "id",
+      "newsType"
+     ]
+    },
+    {
+     "path": "/SystemAjax/SaveShopItem",
+     "method": "POST",
+     "name": "保存商铺商品",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "param",
+      "contentTxt"
+     ]
+    },
+    {
+     "path": "/SystemAjax/SaveWechatAppHyDisc",
+     "method": "POST",
+     "name": "保存微信小程序会员Disc",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/SaveWechatAppShopFulDec",
+     "method": "POST",
+     "name": "保存微信小程序商铺FulDec",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/SystemAjax/UpDownIntegralItem",
+     "method": "POST",
+     "name": "更新DownIntegral商品",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id",
+      "type"
+     ]
+    },
+    {
+     "path": "/SystemAjax/UpDownShopItem",
+     "method": "POST",
+     "name": "更新Down商铺商品",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id",
+      "type"
+     ]
+    }
+   ]
+  },
+  "/User/ApplyOnboardingMange": {
+   "title": "",
+   "endpoints": [
+    {
+     "path": "/UserAjax/GetOnboardingList",
+     "method": "GET",
+     "name": "获取入职列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/UserAjax/AuditOnboarding",
+     "method": "GET",
+     "name": "Audit入职",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/UserAjax/DeleteOnboarding",
+     "method": "POST",
+     "name": "删除入职",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": []
+    }
+   ]
+  },
+  "/User/BackUserList": {
+   "title": "系统用户黑名单管理",
+   "endpoints": [
+    {
+     "path": "/UserAjax/GetSystemUserBackList",
+     "method": "GET",
+     "name": "获取System人员黑名单列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/UserAjax/DelSystemUserBackListByID",
+     "method": "POST",
+     "name": "删除System人员黑名单列表ByID",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "ids"
+     ]
+    }
+   ]
+  },
+  "/User/RnameCertLogAndSetting": {
+   "title": "系统用户实名认证记录与配置",
+   "endpoints": [
+    {
+     "path": "/UserAjax/GetUserRnameCertLogList",
+     "method": "GET",
+     "name": "获取人员实名认证日志列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/UserAjax/SaveCertSetting",
+     "method": "POST",
+     "name": "保存认证设置",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "param"
+     ]
+    }
+   ]
+  },
+  "/User/UserContractSigning": {
+   "title": "签约管理",
+   "endpoints": [
+    {
+     "path": "/UserAjax/GetContractWhitelist",
+     "method": "GET",
+     "name": "获取合同Whitelist",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/UserAjax/SaveContractWhitelist",
+     "method": "POST",
+     "name": "保存合同Whitelist",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": []
+    }
+   ]
+  },
+  "/User/adduser": {
+   "title": "新开/编辑系统子账户",
+   "endpoints": [
+    {
+     "path": "/UserAjax/GetAllUserByGameName",
+     "method": "GET",
+     "name": "获取全部人员By游戏名称",
+     "note": "；实测返回列表(count=82，字段: name,value,selected,disabled,type,tichen,brokerageType,tips,info1,info2,optgroup,click,children)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/UserAjax/AddEditUser",
+     "method": "POST",
+     "name": "新增编辑人员",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "strparameter",
+      "games"
+     ]
+    },
+    {
+     "path": "/UserAjax/CheckAddUserIsContainsBlack",
+     "method": "POST",
+     "name": "检查新增人员IsContainsBlack",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "acc",
+      "phone",
+      "qq",
+      "wx",
+      "rname"
+     ]
+    },
+    {
+     "path": "/UserAjax/ResetRnameCert",
+     "method": "POST",
+     "name": "重置实名认证",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "uid"
+     ]
+    }
+   ]
+  },
+  "/User/checkinlog": {
+   "title": "",
+   "endpoints": [
+    {
+     "path": "/UserAjax/GetUserCheckInList",
+     "method": "GET",
+     "name": "获取人员检查In列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    }
+   ]
+  },
+  "/User/checkinstatic": {
+   "title": "",
+   "endpoints": [
+    {
+     "path": "/UserAjax/GetUserCheckInStaticList",
+     "method": "GET",
+     "name": "获取人员检查In统计列表",
+     "note": "；实测返回列表(count=80，字段: loginAcc,userName,roleName,ip,computer,createTime,checkType,remark,checkinNumber)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    }
+   ]
+  },
+  "/User/myinfo": {
+   "title": "我的资料",
+   "endpoints": [
+    {
+     "path": "/UserAjax/GetDyplsOSSInfoForUploadFile",
+     "method": "GET",
+     "name": "获取DyplsOSS信息For上传File",
+     "note": "；实测返回对象(字段: AccessKeyId,ExpireTime,Host,Policy,Signature,StartPath)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/UserAjax/GetUserPhoneReport",
+     "method": "GET",
+     "name": "获取人员电话报表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/UserAjax/CreatePhoneNoAReport",
+     "method": "GET",
+     "name": "Create电话NoA报表",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/UserAjax/RnameCertInit",
+     "method": "POST",
+     "name": "实名认证Init",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "rname",
+      "sid"
+     ]
+    },
+    {
+     "path": "/UserAjax/UploadMyPic",
+     "method": "POST",
+     "name": "上传我的图片",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/UserAjax/UploadQrCode",
+     "method": "POST",
+     "name": "上传QrCode",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/UserAjax/saveMyFeaturesMyJdpSet",
+     "method": "POST",
+     "name": "保存我的Features我的鸡蛋铺设置",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "paramStr"
+     ]
+    },
+    {
+     "path": "/UserAjax/saveMyFeaturesMySystemSet",
+     "method": "POST",
+     "name": "保存我的Features我的System设置",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "paramStr"
+     ]
+    },
+    {
+     "path": "/UserAjax/saveMyInfo",
+     "method": "POST",
+     "name": "保存我的信息",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "paramStr"
+     ]
+    },
+    {
+     "path": "/UserAjax/saveMyLoginPwd",
+     "method": "POST",
+     "name": "保存我的LoginPwd",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "paramStr"
+     ]
+    }
+   ]
+  },
+  "/User/mymessage": {
+   "title": "我的消息",
+   "endpoints": [
+    {
+     "path": "/UserAjax/GetMyMessageList",
+     "method": "GET",
+     "name": "获取我的消息列表",
+     "note": "；实测返回列表(count=3，字段: msgId,msgType,title,content,sendUserName,createTime,isRead,isViewNotification,isAutoPaySound,orderId)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/UserAjax/ResetInterNalNewOrderPushWechatMsgSetting",
+     "method": "POST",
+     "name": "重置InterNal新订单推送微信消息设置",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/UserAjax/SaveUserConfigForMsgSoundSoureByUserId",
+     "method": "POST",
+     "name": "保存人员配置For消息Sound上家By人员Id",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "value"
+     ]
+    },
+    {
+     "path": "/UserAjax/SaveUserConfigForMsgSoundSwichtByUserId",
+     "method": "POST",
+     "name": "保存人员配置For消息SoundSwichtBy人员Id",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "status"
+     ]
+    },
+    {
+     "path": "/UserAjax/SetMyMessageRead",
+     "method": "POST",
+     "name": "设置我的消息已读",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "msgId"
+     ]
+    }
+   ]
+  },
+  "/User/usergroup": {
+   "title": "",
+   "endpoints": [
+    {
+     "path": "/SystemAjax/GetUserGroupList",
+     "method": "GET",
+     "name": "获取人员分组列表",
+     "note": "；实测返回列表(count=6，字段: groupId,groupName,containJobName)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    }
+   ]
+  },
+  "/User/userlist": {
+   "title": "系统用户管理",
+   "endpoints": [
+    {
+     "path": "/UserAjax/GetCheckIdenticalAliPayAcc",
+     "method": "GET",
+     "name": "获取检查Identical阿里支付账号",
+     "note": "；实测返回列表(count=19，字段: id,id2,id3,id4,id5,id6,id7,id8,id9,id10,company,str1,str2,str3)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/UserAjax/GetJdpUidList",
+     "method": "GET",
+     "name": "获取鸡蛋铺Uid列表",
+     "note": "；实测返回列表(count=1)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/UserAjax/GetRecOrderTotalList",
+     "method": "GET",
+     "name": "获取接单订单Total列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/UserAjax/GetUserList",
+     "method": "GET",
+     "name": "获取人员列表",
+     "note": "；实测返回列表(count=150，字段: uid,loginAcc,userName,userType,jobName,recOrderMaxCount,qq,moblie,entryDate,disableDate,remark,sta,isExcuseLoginVer,isRecEarlyWarningSms)",
+     "risk": "read",
+     "has_model": true,
+     "params": []
+    },
+    {
+     "path": "/UserAjax/AddModiftySystemUserBackList",
+     "method": "POST",
+     "name": "新增ModiftySystem人员黑名单列表",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "bid",
+      "moblie",
+      "wechat",
+      "qq",
+      "remark",
+      "rname",
+      "yy",
+      "alipayacc",
+      "cid"
+     ]
+    },
+    {
+     "path": "/UserAjax/ChangeProhibitedViewOrderPhone",
+     "method": "POST",
+     "name": "变更Prohibited查看订单电话",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "uid",
+      "sta"
+     ]
+    },
+    {
+     "path": "/UserAjax/ChangeProhibitedViewOrderPwd",
+     "method": "POST",
+     "name": "变更Prohibited查看订单Pwd",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "uid",
+      "sta"
+     ]
+    },
+    {
+     "path": "/UserAjax/ChangeUserBalance",
+     "method": "POST",
+     "name": "变更人员Balance",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "uid",
+      "amount"
+     ]
+    },
+    {
+     "path": "/UserAjax/ChangeUserEnsureAmount",
+     "method": "POST",
+     "name": "变更人员EnsureAmount",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "uid",
+      "value"
+     ]
+    },
+    {
+     "path": "/UserAjax/ChangeUserIsAutoSett",
+     "method": "POST",
+     "name": "变更人员Is自动结算",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "uid"
+     ]
+    },
+    {
+     "path": "/UserAjax/ChangeUserOrderBy",
+     "method": "POST",
+     "name": "变更人员订单By",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "uid",
+      "by"
+     ]
+    },
+    {
+     "path": "/UserAjax/CreateGroupOrInvitation",
+     "method": "GET",
+     "name": "Create分组OrInvitation",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/UserAjax/DelUser",
+     "method": "POST",
+     "name": "删除人员",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "uid"
+     ]
+    },
+    {
+     "path": "/UserAjax/EditUserMark",
+     "method": "POST",
+     "name": "编辑人员Mark",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "uid",
+      "tag"
+     ]
+    },
+    {
+     "path": "/UserAjax/RefChangePwd",
+     "method": "POST",
+     "name": "Ref变更Pwd",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "uid"
+     ]
+    },
+    {
+     "path": "/UserAjax/SetForbidViewOrderContent",
+     "method": "POST",
+     "name": "设置Forbid查看订单内容",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "uid"
+     ]
+    },
+    {
+     "path": "/UserAjax/SetIsProhibitPublicRecOrder",
+     "method": "POST",
+     "name": "设置IsProhibit公开接单订单",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "uid"
+     ]
+    },
+    {
+     "path": "/UserAjax/SetUserPrivatePhone",
+     "method": "POST",
+     "name": "设置人员私密电话",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "uid"
+     ]
+    },
+    {
+     "path": "/UserAjax/SetUserProhibitedViewOrderPwd",
+     "method": "POST",
+     "name": "设置人员Prohibited查看订单Pwd",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "uid"
+     ]
+    },
+    {
+     "path": "/UserAjax/SetUserSelfRecOrderMaxCount",
+     "method": "POST",
+     "name": "设置人员Self接单订单Max统计",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "uid",
+      "count"
+     ]
+    },
+    {
+     "path": "/UserAjax/UpUserDisSettSta",
+     "method": "POST",
+     "name": "更新人员Dis结算状态",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "uid"
+     ]
+    },
+    {
+     "path": "/UserAjax/UpUserSta",
+     "method": "POST",
+     "name": "更新人员状态",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "uid"
+     ]
+    },
+    {
+     "path": "/UserAjax/UpUserStaBatch",
+     "method": "POST",
+     "name": "更新人员状态Batch",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "uid"
+     ]
+    },
+    {
+     "path": "/UserAjax/UpUserVerSta",
+     "method": "POST",
+     "name": "更新人员Ver状态",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "uid"
+     ]
+    }
+   ]
+  },
+  "/User/userloginrestrict": {
+   "title": "用户登录限制设置",
+   "endpoints": [
+    {
+     "path": "/UserAjax/GetUserLoginRestrictList",
+     "method": "GET",
+     "name": "获取人员Login限制列表",
+     "note": "；实测返回列表(count=0)",
+     "risk": "read",
+     "has_model": false,
+     "params": []
+    },
+    {
+     "path": "/UserAjax/AddUserLoginRestrictByIP",
+     "method": "POST",
+     "name": "新增人员Login限制ByIP",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "id",
+      "ip"
+     ]
+    },
+    {
+     "path": "/UserAjax/DelUserLoginRestrict",
+     "method": "POST",
+     "name": "删除人员Login限制",
+     "note": "（写操作，未调用）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "idx"
+     ]
+    },
+    {
+     "path": "/UserAjax/UpUserLoginRestrictStatus",
+     "method": "POST",
+     "name": "更新人员Login限制状态",
+     "note": "（空参未返回JSON，通常需传参数）",
+     "risk": "write",
+     "has_model": false,
+     "params": [
+      "userLoginRestrictId",
+      "status"
+     ]
+    }
+   ]
+  }
+ },
+ "unpaged": [
+  {
+   "path": "/Login/ForgetPassword",
+   "method": "POST",
+   "name": "找回密码三级面板第 3 步：重置密码。**这是写操作**",
+   "note": "（会改别人的口令）。",
+   "risk": "auth",
+   "has_model": false,
+   "params": []
+  },
+  {
+   "path": "/Login/GetCompany",
+   "method": "POST",
+   "name": "公开端点",
+   "note": "（无需任何凭据）：POST 后返回 {\"code\":1,\"msg\":\"<租户名>\"}，登录页 JS 用它把工作室名写进 document.title 与卡片标题。",
+   "risk": "auth",
+   "has_model": false,
+   "params": []
+  },
+  {
+   "path": "/Login/Login",
+   "method": "POST",
+   "name": "接口清单里没有",
+   "note": "；仅见于 SDK 源码调用",
+   "risk": "auth",
+   "has_model": false,
+   "params": []
+  },
+  {
+   "path": "/Login/LoginGetSmsCode",
+   "method": "POST",
+   "name": "获取登录短信验证码",
+   "note": "（配合 /Login/LoginSecurityVerification）。",
+   "risk": "auth",
+   "has_model": false,
+   "params": []
+  },
+  {
+   "path": "/Login/LoginSecurityVerification",
+   "method": "POST",
+   "name": "登录页的「短信验证码」校验步骤",
+   "note": "（对标物登录页字段 code / #larry_code，默认 display:none）。",
+   "risk": "auth",
+   "has_model": false,
+   "params": []
+  },
+  {
+   "path": "/Login/SendEmailCode",
+   "method": "POST",
+   "name": "找回密码三级面板第 1 步：发送邮箱验证码。",
+   "note": "",
+   "risk": "auth",
+   "has_model": false,
+   "params": []
+  },
+  {
+   "path": "/Login/VerifyForgetCode",
+   "method": "POST",
+   "name": "找回密码三级面板第 2 步：校验邮箱验证码。",
+   "note": "",
+   "risk": "auth",
+   "has_model": false,
+   "params": []
+  },
+  {
+   "path": "/Login/loginout",
+   "method": "POST",
+   "name": "登出：GET → 302 到 /Login/",
+   "note": "；**无 cookie 也 302**（幂等）；不清 sl-session。",
+   "risk": "auth",
+   "has_model": false,
+   "params": []
+  },
+  {
+   "path": "/OrderAjax/SetOrderZhiPaiByIDX",
+   "method": "POST",
+   "name": "接口清单里没有",
+   "note": "；仅见于 SDK 源码调用",
+   "risk": "write",
+   "has_model": false,
+   "params": []
+  },
+  {
+   "path": "/OrderAjax/UploadOrderPic",
+   "method": "POST",
+   "name": "接口清单里没有",
+   "note": "；仅见于 SDK 源码调用",
+   "risk": "write",
+   "has_model": false,
+   "params": []
+  }
+ ]
+}

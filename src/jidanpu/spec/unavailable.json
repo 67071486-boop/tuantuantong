@@ -1,0 +1,532 @@
+{
+ "meta": {
+  "source": "live-readonly-sweep",
+  "measured_at": "2026-09-20",
+  "note": "对真实租户做的一次性只读扫描（每个接口最多试 4 种调用方式：清单方法/另一方法 × 空参/带 page+limit）。本文件列出**四种方式都拿不到业务成功码**的接口。它只是证据，不是开关；tools/import_endpoints.py 会把这些 path 从生成的 spec 中排除。若租户后续部署了它们，删掉对应条目重新生成即可恢复。",
+  "measured": 169,
+  "usable": 123,
+  "unavailable": 46,
+  "by_reason": {
+   "unreadable": 12,
+   "server_error": 31,
+   "not_deployed": 3
+  },
+  "withdrawn": [
+   {
+    "path": "/OrderAjax/GetPushPlatfromOrderActionLogMangeList",
+    "withdrawn_at": "2026-09-24",
+    "was_reason": "server_error",
+    "why": "当时 4 种调用方式都传了带时分秒的 sdate/edate ⇒ 500。实测（2026-09-24）该端点只吃日期（YYYY-MM-DD），传对即返回上万行。端点本身可用，故撤下排除。",
+    "evidence": "团团通仓 docs/specs/2026-09-24-jidanpu-sync-design.md §2.3 与 docs/RECON-operation-log.md §4.7"
+   }
+  ]
+ },
+ "unavailable": [
+  {
+   "path": "/OrderAjax/AppendAllTransctionOrderPrice",
+   "reason": "not_deployed",
+   "observed": [
+    "GET:404",
+    "POST:404",
+    "GET:404",
+    "POST:404"
+   ],
+   "desc": "Append全部Transction订单价格"
+  },
+  {
+   "path": "/OrderAjax/GetInsideRecOrderList",
+   "reason": "not_deployed",
+   "observed": [
+    "GET:404",
+    "POST:404",
+    "GET:404",
+    "POST:404"
+   ],
+   "desc": "获取内部接单订单列表；实测返回列表(count=0)"
+  },
+  {
+   "path": "/SystemAjax/GetPushJdp",
+   "reason": "not_deployed",
+   "observed": [
+    "GET:404",
+    "POST:404",
+    "GET:404",
+    "POST:404"
+   ],
+   "desc": "获取推送鸡蛋铺"
+  },
+  {
+   "path": "/EmpAjax/GetBillSummaryDetailsList",
+   "reason": "server_error",
+   "observed": [
+    "GET:500",
+    "POST:404",
+    "GET:500",
+    "POST:404"
+   ],
+   "desc": "获取账单汇总明细列表"
+  },
+  {
+   "path": "/EmpAjax/GetFundDetailsListData",
+   "reason": "server_error",
+   "observed": [
+    "GET:500",
+    "POST:500",
+    "GET:500",
+    "POST:500"
+   ],
+   "desc": "获取资金明细列表数据"
+  },
+  {
+   "path": "/EmpAjax/GetMyOnlineBillSummaryDetailsList",
+   "reason": "server_error",
+   "observed": [
+    "GET:500",
+    "POST:404",
+    "GET:500",
+    "POST:404"
+   ],
+   "desc": "获取我的在线账单汇总明细列表"
+  },
+  {
+   "path": "/GameAccountsAjax/SellAccGetInfo",
+   "reason": "server_error",
+   "observed": [
+    "POST:500",
+    "GET:404",
+    "POST:500",
+    "GET:404"
+   ],
+   "desc": "出售账号获取信息"
+  },
+  {
+   "path": "/GameAjax/GetGameItemList",
+   "reason": "server_error",
+   "observed": [
+    "GET:500",
+    "POST:404",
+    "GET:500",
+    "POST:404"
+   ],
+   "desc": "获取游戏商品列表"
+  },
+  {
+   "path": "/GameAjax/PWGameByGameID",
+   "reason": "server_error",
+   "observed": [
+    "GET:404",
+    "POST:500",
+    "GET:404",
+    "POST:500"
+   ],
+   "desc": "PW游戏By游戏ID"
+  },
+  {
+   "path": "/GameAjax/TopGameByGameID",
+   "reason": "server_error",
+   "observed": [
+    "GET:404",
+    "POST:500",
+    "GET:404",
+    "POST:500"
+   ],
+   "desc": "Top游戏By游戏ID"
+  },
+  {
+   "path": "/GameAjax/getGameItemInfoByItemID",
+   "reason": "server_error",
+   "observed": [
+    "GET:500",
+    "POST:404",
+    "GET:500",
+    "POST:404"
+   ],
+   "desc": "获取游戏商品信息By商品ID"
+  },
+  {
+   "path": "/GameAjax/getProject",
+   "reason": "server_error",
+   "observed": [
+    "GET:500",
+    "POST:404",
+    "GET:500",
+    "POST:404"
+   ],
+   "desc": "获取项目"
+  },
+  {
+   "path": "/OrderAjax/GetOrderGroupMangerLog",
+   "reason": "server_error",
+   "observed": [
+    "GET:404",
+    "POST:500",
+    "GET:404",
+    "POST:500"
+   ],
+   "desc": "获取订单分组Manger日志"
+  },
+  {
+   "path": "/OrderAjax/GetOrderJobGroupTotal",
+   "reason": "server_error",
+   "observed": [
+    "GET:500",
+    "POST:404",
+    "GET:500",
+    "POST:404"
+   ],
+   "desc": "获取订单职位分组Total"
+  },
+  {
+   "path": "/OrderAjax/GetTbSendRecordList",
+   "reason": "server_error",
+   "observed": [
+    "GET:500",
+    "POST:404",
+    "GET:500",
+    "POST:404"
+   ],
+   "desc": "获取淘宝发送Record列表"
+  },
+  {
+   "path": "/PveTaskAjax/CheckGroupFullInfo",
+   "reason": "server_error",
+   "observed": [
+    "GET:404",
+    "POST:500",
+    "GET:404",
+    "POST:500"
+   ],
+   "desc": "检查分组Full信息"
+  },
+  {
+   "path": "/PveTaskAjax/DisSelectFileToGroup",
+   "reason": "server_error",
+   "observed": [
+    "GET:404",
+    "POST:500",
+    "GET:404",
+    "POST:500"
+   ],
+   "desc": "Dis选择FileTo分组"
+  },
+  {
+   "path": "/PveTaskAjax/GetAllTaskSelectListData",
+   "reason": "server_error",
+   "observed": [
+    "GET:500",
+    "POST:404",
+    "GET:500",
+    "POST:404"
+   ],
+   "desc": "获取全部任务选择列表数据"
+  },
+  {
+   "path": "/PveTaskAjax/GetGroupJobNeedList",
+   "reason": "server_error",
+   "observed": [
+    "GET:500",
+    "POST:404",
+    "GET:500",
+    "POST:404"
+   ],
+   "desc": "获取分组职位Need列表"
+  },
+  {
+   "path": "/PveTaskAjax/GetGroupList",
+   "reason": "server_error",
+   "observed": [
+    "GET:500",
+    "POST:404",
+    "GET:500",
+    "POST:404"
+   ],
+   "desc": "获取分组列表"
+  },
+  {
+   "path": "/PveTaskAjax/GetJdpPublicTaskContactData",
+   "reason": "server_error",
+   "observed": [
+    "POST:500",
+    "GET:404",
+    "POST:500",
+    "GET:404"
+   ],
+   "desc": "获取鸡蛋铺公开任务Contact数据"
+  },
+  {
+   "path": "/PveTaskAjax/GetMyGroup",
+   "reason": "server_error",
+   "observed": [
+    "GET:500",
+    "POST:404",
+    "GET:500",
+    "POST:404"
+   ],
+   "desc": "获取我的分组"
+  },
+  {
+   "path": "/PveTaskAjax/GetTaskNeedJobTemplateByTid",
+   "reason": "server_error",
+   "observed": [
+    "POST:500",
+    "GET:404",
+    "POST:500",
+    "GET:404"
+   ],
+   "desc": "获取任务Need职位模板ByTid"
+  },
+  {
+   "path": "/PveTaskAjax/PublicNeedJobPostion",
+   "reason": "server_error",
+   "observed": [
+    "GET:404",
+    "POST:500",
+    "GET:404",
+    "POST:500"
+   ],
+   "desc": "公开Need职位Postion"
+  },
+  {
+   "path": "/SystemAjax/GetIntegarlExchangeItemInfoById",
+   "reason": "server_error",
+   "observed": [
+    "GET:404",
+    "POST:500",
+    "GET:404",
+    "POST:500"
+   ],
+   "desc": "获取IntegarlExchange商品信息ById"
+  },
+  {
+   "path": "/SystemAjax/GetIntegarlItemInfoById",
+   "reason": "server_error",
+   "observed": [
+    "POST:500",
+    "GET:404",
+    "POST:500",
+    "GET:404"
+   ],
+   "desc": "获取Integarl商品信息ById"
+  },
+  {
+   "path": "/SystemAjax/GetPublicNews",
+   "reason": "server_error",
+   "observed": [
+    "GET:500",
+    "POST:404",
+    "GET:500",
+    "POST:404"
+   ],
+   "desc": "获取公开News"
+  },
+  {
+   "path": "/SystemAjax/GetShopItemInfoById",
+   "reason": "server_error",
+   "observed": [
+    "POST:500",
+    "GET:404",
+    "POST:500",
+    "GET:404"
+   ],
+   "desc": "获取商铺商品信息ById"
+  },
+  {
+   "path": "/SystemAjax/GetSystemGroupList",
+   "reason": "server_error",
+   "observed": [
+    "GET:500",
+    "POST:404",
+    "GET:500",
+    "POST:404"
+   ],
+   "desc": "获取System分组列表；实测返回列表(count=0)"
+  },
+  {
+   "path": "/SystemAjax/ModityOrderLabelStatus",
+   "reason": "server_error",
+   "observed": [
+    "GET:404",
+    "POST:500",
+    "GET:404",
+    "POST:500"
+   ],
+   "desc": "Modity订单标签状态"
+  },
+  {
+   "path": "/SystemAjax/ModityShopItemSellCount",
+   "reason": "server_error",
+   "observed": [
+    "POST:500",
+    "GET:404",
+    "POST:500",
+    "GET:404"
+   ],
+   "desc": "Modity商铺商品出售统计"
+  },
+  {
+   "path": "/UserAjax/DeleteOnboarding/",
+   "reason": "server_error",
+   "observed": [
+    "GET:404",
+    "POST:500",
+    "GET:404",
+    "POST:500"
+   ],
+   "desc": ""
+  },
+  {
+   "path": "/UserAjax/GetAllUserByGroupName",
+   "reason": "server_error",
+   "observed": [
+    "GET:500",
+    "POST:404",
+    "GET:500",
+    "POST:404"
+   ],
+   "desc": "获取全部人员By分组名称"
+  },
+  {
+   "path": "/UserAjax/GetSysUserSelect",
+   "reason": "server_error",
+   "observed": [
+    "GET:500",
+    "POST:404",
+    "GET:500",
+    "POST:404"
+   ],
+   "desc": "获取Sys人员选择"
+  },
+  {
+   "path": "/EmpAjax/CheckOnlinePaySetRecName",
+   "reason": "unreadable",
+   "observed": [
+    "GET:404",
+    "POST:200",
+    "GET:404",
+    "POST:200"
+   ],
+   "desc": "检查在线支付设置接单名称"
+  },
+  {
+   "path": "/EmpAjax/RefshPlatformOrderStatusByTaoBao",
+   "reason": "unreadable",
+   "observed": [
+    "GET:404",
+    "POST:200",
+    "GET:404",
+    "POST:200"
+   ],
+   "desc": "Refsh平台订单状态ByTaoBao"
+  },
+  {
+   "path": "/OrderAjax/BuilderSellEmpOrderLog",
+   "reason": "unreadable",
+   "observed": [
+    "GET:404",
+    "POST:200",
+    "GET:404",
+    "POST:200"
+   ],
+   "desc": "Builder出售接单员订单日志"
+  },
+  {
+   "path": "/OrderAjax/ChcekAsynFailOrder",
+   "reason": "unreadable",
+   "observed": [
+    "GET:404",
+    "POST:200",
+    "GET:404",
+    "POST:200"
+   ],
+   "desc": "检查异步失败订单"
+  },
+  {
+   "path": "/OrderAjax/DeTransctionAllPlatformOrder",
+   "reason": "unreadable",
+   "observed": [
+    "POST:200",
+    "GET:404",
+    "POST:200",
+    "GET:404"
+   ],
+   "desc": "DeTransction全部平台订单"
+  },
+  {
+   "path": "/OrderAjax/DeTransctionPlatformOrder",
+   "reason": "unreadable",
+   "observed": [
+    "GET:404",
+    "POST:200",
+    "GET:404",
+    "POST:200"
+   ],
+   "desc": "DeTransction平台订单"
+  },
+  {
+   "path": "/OrderAjax/GetRecEmpAmountByOrderId",
+   "reason": "unreadable",
+   "observed": [
+    "POST:200",
+    "GET:404",
+    "POST:200",
+    "GET:404"
+   ],
+   "desc": "获取接单接单员AmountBy订单Id"
+  },
+  {
+   "path": "/OrderAjax/UrgentOrderByIDX",
+   "reason": "unreadable",
+   "observed": [
+    "GET:404",
+    "POST:200",
+    "GET:404",
+    "POST:200"
+   ],
+   "desc": "Urgent订单ByIDX"
+  },
+  {
+   "path": "/OrderAjax/ViewPic",
+   "reason": "unreadable",
+   "observed": [
+    "GET:200",
+    "POST:404",
+    "GET:200",
+    "POST:404"
+   ],
+   "desc": "查看图片；实测返回JSON对象"
+  },
+  {
+   "path": "/SystemAjax/OpenSmsSig",
+   "reason": "unreadable",
+   "observed": [
+    "GET:404",
+    "POST:200",
+    "GET:404",
+    "POST:200"
+   ],
+   "desc": "Open短信Sig"
+  },
+  {
+   "path": "/UserAjax/QueryRnameCertResult",
+   "reason": "unreadable",
+   "observed": [
+    "POST:200",
+    "GET:404",
+    "POST:200",
+    "GET:404"
+   ],
+   "desc": "查询实名认证Result"
+  },
+  {
+   "path": "/UserAjax/TotalAllUserOrderComplateRat",
+   "reason": "unreadable",
+   "observed": [
+    "POST:200",
+    "GET:404",
+    "POST:200",
+    "GET:404"
+   ],
+   "desc": "Total全部人员订单ComplateRat"
+  }
+ ]
+}

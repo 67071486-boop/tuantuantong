@@ -1,0 +1,243 @@
+diff --git a/src/components/blockUser.ts b/src/components/blockUser.ts
+index 8e9b9ee..a78bf04 100644
+--- a/src/components/blockUser.ts
++++ b/src/components/blockUser.ts
+@@ -3,8 +3,14 @@ import confirmationPopup from '@components/confirmationPopup';
+ import PeerTitle from '@components/peerTitle';
+ import {toastNew} from '@components/toast';
+ import rootScope from '@lib/rootScope';
++import apiManagerProxy from '@lib/apiManagerProxy';
+ import {bindManagersToSession} from '@lib/accounts/bindManagersToAccount';
+
++export function isSystemNotificationPeer(peerId?: PeerId) {
++  const peer = peerId === undefined ? undefined : apiManagerProxy.getPeer(peerId);
++  return !!peer && 'ttSystemNotification' in peer && peer.ttSystemNotification === true;
++}
++
+ /**
+  * Blocks a user once the confirmation is accepted, optionally reporting the chat as spam and
+  * deleting it as well (the checkboxes the confirmation offers). `onConfirmed` gets the requests.
+@@ -21,6 +27,7 @@ export default async function blockUserWithConfirmation(options: {
+   onConfirmed?: (promise: Promise<any>) => void
+ }) {
+   const {peerId, showDelete, fromRepliesMid, onConfirmed} = options;
++  if(isSystemNotificationPeer(peerId)) return;
+   const fromReplies = fromRepliesMid !== undefined;
+   const showReport = options.showReport || fromReplies;
+   // * the account the user is blocked on, whichever the tab shows once the confirmation is answered
+@@ -80,6 +87,7 @@ export default async function blockUserWithConfirmation(options: {
+ }
+
+ export function unblockUser(peerId: PeerId) {
++  if(isSystemNotificationPeer(peerId)) return Promise.resolve();
+   return rootScope.managers.appUsersManager.toggleBlock(peerId, false).then(() => {
+     toastNew({langPackKey: 'UserUnblocked'});
+   });
+diff --git a/src/components/chat/actions.tsx b/src/components/chat/actions.tsx
+index f546057..9e8eec5 100644
+--- a/src/components/chat/actions.tsx
++++ b/src/components/chat/actions.tsx
+@@ -5,6 +5,7 @@ import {LangPackKey, i18n} from '@lib/langPack';
+ import {DocumentAttribute, EmojiStatus, PeerSettings} from '@layer';
+ import {AppManagers} from '@lib/managers';
+ import apiManagerProxy from '@lib/apiManagerProxy';
++import {isSystemNotificationPeer} from '@components/blockUser';
+ import rootScope from '@lib/rootScope';
+ import callbackify from '@helpers/callbackify';
+ import confirmationPopup from '@components/confirmationPopup';
+@@ -491,7 +492,8 @@ export default function createChatActionsPlate(
+     }
+
+     peerSettingsActions = actions.filter((action) => {
+-      return action.key !== 'share_contact' && pFlags[action.key];
++      return action.key !== 'share_contact' &&
++        (action.key !== 'block_contact' || !isSystemNotificationPeer(currentPeerId)) && pFlags[action.key];
+     });
+   };
+
+diff --git a/src/components/chat/contextMenu.ts b/src/components/chat/contextMenu.ts
+index f8d5e8c..01b06f0 100644
+--- a/src/components/chat/contextMenu.ts
++++ b/src/components/chat/contextMenu.ts
+@@ -118,7 +118,7 @@ import getNoForwardsInfo from '@components/chat/noForwardsInfo';
+ import canLookupMessageAuthor from '@appManagers/utils/messages/canLookupMessageAuthor';
+ import canDeletePollAnswer from '@appManagers/utils/polls/canDeletePollAnswer';
+ import tsNow from '@helpers/tsNow';
+-import blockUserWithConfirmation from '@components/blockUser';
++import blockUserWithConfirmation, {isSystemNotificationPeer} from '@components/blockUser';
+ import {isWalletAvailable, isWalletReleased} from '@lib/wallet/release';
+
+ let rateTranscriptionTitleId = 0;
+@@ -1483,7 +1483,10 @@ export default class ChatContextMenu {
+         peerId: this.getRepliesSenderPeerId(),
+         fromRepliesMid: this.message.mid
+       }),
+-      verify: () => this.getRepliesSenderPeerId() !== undefined
++      verify: () => {
++        const peerId = this.getRepliesSenderPeerId();
++        return peerId !== undefined && !isSystemNotificationPeer(peerId);
++      }
+     }, {
+       icon: 'select',
+       text: 'Message.Context.Select',
+diff --git a/src/components/chat/input.ts b/src/components/chat/input.ts
+index 7f8ed9f..0302e80 100644
+--- a/src/components/chat/input.ts
++++ b/src/components/chat/input.ts
+@@ -172,6 +172,7 @@ import {isSavedDialog} from '@appManagers/utils/dialogs/isDialog';
+ import getFwdFromName from '@appManagers/utils/messages/getFwdFromName';
+ import forwardKeepsAuthor from '@appManagers/utils/messages/forwardKeepsAuthor';
+ import apiManagerProxy from '@lib/apiManagerProxy';
++import {isSystemNotificationPeer} from '@components/blockUser';
+ import showTooltip from '@components/tooltip';
+ import createContextMenu from '@helpers/dom/createContextMenu';
+ import {Accessor, createComponent, createEffect, createRoot, createSignal, on, Setter} from 'solid-js';
+@@ -2463,8 +2464,9 @@ export default class ChatInput {
+   }
+
+   public unblockUser = () => {
+-    const toggle = this.toggleControlButtonDisability = toggleDisability([this.unblockBtn], true);
+     const peerId = this.chat.peerId;
++    if(isSystemNotificationPeer(peerId)) return;
++    const toggle = this.toggleControlButtonDisability = toggleDisability([this.unblockBtn], true);
+     const middleware = this.getMiddleware(() => {
+       return this.chat.peerId === peerId && this.toggleControlButtonDisability === toggle;
+     });
+@@ -3436,7 +3438,7 @@ export default class ChatInput {
+       }
+
+       if(this.chat) {
+-        const good = !haveSomethingInControl && !isBot && peerId.isUser();
++        const good = !haveSomethingInControl && !isBot && peerId.isUser() && !isSystemNotificationPeer(peerId);
+         haveSomethingInControl ||= good;
+         this.unblockBtn.classList.toggle('hide', !good);
+       }
+diff --git a/src/components/chat/topbar.ts b/src/components/chat/topbar.ts
+index 3174b8e..57c8fb4 100644
+--- a/src/components/chat/topbar.ts
++++ b/src/components/chat/topbar.ts
+@@ -39,7 +39,7 @@ import confirmationPopup from '@components/confirmationPopup';
+ import noop from '@helpers/noop';
+ import clearHistoryWithConfirmation from '@components/clearHistory';
+ import {isWalletAvailable, isWalletReleased} from '@lib/wallet/release';
+-import blockUserWithConfirmation, {unblockUser} from '@components/blockUser';
++import blockUserWithConfirmation, {isSystemNotificationPeer, unblockUser} from '@components/blockUser';
+ import shareContact, {canShareContact} from '@components/shareContact';
+ import addContact from '@components/addContact';
+ import canClearHistory from '@appManagers/utils/chats/canClearHistory';
+@@ -731,7 +731,7 @@ export default class ChatTopbar {
+         this.blockUser();
+       },
+       verify: async() => {
+-        if(!this.peerId.isUser()) return false;
++        if(!this.peerId.isUser() || isSystemNotificationPeer(this.peerId)) return false;
+         const userFull = await this.managers.appProfileManager.getCachedFullUser(this.peerId.toUserId());
+         return this.peerId !== rootScope.myId && userFull && !userFull.pFlags?.blocked;
+       }
+@@ -740,6 +740,7 @@ export default class ChatTopbar {
+       text: 'Unblock',
+       onClick: () => unblockUser(this.peerId),
+       verify: async() => {
++        if(isSystemNotificationPeer(this.peerId)) return false;
+         const userFull = await this.managers.appProfileManager.getCachedFullUser(this.peerId.toUserId());
+         return !!userFull?.pFlags?.blocked;
+       }
+diff --git a/src/components/dialogsContextMenu.ts b/src/components/dialogsContextMenu.ts
+index 205f55a..c1560e7 100644
+--- a/src/components/dialogsContextMenu.ts
++++ b/src/components/dialogsContextMenu.ts
+@@ -44,7 +44,7 @@ import {
+ } from '@components/communities/communityMute';
+ import {hotReloadGuard} from '@lib/solidjs/hotReloadGuardProvider';
+ import {bindManagersToSession} from '@lib/accounts/bindManagersToAccount';
+-import blockUserWithConfirmation, {unblockUser} from '@components/blockUser';
++import blockUserWithConfirmation, {isSystemNotificationPeer, unblockUser} from '@components/blockUser';
+
+ /**
+  * What an item does on a chat row inside a Community panel (`data-community-chat-kind`),
+@@ -679,7 +679,8 @@ export default class DialogsContextMenu {
+       !peerId.isUser() ||
+       peerId === rootScope.myId ||
+       peerId === REPLIES_PEER_ID ||
+-      peerId === VERIFICATION_CODES_BOT_ID.toPeerId()
++      peerId === VERIFICATION_CODES_BOT_ID.toPeerId() ||
++      isSystemNotificationPeer(peerId)
+     ) {
+       return false;
+     }
+diff --git a/src/components/peerProfile.tsx b/src/components/peerProfile.tsx
+index cfe93b7..99729fa 100644
+--- a/src/components/peerProfile.tsx
++++ b/src/components/peerProfile.tsx
+@@ -75,7 +75,7 @@ import type {LangPackKey} from '@lib/langPack';
+ import type {ChatSetPeerOptions} from '@lib/appImManager';
+ import type SidebarSlider from '@components/slider';
+ import type {CallType} from '@lib/calls/types';
+-import blockUserWithConfirmation, {unblockUser} from '@components/blockUser';
++import blockUserWithConfirmation, {isSystemNotificationPeer, unblockUser} from '@components/blockUser';
+ import shareContact, {canShareContact} from '@components/shareContact';
+ import {ButtonMenuItemOptionsVerifiable} from '@components/buttonMenu';
+ import ButtonMenuToggle, {filterButtonMenuItems} from '@components/buttonMenuToggle';
+@@ -1263,7 +1263,8 @@ PeerProfile.ContactActions = () => {
+       !pFlags.bot &&
+       !pFlags.deleted;
+   });
+-  const isBlocked = () => context.peerId.isUser() && !!userFull()?.pFlags.blocked;
++  const canBlock = () => !isSystemNotificationPeer(context.peerId);
++  const isBlocked = () => canBlock() && context.peerId.isUser() && !!userFull()?.pFlags.blocked;
+
+   return (
+     <>
+@@ -1278,7 +1279,7 @@ PeerProfile.ContactActions = () => {
+       <Show
+         when={isBlocked()}
+         fallback={
+-          <Show when={isStranger() && !user().pFlags.support && userFull()}>
++          <Show when={canBlock() && isStranger() && !user().pFlags.support && userFull()}>
+             <Row color="danger" clickable={() => blockUserWithConfirmation({peerId: context.peerId})}>
+               <Row.Icon icon="lock_filled" />
+               <Row.Title class="danger">{i18n('BlockUser')}</Row.Title>
+@@ -1583,7 +1584,7 @@ PeerProfile.Actions = () => {
+     icon: 'lock',
+     text: 'BlockUser',
+     onClick: () => blockUserWithConfirmation({peerId}),
+-    verify: () => isContact() && !!userFull() && !userFull().pFlags.blocked
++    verify: () => !isSystemNotificationPeer(peerId) && isContact() && !!userFull() && !userFull().pFlags.blocked
+   }, {
+     icon: 'flag',
+     text: 'ReportChat',
+diff --git a/src/pages/localChatPreview/liveChat.ts b/src/pages/localChatPreview/liveChat.ts
+index da76701..26c78a3 100644
+--- a/src/pages/localChatPreview/liveChat.ts
++++ b/src/pages/localChatPreview/liveChat.ts
+@@ -165,14 +165,15 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+   let isDisplayedHistory: (peerId: PeerId) => boolean = () => false;
+   let cursor = initial.cursor ?? 0;
+
+-  function saveUser(contact: Contact, self = false, contactFlag = true) {
++  function saveUser(contact: Contact, self = false, contactFlag = true, systemNotification = false) {
+     const peer = contact.id.toPeerId(false);
+-    const mapped: User.user = {
++    const mapped: User.user & {ttSystemNotification?: true} = {
+       _: 'user',
+       id: contact.id as UserId,
+       pFlags: self ? {self: true} : contactFlag ? {contact: true, mutual_contact: true} : {},
+       first_name: contact.name,
+-      photo: {_: 'userProfilePhotoEmpty'}
++      photo: {_: 'userProfilePhotoEmpty'},
++      ...(systemNotification ? {ttSystemNotification: true as const} : {})
+     };
+     const previousStatus = peers.get(peer)?.status;
+     if(previousStatus) mapped.status = previousStatus;
+@@ -390,7 +391,10 @@ async function startPreview(api: ReturnType<typeof createLiveTransport>, readOnl
+       conversation.peer.id.toPeerId(false);
+     const previous = conversations.get(peerId);
+     if(conversation.kind === 'order') saveGroup(peerId, conversation);
+-    else saveUser(conversation.peer, false, conversation.kind !== 'system');
++    else {
++      const systemNotification = conversation.kind === 'system';
++      saveUser(conversation.peer, false, !systemNotification, systemNotification);
++    }
+     peerByConversation.set(conversation.id, peerId);
+     conversations.set(peerId, conversation);
+     refreshOrderMediaControls();
