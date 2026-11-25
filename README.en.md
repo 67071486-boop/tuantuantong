@@ -52,7 +52,7 @@ Every studio (tenant) gets its own domain and its **own PostgreSQL database**; t
 - Game and server management, order project categories and favourites
 
 **Messaging and collaboration**
-- In-app notifications, feedback, internal chat
+- In-app notifications, feedback, internal chat (chat is an optional component, see below)
 - WeCom group-chat archiving and search, WxPusher push, QQ bot
 - Support-agent toolkit
 
@@ -118,6 +118,14 @@ pnpm dev            # development; use pnpm build for production and serve dist 
 During development the frontend and backend are same-origin: requests hit Vite first, which proxies them to Django and **rewrites the `Host` header to the tenant domain** — that is how `django-tenants` resolves the tenant. `VITE_TENANT_HOST` in `src/frontend/.env.local` must match the domain you provisioned above.
 
 In production run the backend with gunicorn, serve the frontend build with nginx and reverse-proxy `/api`. Connection pooling and other parameters are documented in `.env.example`.
+
+## Internal chat (optional component)
+
+Internal chat is **not** shipped with the web app itself. It is assembled from three extra pieces: the chat UI (upstream Telegram Web K plus patches, built into `/internal-chat-webk/`), a realtime gateway (`src/chat-realtime`), and three Django environment variables. Without them the page shows "internal chat is not enabled for this account" and nothing else breaks.
+
+Build, gateway, nginx and rollback steps are in [deploy/internal-chat/README.md](deploy/internal-chat/README.md).
+
+> ⚠️ The upstream Web K is **GPL-3.0**: keep its license and corresponding source when distributing the chat bundle.
 
 ## Project layout
 

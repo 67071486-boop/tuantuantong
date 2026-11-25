@@ -52,7 +52,7 @@
 - 游戏与区服管理、订单项目分类与常用项目
 
 **消息与协作**
-- 站内通知、问题反馈、内部沟通
+- 站内通知、问题反馈、内部沟通（内部沟通是可选组件，见下）
 - 企业微信群聊归档与检索、WxPusher 推送、QQ 机器人
 - 客服工具面板
 
@@ -118,6 +118,14 @@ pnpm dev            # 开发；生产用 pnpm build，产物交给 nginx
 开发期前端与后端同源：请求先到 Vite，再由它代理给 Django，并**在转发时把租户域名写进 `Host` 头**——`django-tenants` 靠这个头解析租户。前端 `.env.local` 的 `VITE_TENANT_HOST` 要和上面开通的域名一致。
 
 生产环境用 gunicorn 跑后端、nginx 托管前端构建产物并反代 `/api`，数据库连接数、长连接等参数见 `.env.example` 里的说明。
+
+## 内部通讯（可选组件）
+
+内部沟通**不是网页前后端自带的**，它由三块额外组件拼起来：聊天界面（上游 Telegram Web K + 补丁，构建成 `/internal-chat-webk/`）、实时网关（`src/chat-realtime`）、以及 Django 侧的三个环境变量。没部署时页面显示「当前账号暂未开启内部沟通」，订单与结算不受影响。
+
+构建、网关、nginx 与回退步骤见 [deploy/internal-chat/README.md](deploy/internal-chat/README.md)。
+
+> ⚠️ 上游 Web K 是 **GPL-3.0**：分发聊天界面时要保留其许可证与对应源码。
 
 ## 目录结构
 

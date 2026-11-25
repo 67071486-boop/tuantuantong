@@ -1,0 +1,18 @@
+[Unit]
+Description=团团通内部沟通实时服务
+After=network.target
+ConditionPathExists=/home/ubuntu/projects/tuantuantong/current/src/chat-realtime/gateway.mjs
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/projects/tuantuantong/current/src/chat-realtime
+EnvironmentFile=/home/ubuntu/projects/tuantuantong/shared/internal-chat.env
+ExecStart=/usr/bin/node gateway.mjs
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
