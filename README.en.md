@@ -64,6 +64,17 @@ Every studio (tenant) gets its own domain and its **own PostgreSQL database**; t
 
 Prerequisites: Python 3.13, [uv](https://docs.astral.sh/uv/), PostgreSQL 16, Node (`^22.18` or `>=24.12`), pnpm.
 
+### One-command bootstrap
+
+```sh
+cp .env.example .env     # edit database credentials, DJANGO_SECRET_KEY and POSTGRES_ADMIN_USER first
+bash scripts/quickstart.sh
+```
+
+The script installs backend dependencies, creates the platform database and tables, provisions the first tenant, then prints the two commands left to run (set the admin password, start the server).
+
+The manual steps below are the same thing, if you prefer to follow along.
+
 ### 1. Configure
 
 ```sh

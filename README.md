@@ -64,6 +64,17 @@
 
 前置：Python 3.13、[uv](https://docs.astral.sh/uv/)、PostgreSQL 16、Node（`^22.18` 或 `>=24.12`）、pnpm。
 
+### 一键初始化
+
+```sh
+cp .env.example .env     # 先改掉里面的数据库账号、密码、DJANGO_SECRET_KEY 与 POSTGRES_ADMIN_USER
+bash scripts/quickstart.sh
+```
+
+脚本会装好后端依赖、建好平台库与平台表、开通第一个租户，并打印之后要跑的两条命令（设管理员密码、起服务）。
+
+下面是同样步骤的手动版，想逐步确认时用。
+
 ### 1. 配置
 
 ```sh
